@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>KENOS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></symbol>
+  <symbol id="i-key"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M12 11.5l8-8"/><path d="M17 7l2 2"/><path d="M20 4v3"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+  <symbol id="i-mega" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M22 12h-4M4 12H2M12 2v2M12 20v2M19.07 4.93l-1.41 1.41M6.34 17.66l-1.41 1.41M19.07 19.07l-1.41-1.41M6.34 6.34L4.93 4.93"/></symbol>
+  <symbol id="i-ref"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></symbol>
+  <symbol id="i-shld" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-zap"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></symbol>
+  <symbol id="i-rub"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h6a4 4 0 010 8H7V4z"/><path d="M5 16h8"/><path d="M7 12v8"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></symbol>
+  <symbol id="i-awd"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></symbol>
+</svg>
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
+:root{
+  --fd:'Cormorant Garamond',serif;
+  --fb:'Rajdhani',sans-serif;
+  --bg:#0d0d0d;
+  --panel:rgba(14,14,14,.97);
+  --card:rgba(14,14,14,.97);
+  --border:rgba(255,255,255,.08);
+  --g5:#555;--g4:#999;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --fast:.22s;--mid:.38s;
+}
+
+/* ═══════════════════════════════════════════
+   RESET + BASE
+═══════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:#fff;
+  font-family:var(--fb);
+  min-height:100vh;overflow-x:hidden;
+  overscroll-behavior:none;
+  -webkit-user-select:none;user-select:none;
+}
+input,textarea,select{-webkit-user-select:text;user-select:text}
+a{color:inherit}
+
+/* ═══════════════════════════════════════════
+   SAKURA CANVAS — GPU-слой z:0
+═══════════════════════════════════════════ */
+#cvs-sakura{
+  position:fixed;top:0;left:0;
+  width:100%;height:100%;
+  z-index:0;pointer-events:none;
+  opacity:.62;
+  will-change:opacity;
+}
+
+/* ═══════════════════════════════════════════
+   LOADER
+═══════════════════════════════════════════ */
+#loader{
+  position:fixed;inset:0;z-index:9000;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:var(--bg);
+  /* только opacity/visibility на GPU */
+  transition:opacity .85s var(--ease),visibility .85s;
+  will-change:opacity;
+}
+#loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+#cvs-loader{position:absolute;inset:0;pointer-events:none;transform:translateZ(0)}
+
+/* уголки */
+.lc{position:absolute;width:28px;height:28px;opacity:0;animation:fadeIn .5s 1.7s ease forwards}
+.lc-tl{top:24px;left:24px;border-top:1px solid rgba(255,255,255,.22);border-left:1px solid rgba(255,255,255,.22)}
+.lc-tr{top:24px;right:24px;border-top:1px solid rgba(255,255,255,.22);border-right:1px solid rgba(255,255,255,.22)}
+.lc-bl{bottom:24px;left:24px;border-bottom:1px solid rgba(255,255,255,.22);border-left:1px solid rgba(255,255,255,.22)}
+.lc-br{bottom:24px;right:24px;border-bottom:1px solid rgba(255,255,255,.22);border-right:1px solid rgba(255,255,255,.22)}
+
+.ld{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:16px}
+.ld-eye{font-size:9px;letter-spacing:.44em;color:rgba(255,255,255,.28);text-transform:uppercase;opacity:0;animation:fadeIn .5s .55s ease forwards}
+.ld-title{
+  font-family:var(--fd);font-size:70px;font-weight:300;
+  letter-spacing:.3em;color:#fff;line-height:1;
+  /* letter-spacing визуально сдвигает вправо — компенсируем */
+  padding-left:.3em;
+  text-align:center;
+  opacity:0;
+  animation:riseIn .95s .25s var(--ease) forwards, glow 3.5s 1.3s ease-in-out infinite;
+}
+.ld-prog{display:flex;flex-direction:column;align-items:center;gap:7px;opacity:0;animation:fadeIn .4s .85s ease forwards}
+.ld-pct{font-size:10px;font-weight:500;letter-spacing:.22em;color:rgba(255,255,255,.5);font-variant-numeric:tabular-nums}
+.ld-track{width:190px;height:1px;background:rgba(255,255,255,.1);border-radius:1px;overflow:hidden;position:relative}
+.ld-fill{
+  position:absolute;inset-block:0;left:0;width:0%;
+  background:linear-gradient(90deg,transparent,#fff 45%,rgba(255,255,255,.55),transparent);
+  box-shadow:0 0 12px rgba(255,255,255,.5);
+  /* transform вместо width для GPU */
+  transform-origin:left;
+  will-change:transform;
+}
+.ld-sub{font-size:10px;letter-spacing:.1em;color:rgba(255,255,255,.22);text-align:center;line-height:2.1;max-width:210px;opacity:0;animation:fadeIn .5s 1.4s ease forwards}
+
+/* ═══════════════════════════════════════════
+   KEYFRAMES — минимальный набор
+═══════════════════════════════════════════ */
+@keyframes fadeIn{to{opacity:1}}
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glow{
+  0%,100%{text-shadow:0 0 6px rgba(255,255,255,.08)}
+  50%    {text-shadow:0 0 26px rgba(255,255,255,.55),0 0 60px rgba(255,255,255,.14)}
+}
+@keyframes riseUp{
+  from{opacity:0;transform:translateY(20px)}
+  to  {opacity:1;transform:translateY(0)}
+}
+@keyframes navIn{
+  0%  {transform:translateY(5px) scale(.82);opacity:.2}
+  65% {transform:translateY(-3px) scale(1.14)}
+  100%{transform:translateY(0) scale(1);opacity:1}
+}
+@keyframes navGlow{
+  0%,100%{filter:drop-shadow(0 0 2px rgba(255,255,255,.15))}
+  50%    {filter:drop-shadow(0 0 8px rgba(255,255,255,.8)) drop-shadow(0 0 16px rgba(255,255,255,.22))}
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%    {opacity:.28;transform:scale(.55)}
+}
+@keyframes btnGlow{
+  0%,100%{box-shadow:0 4px 16px rgba(255,255,255,.07)}
+  50%    {box-shadow:0 4px 26px rgba(255,255,255,.22),0 0 14px rgba(255,255,255,.06)}
+}
+@keyframes logoGlow{
+  0%,100%{opacity:.7}
+  50%    {opacity:1;text-shadow:0 0 20px rgba(255,255,255,.5),0 0 48px rgba(255,255,255,.14)}
+}
+@keyframes panelShine{
+  0%,100%{box-shadow:0 4px 20px rgba(0,0,0,.45)}
+  50%    {box-shadow:0 4px 20px rgba(0,0,0,.45),0 0 18px rgba(255,255,255,.035)}
+}
+@keyframes dotPulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%    {opacity:.25;transform:scale(.5)}
+}
+@keyframes ambient{
+  0%,100%{opacity:.45}
+  50%    {opacity:.85}
+}
+
+/* ═══════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════ */
+#app{
+  position:relative;z-index:1;
+  max-width:480px;margin:0 auto;
+  padding-bottom:70px;min-height:100vh;
+}
+
+/* ambient glow — без transform в animation, без isolation */
+#app::before{
+  content:'';position:fixed;
+  top:calc(18% - 190px);left:calc(50% - 190px);
+  width:380px;height:380px;
+  background:radial-gradient(circle,rgba(170,130,155,.065) 0%,transparent 68%);
+  pointer-events:none;z-index:0;
+  animation:ambient 7s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════ */
+.hdr{
+  position:sticky;top:0;z-index:100;
+  padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:#0b0b0b;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  contain:layout style;
+}
+.hdr-profile{display:flex;align-items:center;gap:8px}
+.hdr-avatar{
+  width:30px;height:30px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.11);
+  background:rgba(255,255,255,.04);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;flex-shrink:0;color:rgba(255,255,255,.35);
+}
+.hdr-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.hdr-name{font-size:11px;font-weight:500;letter-spacing:.06em;color:rgba(255,255,255,.5);max-width:86px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdr-logo{display:flex;align-items:center;gap:5px}
+.logo-t{font-family:var(--fd);font-size:24px;font-weight:300;letter-spacing:.22em;color:#fff;animation:logoGlow 4s ease-in-out infinite}
+.logo-d{width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.9);animation:logoGlow 4s ease-in-out infinite}
+.lang-sw{display:flex;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:18px;overflow:hidden}
+.lang-b{padding:5px 10px;font-family:var(--fb);font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.32);background:transparent;border:none;cursor:pointer;transition:all .2s ease}
+.lang-b.on{background:rgba(255,255,255,.11);color:#fff}
+
+/* ═══════════════════════════════════════════
+   SECTIONS
+   contain:strict + content-visibility:auto
+   — браузер не рендерит невидимые секции
+═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   SECTIONS — плавные переходы
+   Скрытые: position:absolute поверх, opacity:0
+   Активная: position:relative, opacity:1
+   Выходящая: .leaving — анимация out, потом скрывается
+═══════════════════════════════════════════ */
+#view{position:relative;min-height:calc(100vh - 120px)}
+
+.sec{
+  position:absolute;top:0;left:0;right:0;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(14px);
+  transition:none;
+  /* скрытые секции не влияют на layout */
+  visibility:hidden;
+}
+.sec.on{
+  position:relative;          /* даёт высоту контейнеру */
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+  visibility:visible;
+  animation:secIn .42s var(--ease) both;
+}
+.sec.leaving{
+  position:absolute;top:0;left:0;right:0;
+  opacity:0;
+  pointer-events:none;
+  visibility:visible;
+  transform:translateY(-8px);
+  animation:secOut .22s ease-in both;
+}
+
+@keyframes secIn{
+  from{opacity:0;transform:translateY(16px)}
+  to  {opacity:1;transform:translateY(0)}
+}
+@keyframes secOut{
+  from{opacity:1;transform:translateY(0)}
+  to  {opacity:0;transform:translateY(-8px)}
+}
+
+/* каскадный riseUp для дочерних элементов внутри секции */
+.sec.on>*{
+  opacity:0;
+  animation:riseUp .45s var(--ease) both;
+}
+.sec.on>*:nth-child(1){animation-delay:.05s}
+.sec.on>*:nth-child(2){animation-delay:.11s}
+.sec.on>*:nth-child(3){animation-delay:.17s}
+.sec.on>*:nth-child(4){animation-delay:.23s}
+.sec.on>*:nth-child(5){animation-delay:.29s}
+.sec.on>*:nth-child(6){animation-delay:.35s}
+.sec.on>*:nth-child(7){animation-delay:.41s}
+/* принудительно сохраняем flex на .links — анимация не должна его ломать */
+.sec.on>.links{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important}
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero{padding:40px 20px 14px;text-align:center}
+.hero-eye{font-size:10px;letter-spacing:.38em;color:var(--g5);text-transform:uppercase;margin-bottom:11px}
+.hero-h{
+  font-family:var(--fd);font-size:clamp(58px,15vw,88px);
+  font-weight:300;letter-spacing:.14em;line-height:1;
+  color:#fff;margin-bottom:9px;
+  animation:glow 4s ease-in-out infinite;
+}
+.hero-sub{font-size:11px;letter-spacing:.22em;color:var(--g5);text-transform:uppercase}
+.divider{width:34px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);margin:16px auto}
+.sec-title{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--g5);padding:0 16px 9px}
+
+/* ═══════════════════════════════════════════
+   GLASS PANEL
+   contain:layout style paint — изолируем
+═══════════════════════════════════════════ */
+.panel{
+  margin:0 16px 13px;padding:20px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  position:relative;overflow:hidden;
+  contain:layout style paint;
+  animation:panelShine 5s ease-in-out infinite;
+}
+.panel:nth-child(2){animation-delay:.9s}
+.panel:nth-child(3){animation-delay:1.8s}
+.panel:nth-child(4){animation-delay:2.7s}
+/* блик */
+.panel::before{
+  content:'';position:absolute;
+  top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+  pointer-events:none;
+}
+.p-title{font-family:var(--fd);font-size:21px;font-weight:300;letter-spacing:.1em;color:#fff;margin-bottom:3px;display:flex;align-items:center;gap:8px}
+.p-sub{font-size:10px;color:var(--g5);letter-spacing:.12em;text-transform:uppercase;margin-bottom:13px}
+.p-body{font-size:13px;line-height:1.85;color:rgba(255,255,255,.58)}
+
+/* ═══════════════════════════════════════════
+   SERVICE GRID
+═══════════════════════════════════════════ */
+.svc-grid{padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.svc-card{
+  padding:20px 12px 15px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  cursor:pointer;text-align:center;
+  position:relative;overflow:hidden;
+  contain:layout style paint;
+  /* только transform/opacity на GPU */
+  transition:transform var(--fast) var(--ease),
+             border-color var(--fast) ease,
+             box-shadow var(--fast) ease;
+  will-change:transform;
+}
+.svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);pointer-events:none}
+.svc-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.05) 0%,transparent 58%);pointer-events:none}
+.svc-card:hover{transform:translateY(-2px) scale(1.02);border-color:rgba(255,255,255,.16);box-shadow:0 8px 22px rgba(0,0,0,.5)}
+.svc-card:active{transform:scale(.96)}
+.svc-ico{display:flex;justify-content:center;margin-bottom:9px;color:rgba(255,255,255,.48);position:relative;z-index:1}
+.svc-name{font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:#fff;margin-bottom:3px;position:relative;z-index:1}
+.svc-desc{font-size:10px;color:var(--g5);position:relative;z-index:1}
+
+/* ── INFO ENTRIES — тех работы и объявления ── */
+.info-entry{
+  padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);
+  position:relative;
+}
+.info-entry:last-child{border-bottom:none}
+.info-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 9px;border-radius:6px;
+  font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.info-badge.tech{background:rgba(255,180,0,.12);border:1px solid rgba(255,180,0,.25);color:rgba(255,200,50,.9)}
+.info-badge.info{background:rgba(100,180,255,.1);border:1px solid rgba(100,180,255,.22);color:rgba(140,200,255,.9)}
+.info-badge.ok  {background:rgba(100,255,150,.1);border:1px solid rgba(100,255,150,.22);color:rgba(130,255,160,.9)}
+.info-badge.warn{background:rgba(255,100,100,.1);border:1px solid rgba(255,100,100,.22);color:rgba(255,140,140,.9)}
+.info-badge svg{opacity:.8}
+.info-e-title{font-size:14px;font-weight:500;color:#fff;letter-spacing:.04em;margin-bottom:5px}
+.info-e-body{font-size:12px;color:rgba(255,255,255,.52);line-height:1.75}
+.info-e-date{font-size:10px;color:var(--g5);letter-spacing:.1em;margin-top:6px}
+.info-empty{text-align:center;padding:32px 0;color:var(--g5);font-size:12px;letter-spacing:.1em}
+.info-dot{
+  position:absolute;top:14px;right:0;
+  width:7px;height:7px;border-radius:50%;
+  background:#ffb800;box-shadow:0 0 8px rgba(255,184,0,.6);
+  animation:dotPulse 2s ease-in-out infinite;
+}
+/* badge на nav-иконке */
+.ni-badge{
+  position:absolute;top:4px;right:3px;
+  min-width:14px;height:14px;padding:0 3px;
+  background:#ff3b3b;border-radius:7px;
+  font-size:8px;font-weight:700;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  animation:fadeIn .3s ease;
+  pointer-events:none;
+}
+═══════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════
+   LINKS STRIP
+═══════════════════════════════════════════ */
+.links{
+  padding:0 16px;
+  display:flex;
+  flex-direction:row;
+  flex-wrap:nowrap;
+  gap:8px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+  margin-bottom:16px;
+  -webkit-overflow-scrolling:touch;
+}
+.links::-webkit-scrollbar{display:none}
+.lpill{
+  flex:0 0 auto;
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;text-decoration:none;
+  white-space:nowrap;
+  color:rgba(255,255,255,.42);font-size:11px;letter-spacing:.08em;font-weight:500;
+  transition:border-color var(--fast) ease,color var(--fast) ease;
+}
+.lpill:hover,.lpill:active{border-color:rgba(255,255,255,.18);color:#fff}
+
+/* ═══════════════════════════════════════════
+   PRICE ROW
+═══════════════════════════════════════════ */
+.price-row{display:flex;gap:8px;margin:5px 0 11px}
+.p-opt{flex:1;padding:13px 5px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:11px;text-align:center;transition:border-color var(--fast) ease,background var(--fast) ease}
+.p-opt:hover{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.05)}
+.p-opt-ico{display:flex;justify-content:center;align-items:center;margin-bottom:7px;color:rgba(255,255,255,.52);height:24px}
+.big-g{font-family:var(--fd);font-size:28px;font-weight:400;color:rgba(255,255,255,.62);line-height:1}
+.p-val{font-family:var(--fd);font-size:26px;font-weight:300;color:#fff;line-height:1}
+.p-unit{font-size:9px;letter-spacing:.12em;color:var(--g5);text-transform:uppercase;margin-top:3px}
+
+/* ═══════════════════════════════════════════
+   TAGS
+═══════════════════════════════════════════ */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:16px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);color:rgba(255,255,255,.42)}
+.tag svg{color:rgba(255,255,255,.2)}
+
+/* ═══════════════════════════════════════════
+   NOTE / KEY / INFO
+═══════════════════════════════════════════ */
+.note{padding:11px 13px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;font-size:12px;color:rgba(255,255,255,.48);line-height:1.7;margin-bottom:12px}
+.note b{color:rgba(255,255,255,.76)}
+.key-box{margin:11px 0;padding:17px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;text-align:center}
+.key-lbl{font-size:9px;letter-spacing:.3em;color:var(--g5);text-transform:uppercase;margin-bottom:9px}
+.key-val{font-family:monospace;font-size:15px;color:#fff;letter-spacing:.08em;text-shadow:0 0 16px rgba(255,255,255,.18);margin-bottom:9px;word-break:break-all}
+.key-st{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.15em;text-transform:uppercase}
+.key-st::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.key-st.act{color:#7fff7f}.key-st.act::before{box-shadow:0 0 7px currentColor;animation:dotPulse 2s ease-in-out infinite}
+.key-st.off{color:var(--g5)}
+.info-r{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.info-r:last-child{border-bottom:none}
+.info-k{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--g5);letter-spacing:.07em}
+.info-k svg{color:rgba(255,255,255,.18)}
+.info-v{font-size:12px;color:#fff;font-weight:500}
+
+/* ═══════════════════════════════════════════
+   FORM
+═══════════════════════════════════════════ */
+.form{display:flex;flex-direction:column;gap:10px}
+.form-g{display:flex;flex-direction:column;gap:4px}
+.form-l{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--g5)}
+.form-i,.form-ta{
+  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:10px 12px;
+  font-family:var(--fb);font-size:13px;color:#fff;
+  transition:border-color var(--fast) ease,background var(--fast) ease;
+  outline:none;resize:none;appearance:none;
+}
+.form-i:focus,.form-ta:focus{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.06)}
+.form-i::placeholder,.form-ta::placeholder{color:var(--g5)}
+
+/* ═══════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════ */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:13px 22px;border-radius:12px;
+  font-family:var(--fb);font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  cursor:pointer;border:none;text-decoration:none;
+  transition:transform var(--fast) var(--ease),
+             box-shadow var(--fast) ease,
+             background var(--fast) ease;
+  will-change:transform;
+}
+.btn:active{transform:scale(.96)!important}
+.btn-p{
+  background:rgba(228,228,228,.92);
+  color:rgba(0,0,0,.72);
+  font-weight:600;letter-spacing:.2em;
+  animation:btnGlow 3.5s ease-in-out infinite;
+}
+.btn-p:hover,.btn-p:active{animation:none;background:rgba(240,240,240,.97);color:#000;transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,255,255,.18),0 0 16px rgba(255,255,255,.06)}
+.btn-s{background:rgba(255,255,255,.04);color:#fff;border:1px solid rgba(255,255,255,.1)}
+.btn-s:hover,.btn-s:active{border-color:rgba(255,255,255,.2);transform:translateY(-1px)}
+.mt{margin-top:11px}
+
+/* ═══════════════════════════════════════════
+   DOC LINKS / CHANGELOG
+═══════════════════════════════════════════ */
+.dlink{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);text-decoration:none;color:rgba(255,255,255,.4);font-size:13px;transition:color var(--fast) ease}
+.dlink:last-child{border-bottom:none}.dlink:hover{color:#fff}
+.dlink svg:first-child{flex-shrink:0;color:rgba(255,255,255,.22)}
+.cl-e{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}.cl-e:last-child{border-bottom:none}
+.cl-v{display:inline-block;font-family:monospace;font-size:11px;font-weight:700;letter-spacing:.08em;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:2px 8px;margin-bottom:4px}
+.cl-d{font-size:10px;color:var(--g5);letter-spacing:.1em;margin-bottom:4px}
+.cl-t{font-size:13px;color:rgba(255,255,255,.5);line-height:1.65}
+
+/* ═══════════════════════════════════════════
+   BOTTOM NAV
+═══════════════════════════════════════════ */
+.nav{
+  position:fixed;bottom:0;left:50%;
+  transform:translateX(-50%);
+  width:100%;max-width:480px;
+  padding:5px 4px calc(5px + env(safe-area-inset-bottom));
+  /* полностью непрозрачный — никакого просвечивания */
+  background:#0b0b0b;
+  border-top:1px solid rgba(255,255,255,.09);
+  display:flex;justify-content:space-around;
+  z-index:200;
+}
+.ni{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;padding:6px 4px 4px;border-radius:11px;
+  min-width:44px;position:relative;overflow:hidden;
+  transition:background var(--fast) ease;
+}
+.ni svg{
+  color:rgba(255,255,255,.22);
+  display:block;position:relative;z-index:1;
+  transition:color var(--fast) ease,transform var(--mid) var(--ease),filter var(--fast) ease;
+}
+.ni span{
+  font-size:8px;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.22);white-space:nowrap;
+  position:relative;z-index:1;
+  transition:color var(--fast) ease;
+}
+.ni:hover svg{color:rgba(255,255,255,.58);transform:translateY(-2px) scale(1.07)}
+.ni:hover span{color:rgba(255,255,255,.45)}
+.ni:active{transform:scale(.9)}
+
+/* активная вкладка */
+.ni.on{background:rgba(255,255,255,.055)}
+.ni.on span{color:#fff}
+.ni.on svg{
+  color:#fff;
+  animation:navIn .42s var(--ease) both, navGlow 4s .5s ease-in-out infinite;
+}
+/* индикатор сверху */
+.ni::before{
+  content:'';position:absolute;
+  bottom:3px;left:50%;
+  transform:translateX(-50%) scaleX(0);
+  width:16px;height:1.5px;border-radius:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent);
+  box-shadow:0 0 5px rgba(255,255,255,.3);
+  transition:transform .38s var(--ease),opacity var(--fast) ease;
+  opacity:0;
+}
+.ni.on::before{transform:translateX(-50%) scaleX(1);opacity:.7}
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+#toast{
+  position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%) translateY(8px);
+  background:rgba(255,255,255,.07);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:8px 17px;
+  font-size:12px;letter-spacing:.08em;color:#fff;
+  z-index:999;opacity:0;pointer-events:none;
+  transition:opacity .35s var(--ease),transform .35s var(--ease);
+  will-change:transform,opacity;
+  white-space:nowrap;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ══ LOADER ══ -->
+<div id="loader">
+  <canvas id="cvs-loader"></canvas>
+  <div class="lc lc-tl"></div><div class="lc lc-tr"></div>
+  <div class="lc lc-bl"></div><div class="lc lc-br"></div>
+  <div class="ld">
+    <div class="ld-eye">Emulator Solutions</div>
+    <div class="ld-title">KENOS</div>
+    <div class="ld-prog">
+      <div class="ld-pct" id="ldpct">0%</div>
+      <div class="ld-track"><div class="ld-fill" id="ldfill"></div></div>
+    </div>
+    <div class="ld-sub">Мы рады, что вы выбрали наш продукт.<br>KENOS создан для тех, кто ценит качество.</div>
+  </div>
+</div>
+
+<!-- ══ SAKURA ══ -->
+<canvas id="cvs-sakura"></canvas>
+
+<!-- ══ APP ══ -->
+<div id="app">
+  <header class="hdr">
+    <div class="hdr-profile">
+      <div class="hdr-avatar" id="hdr-av"><svg width="15" height="15"><use href="#i-user"/></svg></div>
+      <span class="hdr-name" id="hdr-nm">—</span>
+    </div>
+    <div class="hdr-logo"><span class="logo-t">KENOS</span><span class="logo-d"></span></div>
+    <div class="lang-sw">
+      <button class="lang-b on" onclick="setLang('ru')">RU</button>
+      <button class="lang-b"    onclick="setLang('en')">EN</button>
+    </div>
+  </header>
+
+  <div id="view">
+  <!-- ГЛАВНАЯ -->
+  <section id="s-home" class="sec on">
+    <div class="hero">
+      <p class="hero-eye" data-i18n="hero.eye">Emulator Solutions</p>
+      <h1 class="hero-h">KENOS</h1>
+      <p class="hero-sub" data-i18n="hero.sub">Premium · BlueStacks · Custom</p>
+      <div class="divider"></div>
+    </div>
+    <p class="sec-title" data-i18n="sec.svc">Услуги</p>
+    <div class="svc-grid">
+      <div class="svc-card" onclick="go('s-buy')">
+        <div class="svc-ico"><svg width="26" height="26"><use href="#i-gear"/></svg></div>
+        <div class="svc-name" data-i18n="svc.bs">Custom BlueStacks</div>
+        <div class="svc-desc" data-i18n="svc.bs.d">Настройка под вас</div>
+      </div>
+      <div class="svc-card" onclick="go('s-key')">
+        <div class="svc-ico"><svg width="26" height="26"><use href="#i-key"/></svg></div>
+        <div class="svc-name" data-i18n="svc.key">Ключ доступа</div>
+        <div class="svc-desc" data-i18n="svc.key.d">HWID лицензия</div>
+      </div>
+      <div class="svc-card" onclick="go('s-pay')">
+        <div class="svc-ico"><svg width="26" height="26"><use href="#i-card"/></svg></div>
+        <div class="svc-name" data-i18n="svc.pay">Оплата</div>
+        <div class="svc-desc" data-i18n="svc.pay.d">Реквизиты</div>
+      </div>
+      <div class="svc-card" onclick="go('s-hlp')">
+        <div class="svc-ico"><svg width="26" height="26"><use href="#i-chat"/></svg></div>
+        <div class="svc-name" data-i18n="svc.hlp">Поддержка</div>
+        <div class="svc-desc" data-i18n="svc.hlp.d">Связаться с нами</div>
+      </div>
+    </div>
+    <p class="sec-title" data-i18n="sec.lnk">Ссылки</p>
+    <div style="padding:0 16px 16px;display:flex;flex-direction:row;flex-wrap:nowrap;gap:8px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+      <a class="lpill" href="https://t.me/scantoptmz"    target="_blank"><svg width="12" height="12"><use href="#i-mega"/></svg><span data-i18n="lnk.ch">Канал</span></a>
+      <a class="lpill" href="https://t.me/scantoptmz"    target="_blank"><svg width="12" height="12"><use href="#i-chat"/></svg><span data-i18n="lnk.ct">Чат</span></a>
+      <a class="lpill" href="https://t.me/datadied"      target="_blank"><svg width="12" height="12"><use href="#i-user"/></svg><span data-i18n="lnk.ow">Владелец</span></a>
+      <a class="lpill" href="https://t.me/WindowsInput32" target="_blank"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="lnk.dev">Кодеры</span></a>
+    </div>
+  </section>
+
+  <!-- КУПИТЬ -->
+  <section id="s-buy" class="sec">
+    <div class="hero" style="padding-bottom:12px">
+      <p class="hero-eye" data-i18n="buy.eye">Лучший выбор</p>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Custom<br>BlueStacks</h1>
+    </div>
+    <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
+      <div class="svc-card" onclick="go('s-pay')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-card"/></svg></div><div class="svc-name" data-i18n="nav.py">Оплата</div></div>
+      <div class="svc-card" onclick="go('s-key')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-key"/></svg></div><div class="svc-name" data-i18n="nav.ky">Ключ</div></div>
+      <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
+    </div>
+    <div class="panel">
+      <div class="p-title" data-i18n="buy.get">Что вы получаете</div>
+      <div class="p-sub" data-i18n="buy.get.d">Лучший эмулятор — персонально для вас</div>
+      <div class="tags">
+        <span class="tag"><svg width="10" height="10"><use href="#i-shld"/></svg><span data-i18n="tag.hw">HWID-защита</span></span>
+        <span class="tag"><svg width="10" height="10"><use href="#i-zap"/></svg><span data-i18n="tag.fp">Оптимизация FPS</span></span>
+        <span class="tag"><svg width="10" height="10"><use href="#i-ref"/></svg><span data-i18n="tag.up">Авто-обновление</span></span>
+        <span class="tag"><svg width="10" height="10"><use href="#i-chat"/></svg><span data-i18n="tag.sp">24/7 поддержка</span></span>
+        <span class="tag"><svg width="10" height="10"><use href="#i-awd"/></svg><span data-i18n="tag.be">Лучший на рынке</span></span>
+      </div>
+      <div class="price-row">
+        <div class="p-opt"><div class="p-opt-ico"><svg width="17" height="17"><use href="#i-rub"/></svg></div><div class="p-val">800</div><div class="p-unit" data-i18n="pr.rub">Рублей</div></div>
+        <div class="p-opt"><div class="p-opt-ico"><span class="big-g">G</span></div><div class="p-val">2000</div><div class="p-unit">G</div></div>
+        <div class="p-opt"><div class="p-opt-ico" style="color:rgba(255,255,255,.78)"><svg width="19" height="19"><use href="#i-star"/></svg></div><div class="p-val">400</div><div class="p-unit" data-i18n="pr.st">Stars</div></div>
+      </div>
+      <div style="font-size:10px;letter-spacing:.1em;color:var(--g5);text-align:center;padding-bottom:2px" data-i18n="pr.per">/ месяц · выберите любой способ</div>
+    </div>
+    <div style="padding:0 16px">
+      <button class="btn btn-p" onclick="go('s-pay')"><svg width="13" height="13"><use href="#i-card"/></svg><span data-i18n="btn.pay">Перейти к оплате</span></button>
+      <button class="btn btn-s mt" onclick="go('s-hlp')"><svg width="13" height="13"><use href="#i-chat"/></svg><span data-i18n="btn.ask">Задать вопрос</span></button>
+    </div>
+  </section>
+
+  <!-- ОПЛАТА -->
+  <section id="s-pay" class="sec">
+    <div class="hero" style="padding-bottom:12px">
+      <p class="hero-eye" data-i18n="pay.eye">Безопасно</p>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)" data-i18n="pay.h">Оплата</h1>
+    </div>
+    <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
+      <div class="svc-card" onclick="go('s-buy')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-gear"/></svg></div><div class="svc-name" data-i18n="nav.by">Купить</div></div>
+      <div class="svc-card" onclick="go('s-key')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-key"/></svg></div><div class="svc-name" data-i18n="nav.ky">Ключ</div></div>
+      <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
+    </div>
+    <div class="panel">
+      <div class="p-title" data-i18n="pay.card">Банковская карта</div>
+      <div class="p-sub" data-i18n="pay.card.d">Перевод по СБП · 800 ₽</div>
+      <div class="note" data-i18n="pay.card.n">Реквизиты и детали оплаты вы получите напрямую у кодера после нажатия кнопки ниже.</div>
+      <a class="btn btn-p" href="https://t.me/WindowsInput32" target="_blank"><svg width="13" height="13"><use href="#i-arr"/></svg><span data-i18n="btn.buy">Купить</span></a>
+    </div>
+    <div class="panel">
+      <div class="p-title" data-i18n="pay.g">G-голда</div>
+      <div class="p-sub">2000 G · Standoff 2</div>
+      <div class="note" data-i18n="pay.g.n">Оплата голдой <b>Standoff 2</b> — только через нашего кодера.</div>
+      <a class="btn btn-p" href="https://t.me/WindowsInput32" target="_blank"><svg width="13" height="13"><use href="#i-arr"/></svg><span data-i18n="btn.buy">Купить</span></a>
+    </div>
+    <div class="panel">
+      <div class="p-title"><svg width="15" height="15" style="color:rgba(255,255,255,.78)"><use href="#i-star"/></svg>Telegram Stars</div>
+      <div class="p-sub" data-i18n="pay.st.d">Прямо внутри Telegram · 400 Stars</div>
+      <div class="note" data-i18n="pay.st.n">Оплата через <b>Telegram Stars</b> — только у нашего кодера.</div>
+      <a class="btn btn-p" href="https://t.me/WindowsInput32" target="_blank"><svg width="13" height="13" style="color:rgba(0,0,0,.55)"><use href="#i-star"/></svg><span data-i18n="btn.st">Купить через Stars</span></a>
+    </div>
+  </section>
+
+  <!-- КЛЮЧ -->
+  <section id="s-key" class="sec">
+    <div class="hero" style="padding-bottom:12px">
+      <p class="hero-eye" data-i18n="key.eye">Лицензия</p>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)" data-i18n="key.h">Ключ</h1>
+    </div>
+    <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
+      <div class="svc-card" onclick="go('s-buy')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-gear"/></svg></div><div class="svc-name" data-i18n="nav.by">Купить</div></div>
+      <div class="svc-card" onclick="go('s-pay')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-card"/></svg></div><div class="svc-name" data-i18n="nav.py">Оплата</div></div>
+      <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
+    </div>
+    <div class="panel">
+      <div class="p-title" data-i18n="key.emu">Ключ эмулятора</div>
+      <div class="p-sub" data-i18n="key.emu.d">Ручная привязка HWID оператором</div>
+      <div class="key-box">
+        <div class="key-lbl" data-i18n="key.lbl">ВАШ КЛЮЧ</div>
+        <div class="key-val" id="key-val">—</div>
+        <div class="key-st off" id="key-st" data-i18n="key.off">Не активен</div>
+      </div>
+      <div style="margin-top:11px">
+        <div class="info-r">
+          <span class="info-k"><svg width="12" height="12"><use href="#i-gear"/></svg><span data-i18n="key.hw">HWID</span></span>
+          <span style="display:flex;align-items:center;gap:7px">
+            <span class="info-v" id="hwid-v">—</span>
+            <span id="cp-hwid" style="cursor:pointer;color:var(--g5);transition:color .2s;display:flex" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--g5)'"><svg width="12" height="12"><use href="#i-copy"/></svg></span>
+          </span>
+        </div>
+        <div class="info-r">
+          <span class="info-k"><svg width="12" height="12"><use href="#i-key"/></svg><span data-i18n="key.exp">Истекает</span></span>
+          <span class="info-v" id="key-exp" data-i18n="key.none">Ключ не куплен</span>
+        </div>
+      </div>
+    </div>
+    <div style="padding:0 16px">
+      <button class="btn btn-p" onclick="go('s-buy')"><svg width="13" height="13"><use href="#i-gear"/></svg><span data-i18n="btn.getbs">Купить Custom BlueStacks</span></button>
+      <button class="btn btn-s mt" onclick="refreshKey()"><svg width="13" height="13"><use href="#i-ref"/></svg><span data-i18n="btn.ref">Обновить данные</span></button>
+    </div>
+  </section>
+
+  <!-- ПОМОЩЬ -->
+  <section id="s-hlp" class="sec">
+    <div class="hero" style="padding-bottom:12px">
+      <p class="hero-eye" data-i18n="hlp.eye">Всегда на связи</p>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)" data-i18n="hlp.h">Поддержка</h1>
+    </div>
+    <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
+      <div class="svc-card" onclick="go('s-buy')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-gear"/></svg></div><div class="svc-name" data-i18n="nav.by">Купить</div></div>
+      <div class="svc-card" onclick="go('s-pay')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-card"/></svg></div><div class="svc-name" data-i18n="nav.py">Оплата</div></div>
+      <div class="svc-card" onclick="go('s-key')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-key"/></svg></div><div class="svc-name" data-i18n="nav.ky">Ключ</div></div>
+    </div>
+
+
+    <!-- ФОРМА НОВОГО ТИКЕТА -->
+    <div class="panel" id="hlp-form-panel">
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(255,255,255,.45)"><use href="#i-chat"/></svg>Связаться с оператором</div>
+      <div class="p-sub">Ответим в течение 15 минут</div>
+      <div class="form">
+        <div class="form-g">
+          <label class="form-l">Тема</label>
+          <select class="form-i" id="sp-subj" style="appearance:none;cursor:pointer">
+            <option value="">Выберите тему...</option>
+            <option value="buy">Покупка / Оплата</option>
+            <option value="key">Проблема с ключом</option>
+            <option value="hwid">Привязка HWID</option>
+            <option value="tech">Техническая проблема</option>
+            <option value="oth">Другое</option>
+          </select>
+        </div>
+        <div class="form-g">
+          <label class="form-l">Сообщение</label>
+          <textarea class="form-ta" id="sp-msg" rows="3" placeholder="Опишите проблему..."></textarea>
+        </div>
+        <button class="btn btn-p" onclick="sendSup()">
+          <svg width="13" height="13"><use href="#i-send"/></svg><span>Отправить</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="p-title" data-i18n="hlp.ct">Прямые контакты</div>
+      <div class="p-sub" data-i18n="hlp.ct.d">Для срочных вопросов</div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg><span data-i18n="ct.own">Владелец</span></span><a href="https://t.me/datadied" class="info-v" style="text-decoration:none;color:#ddd">@datadied</a></div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-mega"/></svg><span data-i18n="ct.ch">Канал</span></span><a href="https://t.me/scantoptmz" class="info-v" style="text-decoration:none;color:#ddd">@scantoptmz</a></div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.dev">Кодер</span></span><a href="https://t.me/WindowsInput32" class="info-v" style="text-decoration:none;color:#ddd">@WindowsInput32</a></div>
+    </div>
+  </section>
+
+  <!-- ADMIN SECTION -->
+  <section id="s-adm" class="sec" style="display:none">
+    <div class="hero" style="padding-bottom:12px">
+      <p class="hero-eye">Администратор</p>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Тикеты</h1>
+    </div>
+  </section>
+
+  <!-- О НАС -->
+  <section id="s-abt" class="sec">
+    <div class="hero" style="padding-bottom:12px">
+      <p class="hero-eye" data-i18n="abt.eye">О проекте</p>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)" data-i18n="abt.h">О нас</h1>
+    </div>
+    <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
+      <div class="svc-card" onclick="go('s-buy')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-gear"/></svg></div><div class="svc-name" data-i18n="nav.by">Купить</div></div>
+      <div class="svc-card" onclick="go('s-pay')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-card"/></svg></div><div class="svc-name" data-i18n="nav.py">Оплата</div></div>
+      <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
+    </div>
+    <div class="panel">
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(255,255,255,.48)"><use href="#i-zap"/></svg>KENOS</div>
+      <div class="p-sub" data-i18n="abt.p.d">Standoff 2 · Premium Emulator</div>
+      <div class="p-body" data-i18n="abt.p.t">KENOS — ваш идеал для игры в <b style="color:#fff">Standoff 2</b>.<br>Лучшая производительность и сенса на рынке.</div>
+    </div>
+    <div class="panel">
+      <div class="p-title" data-i18n="abt.cl">Обновления</div>
+      <div class="p-sub" data-i18n="abt.cl.d">История версий бота</div>
+      <div id="cl-list">
+        <div class="cl-e"><div class="cl-v">v1.0</div><div class="cl-d">Запуск KENOS</div><div class="cl-t">Базовый функционал: покупка, ключи, поддержка, G-голда и Telegram Stars.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-title" data-i18n="abt.docs">Документы</div>
+      <div class="p-sub" data-i18n="abt.docs.d">Юридическая информация</div>
+      <a href="https://telegra.ph/Politika-konfidencialnosti-02-23-37" target="_blank" class="dlink"><svg width="13" height="13"><use href="#i-shld"/></svg><span data-i18n="abt.pp">Политика конфиденциальности</span><svg width="12" height="12" style="margin-left:auto;color:var(--g5)"><use href="#i-arr"/></svg></a>
+      <a href="https://telegra.ph/Politika-konfidencialnosti-08-15-17" target="_blank" class="dlink"><svg width="13" height="13"><use href="#i-link"/></svg><span data-i18n="abt.tos">Пользовательское соглашение</span><svg width="12" height="12" style="margin-left:auto;color:var(--g5)"><use href="#i-arr"/></svg></a>
+    </div>
+    <div class="panel">
+      <div class="p-title" data-i18n="abt.team">Контакты</div>
+      <div class="p-sub" data-i18n="abt.team.d">Наша команда</div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg><span data-i18n="ct.own">Владелец</span></span><a href="https://t.me/datadied" class="info-v" style="text-decoration:none;color:#ddd">@datadied</a></div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-mega"/></svg><span data-i18n="ct.ch">Канал</span></span><a href="https://t.me/scantoptmz" class="info-v" style="text-decoration:none;color:#ddd">@scantoptmz</a></div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.dev">Кодер</span></span><a href="https://t.me/WindowsInput32" class="info-v" style="text-decoration:none;color:#ddd">@WindowsInput32</a></div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.loh">Кодер-лох</span></span><a href="https://t.me/xxaof" class="info-v" style="text-decoration:none;color:#ddd">@xxaof</a></div>
+    </div>
+  </section>
+  <!-- ИНФО -->
+  <section id="s-inf" class="sec">
+    <div class="hero" style="padding-bottom:12px">
+      <p class="hero-eye">Статус · Обновления</p>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Инфо</h1>
+    </div>
+    <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
+      <div class="svc-card" onclick="go('s-buy')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-gear"/></svg></div><div class="svc-name" data-i18n="nav.by">Купить</div></div>
+      <div class="svc-card" onclick="go('s-pay')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-card"/></svg></div><div class="svc-name" data-i18n="nav.py">Оплата</div></div>
+      <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
+    </div>
+    <div class="panel">
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(180,180,180,.6)"><use href="#i-zap"/></svg>Информация</div>
+      <div class="p-sub">Тех. работы · Статус сервиса · Новости</div>
+      <div id="inf-list">
+        <div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">Нет активных объявлений</div></div>
+      </div>
+    </div>
+  </section>
+  </div><!-- /#view -->
+</div>
+
+<!-- ══ FLOATING CHAT BUTTON ══ -->
+<button id="chat-fab" onclick="toggleChatDrawer()" style="
+  position:fixed;bottom:76px;right:16px;z-index:190;
+  width:48px;height:48px;border-radius:50%;
+  background:#1a1a1a;border:1px solid rgba(255,255,255,.14);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(0,0,0,.6);
+  transition:transform .2s cubic-bezier(.16,1,.3,1),border-color .2s;
+">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <!-- badge непрочитанных -->
+  <span id="chat-badge" style="display:none;position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:#e55;font-size:8px;color:#fff;font-weight:700;align-items:center;justify-content:center;line-height:1"></span>
+</button>
+
+<!-- ══ CHAT DRAWER ══ -->
+<div id="chat-drawer" style="
+  position:fixed;bottom:0;right:0;left:0;z-index:400;
+  transform:translateY(100%);
+  transition:transform .32s cubic-bezier(.16,1,.3,1);
+  background:#111;
+  border-top:1px solid rgba(255,255,255,.1);
+  border-radius:18px 18px 0 0;
+  max-height:75vh;
+  display:flex;flex-direction:column;
+  box-shadow:0 -8px 40px rgba(0,0,0,.7);
+">
+  <!-- ручка -->
+  <div style="display:flex;justify-content:center;padding:10px 0 4px;flex-shrink:0">
+    <div style="width:36px;height:3px;border-radius:2px;background:rgba(255,255,255,.18)"></div>
+  </div>
+
+  <!-- USER VIEW -->
+  <div id="cd-user" style="display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0">
+    <!-- шапка -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 12px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div id="chat-dot" style="width:7px;height:7px;border-radius:50%;background:#4ade80;flex-shrink:0"></div>
+        <div>
+          <div id="chat-title" style="font-size:13px;font-weight:600;color:#fff;letter-spacing:.03em">Поддержка</div>
+          <div id="chat-status" style="font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.08em">ОТКРЫТ</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button onclick="showNewTicketDrawer()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:rgba(255,255,255,.5);font-size:10px;padding:5px 10px;cursor:pointer;letter-spacing:.05em">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Новый
+        </button>
+        <button onclick="toggleChatDrawer()" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;padding:4px;font-size:16px;line-height:1">✕</button>
+      </div>
+    </div>
+
+    <!-- вкладки: мои тикеты (список) / переписка -->
+    <div id="cd-ticket-list" style="flex:1;overflow-y:auto;padding:0 12px 8px;display:flex;flex-direction:column;gap:3px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent"></div>
+
+    <div id="cd-chat-view" style="display:none;flex:1;overflow:hidden;min-height:0;flex-direction:column">
+      <div style="padding:6px 14px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <button onclick="cdBackToList()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;padding:0;display:flex;align-items:center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div id="cd-chat-title" style="font-size:12px;font-weight:600;color:#fff;flex:1">Тикет #—</div>
+      </div>
+      <div id="chat-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent;min-height:0"></div>
+      <div id="chat-input-area" style="display:flex;gap:8px;align-items:flex-end;padding:10px 12px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0">
+        <textarea id="chat-input" rows="1" placeholder="Написать..." style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:10px;color:#fff;padding:8px 11px;font-size:13px;resize:none;font-family:inherit;max-height:80px;overflow-y:auto;line-height:1.4" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+        <button onclick="sendChatMsg()" style="background:rgba(228,228,228,.9);border:none;border-radius:9px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN VIEW -->
+  <div id="cd-admin" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
+    <!-- список тикетов -->
+    <div id="cd-adm-list-view" style="display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:6px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,200,50,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span style="font-size:13px;font-weight:600;color:#fff;letter-spacing:.04em">Тикеты</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="loadAdminTickets()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:rgba(255,255,255,.5);font-size:10px;padding:5px 10px;cursor:pointer">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Обновить
+          </button>
+          <button onclick="toggleChatDrawer()" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;padding:4px;font-size:16px;line-height:1">✕</button>
+        </div>
+      </div>
+      <div id="adm-tickets-list" style="flex:1;overflow-y:auto;padding:0 12px 12px;display:flex;flex-direction:column;gap:3px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent">
+        <div style="font-size:11px;opacity:.35;text-align:center;padding:20px">Загрузка...</div>
+      </div>
+    </div>
+
+    <!-- чат тикета (администратор) -->
+    <div id="cd-adm-chat-view" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
+      <div style="display:flex;align-items:center;gap:8px;padding:4px 14px 10px;flex-shrink:0">
+        <button onclick="admBackToList()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;display:flex;align-items:center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div id="adm-chat-title" style="font-size:12px;font-weight:600;color:#fff;flex:1">Тикет #—</div>
+        <button onclick="admCloseTicket()" style="background:rgba(255,60,60,.1);border:1px solid rgba(255,60,60,.18);border-radius:7px;color:rgba(255,90,90,.8);font-size:10px;padding:4px 9px;cursor:pointer;display:flex;align-items:center;gap:4px">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          Закрыть
+        </button>
+      </div>
+      <div id="adm-chat-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent;min-height:0"></div>
+      <div style="display:flex;gap:8px;align-items:flex-end;padding:10px 12px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0">
+        <textarea id="adm-chat-input" rows="1" placeholder="Ответить..." style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:10px;color:#fff;padding:8px 11px;font-size:13px;resize:none;font-family:inherit;max-height:80px;overflow-y:auto" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+        <button onclick="admSendMsg()" style="background:rgba(228,228,228,.9);border:none;border-radius:9px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav class="nav">
+  <div class="ni on" id="n-home" onclick="go('s-home')"><svg width="19" height="19"><use href="#i-home"/></svg><span data-i18n="nav.hm">Главная</span></div>
+  <div class="ni"    id="n-buy"  onclick="go('s-buy')"> <svg width="19" height="19"><use href="#i-gear"/></svg><span data-i18n="nav.by">Купить</span></div>
+  <div class="ni"    id="n-pay"  onclick="go('s-pay')"> <svg width="19" height="19"><use href="#i-card"/></svg><span data-i18n="nav.py">Оплата</span></div>
+  <div class="ni"    id="n-key"  onclick="go('s-key')"> <svg width="19" height="19"><use href="#i-key"/></svg> <span data-i18n="nav.ky">Ключ</span></div>
+  <div class="ni"    id="n-hlp"  onclick="go('s-hlp')"> <svg width="19" height="19"><use href="#i-chat"/></svg><span data-i18n="nav.hp">Помощь</span></div>
+  <div class="ni"    id="n-inf"  onclick="go('s-inf')"> <svg width="19" height="19"><use href="#i-zap"/></svg>  <span>Инфо</span></div>
+  <div class="ni"    id="n-adm"  onclick="go('s-adm')" style="display:none"> <svg width="19" height="19"><use href="#i-shld"/></svg><span>Тикеты</span></div>
+  <div class="ni"    id="n-abt"  onclick="go('s-abt')"> <svg width="19" height="19"><use href="#i-awd"/></svg> <span data-i18n="nav.ab">О нас</span></div>
+</nav>
+<div id="toast"></div>
+
+<script>
+'use strict';
+/* ══════════════════════════════════════
+   TG
+══════════════════════════════════════ */
+const tg=window.Telegram?.WebApp;
+if(tg){tg.ready();tg.expand();tg.setHeaderColor('#0d0d0d');tg.setBackgroundColor('#0d0d0d');}
+const tgU=tg?.initDataUnsafe?.user||{};
+
+/* ══════════════════════════════════════
+   I18N  — только нужные ключи
+══════════════════════════════════════ */
+const TR={
+ru:{
+'hero.eye':'Emulator Solutions','hero.sub':'Premium · BlueStacks · Custom',
+'sec.svc':'Услуги','sec.lnk':'Ссылки',
+'svc.bs':'Custom BlueStacks','svc.bs.d':'Настройка под вас',
+'svc.key':'Ключ доступа','svc.key.d':'HWID лицензия',
+'svc.pay':'Оплата','svc.pay.d':'Реквизиты',
+'svc.hlp':'Поддержка','svc.hlp.d':'Связаться с нами',
+'lnk.ch':'Канал','lnk.ct':'Чат','lnk.ow':'Владелец','lnk.dev':'Кодеры',
+'buy.eye':'Лучший выбор','buy.get':'Что вы получаете','buy.get.d':'Лучший эмулятор — персонально для вас',
+'tag.hw':'HWID-защита','tag.fp':'Оптимизация FPS','tag.up':'Авто-обновление','tag.sp':'24/7 поддержка','tag.be':'Лучший на рынке',
+'pr.rub':'Рублей','pr.st':'Stars','pr.per':'/ месяц · выберите любой способ',
+'btn.pay':'Перейти к оплате','btn.ask':'Задать вопрос','btn.buy':'Купить','btn.st':'Купить через Stars',
+'btn.getbs':'Купить Custom BlueStacks','btn.ref':'Обновить данные','btn.send':'Отправить',
+'pay.eye':'Безопасно','pay.h':'Оплата',
+'pay.card':'Банковская карта','pay.card.d':'Перевод по СБП · 800 ₽',
+'pay.card.n':'Реквизиты и детали оплаты вы получите напрямую у кодера после нажатия кнопки ниже.',
+'pay.g':'G-голда','pay.g.n':'Оплата голдой <b>Standoff 2</b> — только через нашего кодера.',
+'pay.st.d':'Прямо внутри Telegram · 400 Stars','pay.st.n':'Оплата через <b>Telegram Stars</b> — только у нашего кодера.',
+'key.eye':'Лицензия','key.h':'Ключ','key.emu':'Ключ эмулятора','key.emu.d':'Ручная привязка HWID оператором',
+'key.lbl':'ВАШ КЛЮЧ','key.off':'Не активен','key.on':'Активен',
+'key.hw':'HWID','key.exp':'Истекает','key.none':'Ключ не куплен',
+'hlp.eye':'Всегда на связи','hlp.h':'Поддержка','hlp.op':'Связаться с оператором','hlp.op.d':'Ответим в течение 15 минут',
+'frm.subj':'Тема','frm.s0':'Выберите тему...','frm.s1':'Покупка / Оплата','frm.s2':'Проблема с ключом','frm.s3':'Привязка HWID','frm.s4':'Техническая проблема','frm.s5':'Другое',
+'frm.msg':'Сообщение',
+'hlp.ct':'Прямые контакты','hlp.ct.d':'Для срочных вопросов',
+'ct.own':'Владелец','ct.ch':'Канал','ct.dev':'Кодер','ct.loh':'Кодер-лох',
+'nav.hm':'Главная','nav.by':'Купить','nav.py':'Оплата','nav.ky':'Ключ','nav.hp':'Помощь','nav.ab':'О нас',
+'abt.eye':'О проекте','abt.h':'О нас','abt.p.d':'Standoff 2 · Premium Emulator',
+'abt.p.t':'KENOS — ваш идеал для игры в <b style="color:#fff">Standoff 2</b>.<br>Лучшая производительность и сенса на рынке.',
+'abt.cl':'Обновления','abt.cl.d':'История версий бота',
+'abt.docs':'Документы','abt.docs.d':'Юридическая информация',
+'abt.pp':'Политика конфиденциальности','abt.tos':'Пользовательское соглашение',
+'abt.team':'Контакты','abt.team.d':'Наша команда',
+'toast.cp':'Скопировано','toast.sent':'Отправлено','toast.fill':'Заполните все поля','toast.ref':'Обновлено',
+},
+en:{
+'hero.eye':'Emulator Solutions','hero.sub':'Premium · BlueStacks · Custom',
+'sec.svc':'Services','sec.lnk':'Links',
+'svc.bs':'Custom BlueStacks','svc.bs.d':'Tailored for you',
+'svc.key':'Access Key','svc.key.d':'HWID License',
+'svc.pay':'Payment','svc.pay.d':'Requisites',
+'svc.hlp':'Support','svc.hlp.d':'Contact us',
+'lnk.ch':'Channel','lnk.ct':'Chat','lnk.ow':'Owner','lnk.dev':'Devs',
+'buy.eye':'Best Choice','buy.get':'What you get','buy.get.d':'Best emulator — personally for you',
+'tag.hw':'HWID Protection','tag.fp':'FPS Optimization','tag.up':'Auto-update','tag.sp':'24/7 Support','tag.be':'Best on market',
+'pr.rub':'Rubles','pr.st':'Stars','pr.per':'/ month · choose any method',
+'btn.pay':'Go to Payment','btn.ask':'Ask a Question','btn.buy':'Buy','btn.st':'Buy with Stars',
+'btn.getbs':'Buy Custom BlueStacks','btn.ref':'Refresh','btn.send':'Send',
+'pay.eye':'Secure','pay.h':'Payment',
+'pay.card':'Bank Card','pay.card.d':'SBP Transfer · 800 ₽',
+'pay.card.n':'Requisites provided directly by our developer.',
+'pay.g':'G-Gold','pay.g.n':'Payment in <b>Standoff 2 Gold</b> — only via our coder.',
+'pay.st.d':'Right inside Telegram · 400 Stars','pay.st.n':'Payment via <b>Telegram Stars</b> — only via our coder.',
+'key.eye':'License','key.h':'Key','key.emu':'Emulator Key','key.emu.d':'Manual HWID binding by operator',
+'key.lbl':'YOUR KEY','key.off':'Not Active','key.on':'Active',
+'key.hw':'HWID','key.exp':'Expires','key.none':'No key purchased',
+'hlp.eye':'Always in touch','hlp.h':'Support','hlp.op':'Contact Operator','hlp.op.d':'Response in 15 minutes',
+'frm.subj':'Subject','frm.s0':'Select topic...','frm.s1':'Purchase / Payment','frm.s2':'Key Issue','frm.s3':'HWID Binding','frm.s4':'Technical Issue','frm.s5':'Other',
+'frm.msg':'Message',
+'hlp.ct':'Direct Contacts','hlp.ct.d':'For urgent matters',
+'ct.own':'Owner','ct.ch':'Channel','ct.dev':'Developer','ct.loh':'Coder-loh',
+'nav.hm':'Home','nav.by':'Buy','nav.py':'Pay','nav.ky':'Key','nav.hp':'Help','nav.ab':'About',
+'abt.eye':'About project','abt.h':'About us','abt.p.d':'Standoff 2 · Premium Emulator',
+'abt.p.t':'KENOS — your ideal for <b style="color:#fff">Standoff 2</b>.<br>Best performance and sensitivity on market.',
+'abt.cl':'Updates','abt.cl.d':'Bot version history',
+'abt.docs':'Documents','abt.docs.d':'Legal information',
+'abt.pp':'Privacy Policy','abt.tos':'Terms of Service',
+'abt.team':'Contacts','abt.team.d':'Our team',
+'toast.cp':'Copied','toast.sent':'Sent','toast.fill':'Fill all fields','toast.ref':'Refreshed',
+}};
+
+let lang='ru';
+const t=k=>TR[lang][k]||TR.ru[k]||k;
+
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-b').forEach(b=>b.classList.toggle('on',b.textContent===l.toUpperCase()));
+  // batch DOM updates — один проход
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.innerHTML=t(el.dataset.i18n));
+}
+
+/* ══════════════════════════════════════
+   NAVIGATE — плавный переход между секциями
+   1. Предыдущая → .leaving (анимация out 220ms)
+   2. Следующая → .on (анимация in 420ms)
+   3. После 220ms убираем .leaving
+══════════════════════════════════════ */
+const SEC_NAV={
+  's-home':'n-home','s-buy':'n-buy','s-pay':'n-pay',
+  's-key':'n-key','s-hlp':'n-hlp','s-inf':'n-inf','s-adm':'n-adm','s-abt':'n-abt'
+};
+let _cur='s-home';
+let _busy=false;
+
+function go(id){
+  if(id===_cur||_busy)return;
+  const prev=document.getElementById(_cur);
+  const next=document.getElementById(id);
+  if(!next)return;
+
+  _busy=true;
+
+  /* 1. Убираем .on с текущей, даём .leaving для fade-out */
+  prev.classList.remove('on');
+  prev.classList.add('leaving');
+
+  /* 2. Скроллим вверх мгновенно */
+  window.scrollTo({top:0,behavior:'instant'});
+
+  /* 3. Обновляем nav сразу — отзывчивость важнее */
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById(SEC_NAV[id])?.classList.add('on');
+
+  /* 4. Запускаем следующую секцию через микро-задержку
+        чтобы браузер успел отрисовать leaving-анимацию */
+  requestAnimationFrame(()=>{
+    next.classList.add('on');
+    _cur=id;
+
+    /* 5. Через 230ms (длина secOut) убираем leaving */
+    setTimeout(()=>{
+      prev.classList.remove('leaving');
+      _busy=false;
+    },230);
+  });
+}
+
+/* ══════════════════════════════════════
+   TOAST — shared instance
+══════════════════════════════════════ */
+const toastEl=document.getElementById('toast');
+let _toastTimer=0;
+function toast(msg){
+  clearTimeout(_toastTimer);
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  _toastTimer=setTimeout(()=>toastEl.classList.remove('show'),2100);
+}
+
+/* ══════════════════════════════════════
+   CLIPBOARD
+══════════════════════════════════════ */
+function copy(str){
+  (navigator.clipboard?.writeText(str)||Promise.reject())
+    .then(()=>toast(t('toast.cp')))
+    .catch(()=>{
+      const a=document.createElement('textarea');
+      a.value=str;Object.assign(a.style,{position:'fixed',opacity:'0'});
+      document.body.appendChild(a);a.select();
+      document.execCommand('copy');
+      document.body.removeChild(a);
+      toast(t('toast.cp'));
+    });
+}
+document.getElementById('cp-hwid').onclick=()=>{
+  const v=document.getElementById('hwid-v').textContent;
+  v&&v!=='—'?copy(v):toast('HWID не привязан');
+};
+document.addEventListener('copy',e=>e.preventDefault(),{passive:false});
+document.addEventListener('contextmenu',e=>e.preventDefault(),{passive:false});
+
+/* ══════════════════════════════════════
+   KEY
+══════════════════════════════════════ */
+function loadKey(){
+  const kv=document.getElementById('key-val');
+  const ks=document.getElementById('key-st');
+  const ke=document.getElementById('key-exp');
+  const kh=document.getElementById('hwid-v');
+  // TODO: real API
+  kv.textContent='—';
+  ks.className='key-st off';ks.textContent=t('key.off');
+  ke.textContent=t('key.none');kh.textContent='—';
+}
+function refreshKey(){toast(t('toast.ref'));loadKey();}
+
+/* ══════════════════════════════════════
+   SUPPORT
+══════════════════════════════════════ */
+/* ══════════════════════════════════════
+   SUPPORT — реальная отправка через Bot API
+   Сообщение приходит на ОБА аккаунта
+══════════════════════════════════════ */
+const BOT_TOKEN='8297258284:AAFjq8Yn5en7c1XS0qKM4YMylnswzCSRgTM';
+const ADMINS=[8306863943,6641882724];
+
+async function tgSend(chat_id,text){
+  return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({chat_id,text,parse_mode:'HTML'})
+  });
+}
+
+
+
+/* ══════════════════════════════════════
+   PROFILE
+══════════════════════════════════════ */
+(()=>{
+  const nm=tgU.username?'@'+tgU.username:tgU.first_name||'';
+  if(nm)document.getElementById('hdr-nm').textContent=nm;
+  if(tgU.photo_url)document.getElementById('hdr-av').innerHTML=`<img src="${tgU.photo_url}" alt="">`;
+})();
+
+/* ══════════════════════════════════════
+   SAKURA — OffscreenCanvas + пре-рендер лепестков
+   Оптимизации:
+   1. Лепестки pre-rendered в кэш-канвас (одна радиальная градиент на весь размер)
+   2. Позиция обновляется через Float32Array — нет создания объектов
+   3. Один общий resize через ResizeObserver
+   4. Запрос анимации только если вкладка активна (visibilitychange)
+══════════════════════════════════════ */
+function initSakura(canvasId,count,alpha){
+  const cvs=document.getElementById(canvasId);
+  if(!cvs)return;
+  const ctx=cvs.getContext('2d',{alpha:true,desynchronized:true});
+
+  let W=0,H=0;
+
+  // Пре-рендер лепестка в кэш-канвас для каждого размера
+  const SIZES=[5,7,9,11,13];
+  const cache=new Map();
+  SIZES.forEach(r=>{
+    const cc=document.createElement('canvas');
+    const d=Math.ceil(r*2.4);
+    cc.width=cc.height=d;
+    const cx=cc.getContext('2d');
+    const cx2=d/2;
+    for(let i=0;i<5;i++){
+      const ang=(i/5)*Math.PI*2-Math.PI/2;
+      const ox=Math.cos(ang)*r*.45+cx2, oy=Math.sin(ang)*r*.45+cx2;
+      cx.save();cx.translate(ox,oy);cx.rotate(ang);cx.scale(1,.52);
+      cx.beginPath();cx.arc(0,0,r*.5,0,Math.PI*2);
+      const g=cx.createRadialGradient(0,0,0,0,0,r*.5);
+      g.addColorStop(0,'rgba(255,220,230,.9)');
+      g.addColorStop(.5,'rgba(230,185,205,.52)');
+      g.addColorStop(1,'rgba(200,155,180,0)');
+      cx.fillStyle=g;cx.fill();cx.restore();
+    }
+    cache.set(r,cc);
+  });
+
+  // Float32Array: x,y,r_idx,vx,vy,a,va,sw,ss,sa,al  → 11 floats per petal
+  const STRIDE=11;
+  const buf=new Float32Array(count*STRIDE);
+
+  function initPetal(i,fullH){
+    const b=i*STRIDE;
+    buf[b+0]=Math.random()*W;             // x
+    buf[b+1]=fullH?Math.random()*H:-20;   // y
+    buf[b+2]=Math.floor(Math.random()*SIZES.length); // r_idx
+    buf[b+3]=(Math.random()-.5)*.5;       // vx
+    buf[b+4]=.25+Math.random()*.45;       // vy
+    buf[b+5]=Math.random()*Math.PI*2;     // angle
+    buf[b+6]=(Math.random()-.5)*.016;     // va
+    buf[b+7]=Math.random()*Math.PI*2;     // sw
+    buf[b+8]=.004+Math.random()*.008;     // ss
+    buf[b+9]=.4+Math.random()*.8;         // sa
+    buf[b+10]=.4+Math.random()*.5;        // al
+  }
+
+  function resize(){
+    W=cvs.width=window.innerWidth;
+    H=cvs.height=window.innerHeight;
+  }
+
+  // Debounced resize через ResizeObserver — точнее чем window resize
+  const ro=new ResizeObserver(()=>{resize();});
+  ro.observe(document.documentElement);
+  resize();
+
+  for(let i=0;i<count;i++)initPetal(i,true);
+
+  let raf=0;
+  let active=true;
+
+  function frame(){
+    if(!active){raf=0;return;}
+    ctx.clearRect(0,0,W,H);
+    ctx.save();
+    for(let i=0;i<count;i++){
+      const b=i*STRIDE;
+      // update
+      buf[b+7]+=buf[b+8];                           // sw
+      buf[b+0]+=buf[b+3]+Math.sin(buf[b+7])*buf[b+9]*.25; // x
+      buf[b+1]+=buf[b+4];                           // y
+      buf[b+5]+=buf[b+6];                           // angle
+      // out of bounds → respawn
+      if(buf[b+1]>H+40||buf[b+0]<-50||buf[b+0]>W+50){initPetal(i,false);continue;}
+      // draw from cache
+      const r=SIZES[buf[b+2]];
+      const cc=cache.get(r);
+      const d=cc.width;
+      ctx.save();
+      ctx.globalAlpha=buf[b+10]*alpha;
+      ctx.translate(buf[b+0],buf[b+1]);
+      ctx.rotate(buf[b+5]);
+      ctx.drawImage(cc,-d/2,-d/2);
+      ctx.restore();
+    }
+    ctx.restore();
+    raf=requestAnimationFrame(frame);
+  }
+
+  document.addEventListener('visibilitychange',()=>{
+    active=!document.hidden;
+    if(active&&!raf)raf=requestAnimationFrame(frame);
+  },{passive:true});
+
+  raf=requestAnimationFrame(frame);
+  return()=>ro.disconnect();
+}
+
+initSakura('cvs-sakura',45,.58);
+initSakura('cvs-loader',26,.62);
+
+/* ══════════════════════════════════════
+   LOADER — анимированный % через rAF
+   Используем transform:scaleX вместо width
+   для GPU-ускорения заливки
+══════════════════════════════════════ */
+(()=>{
+  const fill=document.getElementById('ldfill');
+  const pct =document.getElementById('ldpct');
+  const ld  =document.getElementById('loader');
+  if(!fill||!pct)return;
+
+  // Используем scaleX для GPU-анимации вместо width
+  fill.style.width='100%';
+  fill.style.transform='scaleX(0)';
+  fill.style.transformOrigin='left';
+  fill.style.transition='none';
+
+  let cur=0;
+  const DUR=2550;
+  const t0=performance.now();
+
+  function ease(x){
+    // ease out cubic
+    return 1-Math.pow(1-Math.min(x,1),3);
+  }
+
+  function tick(now){
+    const p=Math.min((now-t0)/DUR,1);
+    const v=Math.round(ease(p)*100);
+    if(v!==cur){
+      cur=v;
+      fill.style.transform=`scaleX(${v/100})`;
+      pct.textContent=v+'%';
+      if(v>=100)fill.style.boxShadow='0 0 20px 4px rgba(255,255,255,.68)';
+    }
+    if(p<1)requestAnimationFrame(tick);
+    else setTimeout(()=>ld.classList.add('hidden'),400);
+  }
+
+  setTimeout(()=>requestAnimationFrame(tick),900);
+})();
+
+/* ══════════════════════════════════════
+   CHANGELOG
+══════════════════════════════════════ */
+const BIN='69b1450baa77b81da9d63f29';
+
+async function loadCL(){
+  const el=document.getElementById('cl-list');
+  if(!el)return;
+  try{
+    const r=await fetch(`https://api.jsonbin.io/v3/b/${BIN}/latest`);
+    if(!r.ok)return;
+    const j=await r.json();
+    const rec=j.record||{};
+    const arr=Array.isArray(rec)?rec:(rec.changelog||[]);
+    const items=arr.filter(e=>e?.ver&&e.ver!=='—');
+    if(!items.length){el.innerHTML='<div class="cl-e"><div class="cl-t" style="opacity:.35">Нет обновлений</div></div>';return;}
+    el.innerHTML=items.map(e=>`<div class="cl-e"><div class="cl-v">${e.ver}</div><div class="cl-d">${e.date}</div><div class="cl-t">${e.text}</div></div>`).join('');
+  }catch{}
+}
+
+async function loadInfo(){
+  const el=document.getElementById('inf-list');
+  if(!el)return;
+  try{
+    const r=await fetch(`https://api.jsonbin.io/v3/b/${BIN}/latest`);
+    if(!r.ok)return;
+    const j=await r.json();
+    const rec=j.record||{};
+    const items=Array.isArray(rec.info)?rec.info.filter(e=>e?.active!==false):[];
+    if(!items.length){
+      el.innerHTML='<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">Нет активных объявлений</div></div>';
+      return;
+    }
+    const icons = INFO_ICONS;
+    el.innerHTML=items.map(e=>`
+      <div class="cl-e">
+        <div class="cl-v" style="display:flex;align-items:center;gap:5px">${icons[e.type]||icons.info} ${e.title||'Объявление'}</div>
+        <div class="cl-d">${e.date||''}</div>
+        <div class="cl-t">${e.body||''}</div>
+      </div>`).join('');
+  }catch{}
+}
+
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden){loadKey();loadCL();loadInfo();if(_chatOpen)pollChat();}
+},{passive:true});
+
+/* ══════════════════════════════════════
+   TICKET SYSTEM
+══════════════════════════════════════ */
+const API = 'https://kenos-production.up.railway.app/api';
+const ADMIN_IDS = [8306863943, 6641882724];
+
+let _chatTicketId = null;
+let _admTicketId  = null;
+let _pollTimer    = null;
+let _admPollTimer = null;
+let _isAdmin      = false;
+let _drawerOpen   = false;
+
+/* ── Drawer toggle ─────────────────────────────────── */
+function toggleChatDrawer(){
+  _drawerOpen = !_drawerOpen;
+  const d = document.getElementById('chat-drawer');
+  const fab = document.getElementById('chat-fab');
+  d.style.transform = _drawerOpen ? 'translateY(0)' : 'translateY(100%)';
+  fab.style.transform = _drawerOpen ? 'scale(.88)' : 'scale(1)';
+  if(_drawerOpen){
+    if(_isAdmin) loadAdminTickets();
+    else loadMyTickets();
+  } else {
+    clearInterval(_pollTimer);
+    clearInterval(_admPollTimer);
+  }
+}
+
+/* ── Инициализация ─────────────────────────────────── */
+function initTickets(){
+  const uid = tgU.id || 0;
+  _isAdmin = ADMIN_IDS.includes(uid);
+  if(_isAdmin){
+    const nAdm = document.getElementById('n-adm');
+    if(nAdm) nAdm.style.display = 'flex';
+    // в дровере показываем admin view
+    document.getElementById('cd-user').style.display  = 'none';
+    document.getElementById('cd-admin').style.display = 'flex';
+  }
+  // Показываем FAB
+  document.getElementById('chat-fab').style.display = 'flex';
+}
+
+/* ══════════════════════════════════════
+   ПОЛЬЗОВАТЕЛЬ
+══════════════════════════════════════ */
+async function loadMyTickets(){
+  const uid = tgU.id; if(!uid) return;
+  const lst = document.getElementById('cd-ticket-list');
+  try{
+    const r = await fetch(`${API}/tickets/user/${uid}`);
+    if(!r.ok) return;
+    const tickets = await r.json();
+    if(!tickets.length){
+      lst.innerHTML = '<div style="font-size:11px;opacity:.35;text-align:center;padding:20px">Нет обращений — отправь сообщение ниже</div>';
+      return;
+    }
+    // Иконки статуса через SVG
+    const statusIcon = {
+      open:       '<svg width="8" height="8" viewBox="0 0 24 24" fill="#facc15"><circle cx="12" cy="12" r="10"/></svg>',
+      inprogress: '<svg width="8" height="8" viewBox="0 0 24 24" fill="#4ade80"><circle cx="12" cy="12" r="10"/></svg>',
+      closed:     '<svg width="8" height="8" viewBox="0 0 24 24" fill="rgba(255,255,255,.2)"><circle cx="12" cy="12" r="10"/></svg>'
+    };
+    lst.innerHTML = tickets.map(t=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);transition:background .15s" onclick="openUserChat(${t.id},'${escHtml(t.subject)}','${t.status}')" onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background='rgba(255,255,255,.02)'">
+        ${statusIcon[t.status]||statusIcon.open}
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">#${t.id} — ${escHtml(t.subject)}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.06em;margin-top:1px">${t.status === 'closed' ? 'закрыт' : t.status === 'inprogress' ? 'в работе' : 'открыт'}</div>
+        </div>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>`).join('');
+
+    // Автооткрытие последнего активного тикета
+    const active = tickets.find(t=>t.status!=='closed');
+    if(active) openUserChat(active.id, active.subject, active.status);
+  }catch{}
+}
+
+function showNewTicketDrawer(){
+  // Возвращаемся к списку без автооткрытия
+  document.getElementById('cd-chat-view').style.display = 'none';
+  document.getElementById('cd-ticket-list').style.display = 'flex';
+}
+
+function openUserChat(ticketId, subject, status){
+  _chatTicketId = ticketId;
+  document.getElementById('cd-ticket-list').style.display = 'none';
+  const cv = document.getElementById('cd-chat-view');
+  cv.style.display = 'flex';
+  document.getElementById('cd-chat-title').textContent = `#${ticketId} — ${subject}`;
+  const dot = document.getElementById('chat-dot');
+  dot.style.background = status==='closed'?'rgba(255,255,255,.2)':'#4ade80';
+  document.getElementById('chat-title').textContent = subject;
+  document.getElementById('chat-status').textContent = status==='closed'?'ЗАКРЫТ':'ОТКРЫТ';
+  document.getElementById('chat-input-area').style.display = status==='closed'?'none':'flex';
+  pollUserChat();
+  clearInterval(_pollTimer);
+  _pollTimer = setInterval(pollUserChat, 5000);
+}
+
+function cdBackToList(){
+  clearInterval(_pollTimer);
+  document.getElementById('cd-chat-view').style.display = 'none';
+  document.getElementById('cd-ticket-list').style.display = 'flex';
+  loadMyTickets();
+}
+
+async function pollUserChat(){
+  if(!_chatTicketId) return;
+  try{
+    const r = await fetch(`${API}/tickets/${_chatTicketId}/messages?userId=${tgU.id}`);
+    if(!r.ok) return;
+    renderMsgs('chat-messages', await r.json(), false);
+  }catch{}
+}
+
+async function sendChatMsg(){
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if(!text||!_chatTicketId) return;
+  inp.value=''; inp.style.height='auto';
+  try{
+    await fetch(`${API}/tickets/${_chatTicketId}/messages`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({userId:tgU.id, text})
+    });
+    await pollUserChat();
+  }catch{ toast('Ошибка отправки'); }
+}
+
+document.getElementById('chat-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChatMsg();}
+});
+
+/* Отправить новый тикет (форма в разделе Помощь) */
+async function sendSup(){
+  const subjEl = document.getElementById('sp-subj');
+  const msgEl  = document.getElementById('sp-msg');
+  const subj   = subjEl.value, msg = msgEl.value.trim();
+  if(!subj||!msg){toast('Заполните все поля');return;}
+
+  const btn = document.querySelector('#hlp-form-panel .btn-p');
+  if(btn){btn.style.opacity='.5';btn.style.pointerEvents='none';}
+
+  const uid  = tgU.id||0;
+  const user = tgU.username||tgU.first_name||`user${uid}`;
+  const labels={buy:'Покупка/Оплата',key:'Проблема с ключом',hwid:'Привязка HWID',tech:'Техн. проблема',oth:'Другое'};
+
+  try{
+    const r = await fetch(`${API}/tickets`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({userId:uid, username:user, subject:labels[subj]||subj, message:msg})
+    });
+    if(!r.ok) throw new Error();
+    const data = await r.json();
+    toast('Обращение создано');
+    subjEl.value=''; msgEl.value='';
+    // Открываем дровер с чатом
+    if(!_drawerOpen) toggleChatDrawer();
+    setTimeout(()=>openUserChat(data.id, data.subject, 'open'), 300);
+  }catch{
+    await Promise.all(ADMINS.map(id=>tgSend(id,
+      `Поддержка KENOS\n@${user} [${uid}]\n${labels[subj]||subj}\n\n${msg}`
+    ))).catch(()=>{});
+    toast('Сообщение отправлено');
+  }finally{
+    if(btn){btn.style.opacity='';btn.style.pointerEvents='';}
+  }
+}
+
+/* ══════════════════════════════════════
+   АДМИНИСТРАТОР
+══════════════════════════════════════ */
+async function loadAdminTickets(){
+  const lst = document.getElementById('adm-tickets-list');
+  lst.innerHTML = '<div style="font-size:11px;opacity:.35;text-align:center;padding:20px">Загрузка...</div>';
+  try{
+    const r = await fetch(`${API}/admin/tickets?adminId=${tgU.id}`);
+    if(!r.ok){
+      lst.innerHTML='<div style="font-size:11px;color:rgba(255,90,90,.8);text-align:center;padding:16px;display:flex;flex-direction:column;align-items:center;gap:6px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>API недоступен — запусти бот</div>';
+      return;
+    }
+    const list = await r.json();
+    if(!list.length){
+      lst.innerHTML='<div style="font-size:11px;opacity:.35;text-align:center;padding:20px;display:flex;flex-direction:column;align-items:center;gap:6px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>Нет открытых тикетов</div>';
+      return;
+    }
+    const statusIcon = {
+      open:       '<svg width="8" height="8" viewBox="0 0 24 24" fill="#facc15"><circle cx="12" cy="12" r="10"/></svg>',
+      inprogress: '<svg width="8" height="8" viewBox="0 0 24 24" fill="#4ade80"><circle cx="12" cy="12" r="10"/></svg>',
+      closed:     '<svg width="8" height="8" viewBox="0 0 24 24" fill="rgba(255,255,255,.2)"><circle cx="12" cy="12" r="10"/></svg>'
+    };
+    lst.innerHTML = list.map(t=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);transition:background .15s" onclick="admOpenChat(${t.id},'${escHtml(t.username)}','${escHtml(t.subject)}')" onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background='rgba(255,255,255,.02)'">
+        ${statusIcon[t.status]||statusIcon.open}
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">#${t.id} @${escHtml(t.username)}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.38);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(t.subject)}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:9px;color:rgba(255,255,255,.25)">${fmtTime(t.createdAt)}</div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>`).join('');
+  }catch{
+    lst.innerHTML='<div style="font-size:11px;color:rgba(255,90,90,.8);text-align:center;padding:16px">Ошибка загрузки</div>';
+  }
+}
+
+function admOpenChat(ticketId, username, subject){
+  _admTicketId = ticketId;
+  document.getElementById('cd-adm-list-view').style.display = 'none';
+  const cv = document.getElementById('cd-adm-chat-view');
+  cv.style.display = 'flex';
+  document.getElementById('adm-chat-title').textContent = `#${ticketId} — @${username}`;
+  admPollChat();
+  clearInterval(_admPollTimer);
+  _admPollTimer = setInterval(admPollChat, 5000);
+}
+
+function admBackToList(){
+  clearInterval(_admPollTimer);
+  _admTicketId = null;
+  document.getElementById('cd-adm-chat-view').style.display = 'none';
+  document.getElementById('cd-adm-list-view').style.display = 'flex';
+}
+
+async function admCloseTicket(){
+  if(!_admTicketId) return;
+  await fetch(`${API}/admin/tickets/${_admTicketId}/close?adminId=${tgU.id}`,{method:'POST'});
+  toast('Тикет закрыт');
+  admBackToList();
+  loadAdminTickets();
+}
+
+async function admPollChat(){
+  if(!_admTicketId) return;
+  try{
+    const r = await fetch(`${API}/admin/tickets/${_admTicketId}/messages?adminId=${tgU.id}`);
+    if(!r.ok) return;
+    renderMsgs('adm-chat-messages', await r.json(), true);
+  }catch{}
+}
+
+async function admSendMsg(){
+  const inp = document.getElementById('adm-chat-input');
+  const text = inp.value.trim();
+  if(!text||!_admTicketId) return;
+  inp.value=''; inp.style.height='auto';
+  const adminName = tgU.username?'@'+tgU.username:tgU.first_name||'Администратор';
+  try{
+    await fetch(`${API}/admin/tickets/${_admTicketId}/reply?adminId=${tgU.id}`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({adminName, text})
+    });
+    await admPollChat();
+  }catch{ toast('Ошибка отправки'); }
+}
+
+document.getElementById('adm-chat-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();admSendMsg();}
+});
+
+/* ══════════════════════════════════════
+   ОБЩИЕ УТИЛИТЫ
+══════════════════════════════════════ */
+function renderMsgs(containerId, msgs, isAdminView){
+  const box = document.getElementById(containerId);
+  if(!box) return;
+  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 50;
+  box.innerHTML = msgs.map(m=>{
+    const mine = isAdminView ? m.fromAdmin : !m.fromAdmin;
+    return `<div style="display:flex;flex-direction:column;align-items:${mine?'flex-end':'flex-start'};gap:2px">
+      <div style="font-size:9px;color:rgba(255,255,255,.28);padding:0 4px">${escHtml(m.sender)}</div>
+      <div style="max-width:82%;padding:7px 11px;border-radius:${mine?'12px 12px 3px 12px':'12px 12px 12px 3px'};background:${mine?'rgba(255,255,255,.11)':'rgba(255,255,255,.05)'};border:1px solid rgba(255,255,255,.07);font-size:12px;line-height:1.45;color:${mine?'#fff':'rgba(255,255,255,.82)'};">${escHtml(m.text)}</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.2);padding:0 4px">${fmtTime(m.sentAt)}</div>
+    </div>`;
+  }).join('');
+  if(atBottom || msgs.length <= 3) box.scrollTop = box.scrollHeight;
+}
+
+// Иконки статуса в Инфо (вместо эмодзи)
+const INFO_ICONS = {
+  tech: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,160,50,.8)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>',
+  warn: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,80,80,.8)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  ok:   '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  info: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(100,160,255,.8)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+};
+
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtTime(iso){ try{const d=new Date(iso);return d.toLocaleDateString('ru',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});}catch{return '';} }
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+setLang('ru');
+loadKey();
+loadCL();
+loadInfo();
+initTickets();
+
+</script>
+</body>
+</html>
