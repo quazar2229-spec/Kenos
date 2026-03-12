@@ -845,7 +845,7 @@ a{color:inherit}
   <!-- ИНФО -->
   <section id="s-inf" class="sec">
     <div class="hero" style="padding-bottom:12px">
-      <p class="hero-eye">Статус · Обновления</p>
+      <p class="hero-eye">Статус · Новости</p>
       <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Инфо</h1>
     </div>
     <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
@@ -854,7 +854,7 @@ a{color:inherit}
       <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
     </div>
     <div class="panel">
-      <div class="p-title"><svg width="17" height="17" style="color:rgba(180,180,180,.6)"><use href="#i-zap"/></svg>Информация</div>
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(180,180,180,.55)"><use href="#i-zap"/></svg>Информация</div>
       <div class="p-sub">Тех. работы · Статус сервиса · Новости</div>
       <div id="inf-list">
         <div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">Нет активных объявлений</div></div>
@@ -862,124 +862,6 @@ a{color:inherit}
     </div>
   </section>
   </div><!-- /#view -->
-</div>
-
-<!-- ══ FLOATING CHAT BUTTON ══ -->
-<button id="chat-fab" onclick="toggleChatDrawer()" style="
-  position:fixed;bottom:76px;right:16px;z-index:190;
-  width:48px;height:48px;border-radius:50%;
-  background:#1a1a1a;border:1px solid rgba(255,255,255,.14);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 20px rgba(0,0,0,.6);
-  transition:transform .2s cubic-bezier(.16,1,.3,1),border-color .2s;
-">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-  </svg>
-  <!-- badge непрочитанных -->
-  <span id="chat-badge" style="display:none;position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:#e55;font-size:8px;color:#fff;font-weight:700;align-items:center;justify-content:center;line-height:1"></span>
-</button>
-
-<!-- ══ CHAT DRAWER ══ -->
-<div id="chat-drawer" style="
-  position:fixed;bottom:0;right:0;left:0;z-index:400;
-  transform:translateY(100%);
-  transition:transform .32s cubic-bezier(.16,1,.3,1);
-  background:#111;
-  border-top:1px solid rgba(255,255,255,.1);
-  border-radius:18px 18px 0 0;
-  max-height:75vh;
-  display:flex;flex-direction:column;
-  box-shadow:0 -8px 40px rgba(0,0,0,.7);
-">
-  <!-- ручка -->
-  <div style="display:flex;justify-content:center;padding:10px 0 4px;flex-shrink:0">
-    <div style="width:36px;height:3px;border-radius:2px;background:rgba(255,255,255,.18)"></div>
-  </div>
-
-  <!-- USER VIEW -->
-  <div id="cd-user" style="display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0">
-    <!-- шапка -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 12px;flex-shrink:0">
-      <div style="display:flex;align-items:center;gap:8px">
-        <div id="chat-dot" style="width:7px;height:7px;border-radius:50%;background:#4ade80;flex-shrink:0"></div>
-        <div>
-          <div id="chat-title" style="font-size:13px;font-weight:600;color:#fff;letter-spacing:.03em">Поддержка</div>
-          <div id="chat-status" style="font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.08em">ОТКРЫТ</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button onclick="showNewTicketDrawer()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:rgba(255,255,255,.5);font-size:10px;padding:5px 10px;cursor:pointer;letter-spacing:.05em">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Новый
-        </button>
-        <button onclick="toggleChatDrawer()" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;padding:4px;font-size:16px;line-height:1">✕</button>
-      </div>
-    </div>
-
-    <!-- вкладки: мои тикеты (список) / переписка -->
-    <div id="cd-ticket-list" style="flex:1;overflow-y:auto;padding:0 12px 8px;display:flex;flex-direction:column;gap:3px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent"></div>
-
-    <div id="cd-chat-view" style="display:none;flex:1;overflow:hidden;min-height:0;flex-direction:column">
-      <div style="padding:6px 14px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;flex-shrink:0">
-        <button onclick="cdBackToList()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;padding:0;display:flex;align-items:center">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        <div id="cd-chat-title" style="font-size:12px;font-weight:600;color:#fff;flex:1">Тикет #—</div>
-      </div>
-      <div id="chat-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent;min-height:0"></div>
-      <div id="chat-input-area" style="display:flex;gap:8px;align-items:flex-end;padding:10px 12px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0">
-        <textarea id="chat-input" rows="1" placeholder="Написать..." style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:10px;color:#fff;padding:8px 11px;font-size:13px;resize:none;font-family:inherit;max-height:80px;overflow-y:auto;line-height:1.4" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-        <button onclick="sendChatMsg()" style="background:rgba(228,228,228,.9);border:none;border-radius:9px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADMIN VIEW -->
-  <div id="cd-admin" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
-    <!-- список тикетов -->
-    <div id="cd-adm-list-view" style="display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;flex-shrink:0">
-        <div style="display:flex;align-items:center;gap:6px">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,200,50,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          <span style="font-size:13px;font-weight:600;color:#fff;letter-spacing:.04em">Тикеты</span>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button onclick="loadAdminTickets()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:rgba(255,255,255,.5);font-size:10px;padding:5px 10px;cursor:pointer">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            Обновить
-          </button>
-          <button onclick="toggleChatDrawer()" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;padding:4px;font-size:16px;line-height:1">✕</button>
-        </div>
-      </div>
-      <div id="adm-tickets-list" style="flex:1;overflow-y:auto;padding:0 12px 12px;display:flex;flex-direction:column;gap:3px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent">
-        <div style="font-size:11px;opacity:.35;text-align:center;padding:20px">Загрузка...</div>
-      </div>
-    </div>
-
-    <!-- чат тикета (администратор) -->
-    <div id="cd-adm-chat-view" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
-      <div style="display:flex;align-items:center;gap:8px;padding:4px 14px 10px;flex-shrink:0">
-        <button onclick="admBackToList()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;display:flex;align-items:center">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        <div id="adm-chat-title" style="font-size:12px;font-weight:600;color:#fff;flex:1">Тикет #—</div>
-        <button onclick="admCloseTicket()" style="background:rgba(255,60,60,.1);border:1px solid rgba(255,60,60,.18);border-radius:7px;color:rgba(255,90,90,.8);font-size:10px;padding:4px 9px;cursor:pointer;display:flex;align-items:center;gap:4px">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-          Закрыть
-        </button>
-      </div>
-      <div id="adm-chat-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent;min-height:0"></div>
-      <div style="display:flex;gap:8px;align-items:flex-end;padding:10px 12px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0">
-        <textarea id="adm-chat-input" rows="1" placeholder="Ответить..." style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:10px;color:#fff;padding:8px 11px;font-size:13px;resize:none;font-family:inherit;max-height:80px;overflow-y:auto" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-        <button onclick="admSendMsg()" style="background:rgba(228,228,228,.9);border:none;border-radius:9px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- ══ NAV ══ -->
@@ -1202,7 +1084,28 @@ async function tgSend(chat_id,text){
   });
 }
 
-
+async function sendSup(){
+  const subjEl=document.getElementById('sp-subj');
+  const msgEl =document.getElementById('sp-msg');
+  const subj=subjEl.value, msg=msgEl.value.trim();
+  if(!subj||!msg){toast(t('toast.fill'));return;}
+  const btn=document.querySelector('#hlp-form-panel .btn-p');
+  if(btn){btn.style.opacity='.5';btn.style.pointerEvents='none';}
+  const user=tgU.username?`@${tgU.username}`:(tgU.first_name||'Аноним');
+  const uid=tgU.id?`[${tgU.id}]`:'';
+  const labels={buy:'Покупка/Оплата',key:'Проблема с ключом',hwid:'Привязка HWID',tech:'Техн. проблема',oth:'Другое'};
+  const text=`<b>Обращение KENOS</b>\n\nОт: ${user} ${uid}\nТема: ${labels[subj]||subj}\n\n${msg}`;
+  try{
+    await Promise.all(ADMINS.map(id=>tgSend(id,text)));
+    toast(t('toast.sent'));
+    subjEl.value='';msgEl.value='';
+  }catch{
+    if(tg?.sendData)tg.sendData(JSON.stringify({type:'support',subject:subj,message:msg,user_id:tgU.id||0}));
+    toast(t('toast.sent'));
+  }finally{
+    if(btn){btn.style.opacity='';btn.style.pointerEvents='';}
+  }
+}
 
 /* ══════════════════════════════════════
    PROFILE
@@ -1415,307 +1318,12 @@ document.addEventListener('visibilitychange',()=>{
 },{passive:true});
 
 /* ══════════════════════════════════════
-   TICKET SYSTEM
-══════════════════════════════════════ */
-const API = 'https://kenos-production.up.railway.app/api';
-const ADMIN_IDS = [8306863943, 6641882724];
-
-let _chatTicketId = null;
-let _admTicketId  = null;
-let _pollTimer    = null;
-let _admPollTimer = null;
-let _isAdmin      = false;
-let _drawerOpen   = false;
-
-/* ── Drawer toggle ─────────────────────────────────── */
-function toggleChatDrawer(){
-  _drawerOpen = !_drawerOpen;
-  const d = document.getElementById('chat-drawer');
-  const fab = document.getElementById('chat-fab');
-  d.style.transform = _drawerOpen ? 'translateY(0)' : 'translateY(100%)';
-  fab.style.transform = _drawerOpen ? 'scale(.88)' : 'scale(1)';
-  if(_drawerOpen){
-    if(_isAdmin) loadAdminTickets();
-    else loadMyTickets();
-  } else {
-    clearInterval(_pollTimer);
-    clearInterval(_admPollTimer);
-  }
-}
-
-/* ── Инициализация ─────────────────────────────────── */
-function initTickets(){
-  const uid = tgU.id || 0;
-  _isAdmin = ADMIN_IDS.includes(uid);
-  if(_isAdmin){
-    const nAdm = document.getElementById('n-adm');
-    if(nAdm) nAdm.style.display = 'flex';
-    // в дровере показываем admin view
-    document.getElementById('cd-user').style.display  = 'none';
-    document.getElementById('cd-admin').style.display = 'flex';
-  }
-  // Показываем FAB
-  document.getElementById('chat-fab').style.display = 'flex';
-}
-
-/* ══════════════════════════════════════
-   ПОЛЬЗОВАТЕЛЬ
-══════════════════════════════════════ */
-async function loadMyTickets(){
-  const uid = tgU.id; if(!uid) return;
-  const lst = document.getElementById('cd-ticket-list');
-  try{
-    const r = await fetch(`${API}/tickets/user/${uid}`);
-    if(!r.ok) return;
-    const tickets = await r.json();
-    if(!tickets.length){
-      lst.innerHTML = '<div style="font-size:11px;opacity:.35;text-align:center;padding:20px">Нет обращений — отправь сообщение ниже</div>';
-      return;
-    }
-    // Иконки статуса через SVG
-    const statusIcon = {
-      open:       '<svg width="8" height="8" viewBox="0 0 24 24" fill="#facc15"><circle cx="12" cy="12" r="10"/></svg>',
-      inprogress: '<svg width="8" height="8" viewBox="0 0 24 24" fill="#4ade80"><circle cx="12" cy="12" r="10"/></svg>',
-      closed:     '<svg width="8" height="8" viewBox="0 0 24 24" fill="rgba(255,255,255,.2)"><circle cx="12" cy="12" r="10"/></svg>'
-    };
-    lst.innerHTML = tickets.map(t=>`
-      <div style="display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);transition:background .15s" onclick="openUserChat(${t.id},'${escHtml(t.subject)}','${t.status}')" onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background='rgba(255,255,255,.02)'">
-        ${statusIcon[t.status]||statusIcon.open}
-        <div style="flex:1;min-width:0">
-          <div style="font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">#${t.id} — ${escHtml(t.subject)}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.06em;margin-top:1px">${t.status === 'closed' ? 'закрыт' : t.status === 'inprogress' ? 'в работе' : 'открыт'}</div>
-        </div>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>`).join('');
-
-    // Автооткрытие последнего активного тикета
-    const active = tickets.find(t=>t.status!=='closed');
-    if(active) openUserChat(active.id, active.subject, active.status);
-  }catch{}
-}
-
-function showNewTicketDrawer(){
-  // Возвращаемся к списку без автооткрытия
-  document.getElementById('cd-chat-view').style.display = 'none';
-  document.getElementById('cd-ticket-list').style.display = 'flex';
-}
-
-function openUserChat(ticketId, subject, status){
-  _chatTicketId = ticketId;
-  document.getElementById('cd-ticket-list').style.display = 'none';
-  const cv = document.getElementById('cd-chat-view');
-  cv.style.display = 'flex';
-  document.getElementById('cd-chat-title').textContent = `#${ticketId} — ${subject}`;
-  const dot = document.getElementById('chat-dot');
-  dot.style.background = status==='closed'?'rgba(255,255,255,.2)':'#4ade80';
-  document.getElementById('chat-title').textContent = subject;
-  document.getElementById('chat-status').textContent = status==='closed'?'ЗАКРЫТ':'ОТКРЫТ';
-  document.getElementById('chat-input-area').style.display = status==='closed'?'none':'flex';
-  pollUserChat();
-  clearInterval(_pollTimer);
-  _pollTimer = setInterval(pollUserChat, 5000);
-}
-
-function cdBackToList(){
-  clearInterval(_pollTimer);
-  document.getElementById('cd-chat-view').style.display = 'none';
-  document.getElementById('cd-ticket-list').style.display = 'flex';
-  loadMyTickets();
-}
-
-async function pollUserChat(){
-  if(!_chatTicketId) return;
-  try{
-    const r = await fetch(`${API}/tickets/${_chatTicketId}/messages?userId=${tgU.id}`);
-    if(!r.ok) return;
-    renderMsgs('chat-messages', await r.json(), false);
-  }catch{}
-}
-
-async function sendChatMsg(){
-  const inp = document.getElementById('chat-input');
-  const text = inp.value.trim();
-  if(!text||!_chatTicketId) return;
-  inp.value=''; inp.style.height='auto';
-  try{
-    await fetch(`${API}/tickets/${_chatTicketId}/messages`,{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({userId:tgU.id, text})
-    });
-    await pollUserChat();
-  }catch{ toast('Ошибка отправки'); }
-}
-
-document.getElementById('chat-input').addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChatMsg();}
-});
-
-/* Отправить новый тикет (форма в разделе Помощь) */
-async function sendSup(){
-  const subjEl = document.getElementById('sp-subj');
-  const msgEl  = document.getElementById('sp-msg');
-  const subj   = subjEl.value, msg = msgEl.value.trim();
-  if(!subj||!msg){toast('Заполните все поля');return;}
-
-  const btn = document.querySelector('#hlp-form-panel .btn-p');
-  if(btn){btn.style.opacity='.5';btn.style.pointerEvents='none';}
-
-  const uid  = tgU.id||0;
-  const user = tgU.username||tgU.first_name||`user${uid}`;
-  const labels={buy:'Покупка/Оплата',key:'Проблема с ключом',hwid:'Привязка HWID',tech:'Техн. проблема',oth:'Другое'};
-
-  try{
-    const r = await fetch(`${API}/tickets`,{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({userId:uid, username:user, subject:labels[subj]||subj, message:msg})
-    });
-    if(!r.ok) throw new Error();
-    const data = await r.json();
-    toast('Обращение создано');
-    subjEl.value=''; msgEl.value='';
-    // Открываем дровер с чатом
-    if(!_drawerOpen) toggleChatDrawer();
-    setTimeout(()=>openUserChat(data.id, data.subject, 'open'), 300);
-  }catch{
-    await Promise.all(ADMINS.map(id=>tgSend(id,
-      `Поддержка KENOS\n@${user} [${uid}]\n${labels[subj]||subj}\n\n${msg}`
-    ))).catch(()=>{});
-    toast('Сообщение отправлено');
-  }finally{
-    if(btn){btn.style.opacity='';btn.style.pointerEvents='';}
-  }
-}
-
-/* ══════════════════════════════════════
-   АДМИНИСТРАТОР
-══════════════════════════════════════ */
-async function loadAdminTickets(){
-  const lst = document.getElementById('adm-tickets-list');
-  lst.innerHTML = '<div style="font-size:11px;opacity:.35;text-align:center;padding:20px">Загрузка...</div>';
-  try{
-    const r = await fetch(`${API}/admin/tickets?adminId=${tgU.id}`);
-    if(!r.ok){
-      lst.innerHTML='<div style="font-size:11px;color:rgba(255,90,90,.8);text-align:center;padding:16px;display:flex;flex-direction:column;align-items:center;gap:6px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>API недоступен — запусти бот</div>';
-      return;
-    }
-    const list = await r.json();
-    if(!list.length){
-      lst.innerHTML='<div style="font-size:11px;opacity:.35;text-align:center;padding:20px;display:flex;flex-direction:column;align-items:center;gap:6px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>Нет открытых тикетов</div>';
-      return;
-    }
-    const statusIcon = {
-      open:       '<svg width="8" height="8" viewBox="0 0 24 24" fill="#facc15"><circle cx="12" cy="12" r="10"/></svg>',
-      inprogress: '<svg width="8" height="8" viewBox="0 0 24 24" fill="#4ade80"><circle cx="12" cy="12" r="10"/></svg>',
-      closed:     '<svg width="8" height="8" viewBox="0 0 24 24" fill="rgba(255,255,255,.2)"><circle cx="12" cy="12" r="10"/></svg>'
-    };
-    lst.innerHTML = list.map(t=>`
-      <div style="display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);transition:background .15s" onclick="admOpenChat(${t.id},'${escHtml(t.username)}','${escHtml(t.subject)}')" onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background='rgba(255,255,255,.02)'">
-        ${statusIcon[t.status]||statusIcon.open}
-        <div style="flex:1;min-width:0">
-          <div style="font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">#${t.id} @${escHtml(t.username)}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.38);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(t.subject)}</div>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:9px;color:rgba(255,255,255,.25)">${fmtTime(t.createdAt)}</div>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-      </div>`).join('');
-  }catch{
-    lst.innerHTML='<div style="font-size:11px;color:rgba(255,90,90,.8);text-align:center;padding:16px">Ошибка загрузки</div>';
-  }
-}
-
-function admOpenChat(ticketId, username, subject){
-  _admTicketId = ticketId;
-  document.getElementById('cd-adm-list-view').style.display = 'none';
-  const cv = document.getElementById('cd-adm-chat-view');
-  cv.style.display = 'flex';
-  document.getElementById('adm-chat-title').textContent = `#${ticketId} — @${username}`;
-  admPollChat();
-  clearInterval(_admPollTimer);
-  _admPollTimer = setInterval(admPollChat, 5000);
-}
-
-function admBackToList(){
-  clearInterval(_admPollTimer);
-  _admTicketId = null;
-  document.getElementById('cd-adm-chat-view').style.display = 'none';
-  document.getElementById('cd-adm-list-view').style.display = 'flex';
-}
-
-async function admCloseTicket(){
-  if(!_admTicketId) return;
-  await fetch(`${API}/admin/tickets/${_admTicketId}/close?adminId=${tgU.id}`,{method:'POST'});
-  toast('Тикет закрыт');
-  admBackToList();
-  loadAdminTickets();
-}
-
-async function admPollChat(){
-  if(!_admTicketId) return;
-  try{
-    const r = await fetch(`${API}/admin/tickets/${_admTicketId}/messages?adminId=${tgU.id}`);
-    if(!r.ok) return;
-    renderMsgs('adm-chat-messages', await r.json(), true);
-  }catch{}
-}
-
-async function admSendMsg(){
-  const inp = document.getElementById('adm-chat-input');
-  const text = inp.value.trim();
-  if(!text||!_admTicketId) return;
-  inp.value=''; inp.style.height='auto';
-  const adminName = tgU.username?'@'+tgU.username:tgU.first_name||'Администратор';
-  try{
-    await fetch(`${API}/admin/tickets/${_admTicketId}/reply?adminId=${tgU.id}`,{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({adminName, text})
-    });
-    await admPollChat();
-  }catch{ toast('Ошибка отправки'); }
-}
-
-document.getElementById('adm-chat-input').addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();admSendMsg();}
-});
-
-/* ══════════════════════════════════════
-   ОБЩИЕ УТИЛИТЫ
-══════════════════════════════════════ */
-function renderMsgs(containerId, msgs, isAdminView){
-  const box = document.getElementById(containerId);
-  if(!box) return;
-  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 50;
-  box.innerHTML = msgs.map(m=>{
-    const mine = isAdminView ? m.fromAdmin : !m.fromAdmin;
-    return `<div style="display:flex;flex-direction:column;align-items:${mine?'flex-end':'flex-start'};gap:2px">
-      <div style="font-size:9px;color:rgba(255,255,255,.28);padding:0 4px">${escHtml(m.sender)}</div>
-      <div style="max-width:82%;padding:7px 11px;border-radius:${mine?'12px 12px 3px 12px':'12px 12px 12px 3px'};background:${mine?'rgba(255,255,255,.11)':'rgba(255,255,255,.05)'};border:1px solid rgba(255,255,255,.07);font-size:12px;line-height:1.45;color:${mine?'#fff':'rgba(255,255,255,.82)'};">${escHtml(m.text)}</div>
-      <div style="font-size:9px;color:rgba(255,255,255,.2);padding:0 4px">${fmtTime(m.sentAt)}</div>
-    </div>`;
-  }).join('');
-  if(atBottom || msgs.length <= 3) box.scrollTop = box.scrollHeight;
-}
-
-// Иконки статуса в Инфо (вместо эмодзи)
-const INFO_ICONS = {
-  tech: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,160,50,.8)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>',
-  warn: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,80,80,.8)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-  ok:   '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>',
-  info: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(100,160,255,.8)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-};
-
-function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function fmtTime(iso){ try{const d=new Date(iso);return d.toLocaleDateString('ru',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});}catch{return '';} }
-
-/* ══════════════════════════════════════
    INIT
 ══════════════════════════════════════ */
 setLang('ru');
 loadKey();
 loadCL();
 loadInfo();
-initTickets();
 
 </script>
 </body>
