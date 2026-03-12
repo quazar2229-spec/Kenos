@@ -18,7 +18,6 @@ public sealed class MsgHandler(
     Keyboards kb,
     Changelog log,
     InfoService info,
-    TicketService tickets,
     JsonBin bin,
     ILogger<MsgHandler> logger)
 {
@@ -307,63 +306,6 @@ public sealed class MsgHandler(
                 return true;
             }
 
-            // ─ /tickets — список открытых тикетов ──────────
-            case "/tickets":
-            {
-                var list = await tickets.GetAllOpenAsync();
-                if (!list.Any())
-                {
-                    await bot.SendMessage(_c.AdminChatId, "📭 Открытых тикетов нет.", cancellationToken: ct);
-                    return true;
-                }
-                var txt = "<b>📋 Открытые тикеты:</b>\n\n" +
-                    string.Join("\n", list.Select(t =>
-                        $"<b>#{t.Id}</b> — @{t.Username}\n" +
-                        $"📌 {t.Subject}\n" +
-                        $"🕐 {t.CreatedAt:dd.MM HH:mm} · {t.Status}\n"));
-                await bot.SendMessage(_c.AdminChatId, txt, ParseMode.Html, cancellationToken: ct);
-                return true;
-            }
-
-            // ─ /reply ticketId текст ────────────────────────
-            case "/reply" when p.Length >= 3:
-            {
-                if (!int.TryParse(p[1], out var tid)) return false;
-                var replyText = string.Join(' ', p.Skip(2));
-                var adminName = msg.From?.Username ?? msg.From?.FirstName ?? "Администратор";
-                var m = await tickets.AdminReplyAsync(tid, adminName, replyText);
-                if (m is null)
-                {
-                    await bot.SendMessage(_c.AdminChatId, $"❌ Тикет #{tid} не найден.", cancellationToken: ct);
-                    return true;
-                }
-                var ticket = await tickets.GetAsync(tid);
-                // уведомить пользователя
-                if (ticket is not null)
-                    try
-                    {
-                        await bot.SendMessage(ticket.UserId,
-                            $"📩 <b>Ответ по тикету #{tid}</b>\n\n{replyText}\n\n<i>— {adminName}</i>",
-                            ParseMode.Html, replyMarkup: kb.App(), cancellationToken: ct);
-                    }
-                    catch { }
-
-                await bot.SendMessage(_c.AdminChatId, $"✅ Ответ по тикету #{tid} отправлен.", cancellationToken: ct);
-                return true;
-            }
-
-            // ─ /close ticketId ──────────────────────────────
-            case "/close" when p.Length >= 2:
-            {
-                if (!int.TryParse(p[1], out var cid)) return false;
-                var ok = await tickets.CloseAsync(cid);
-                if (!ok) { await bot.SendMessage(_c.AdminChatId, $"❌ Тикет #{cid} не найден.", cancellationToken: ct); return true; }
-                var ticket = await tickets.GetAsync(cid);
-                if (ticket is not null)
-                    try { await bot.SendMessage(ticket.UserId, $"✅ Ваш тикет <b>#{cid}</b> закрыт. Спасибо за обращение!", ParseMode.Html, replyMarkup: kb.App(), cancellationToken: ct); } catch { }
-                await bot.SendMessage(_c.AdminChatId, $"🔒 Тикет #{cid} закрыт.", cancellationToken: ct);
-                return true;
-            }
         }
         return false;
     }
