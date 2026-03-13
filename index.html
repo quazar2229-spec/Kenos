@@ -234,12 +234,29 @@ a{color:inherit}
   contain:layout style;
 }
 .hdr-profile{display:flex;align-items:center;gap:8px}
+.hdr-profile{display:flex;align-items:center;gap:8px;position:relative}
+
+/* обёртка для кольца — чтобы overflow:hidden аватарки не обрезал кольцо */
+.hdr-avatar-wrap{position:relative;flex-shrink:0}
+.hdr-avatar-wrap::before{
+  content:'';
+  position:absolute;inset:-2px;
+  border-radius:50%;
+  border:1.5px solid transparent;
+  border-top-color:rgba(255,255,255,.85);
+  border-right-color:rgba(255,255,255,.2);
+  animation:spin 2.2s linear infinite;
+  pointer-events:none;
+  z-index:2;
+}
+@keyframes spin{ to{ transform:rotate(360deg) } }
+
 .hdr-avatar{
   width:30px;height:30px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.11);
+  border:1px solid rgba(255,255,255,.08);
   background:rgba(255,255,255,.04);
   display:flex;align-items:center;justify-content:center;
-  overflow:hidden;flex-shrink:0;color:rgba(255,255,255,.35);
+  overflow:hidden;color:rgba(255,255,255,.35);
 }
 .hdr-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .hdr-name{font-size:11px;font-weight:500;letter-spacing:.06em;color:rgba(255,255,255,.5);max-width:86px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -325,11 +342,12 @@ a{color:inherit}
 ═══════════════════════════════════════════ */
 .hero{padding:40px 20px 14px;text-align:center}
 .hero-eye{font-size:10px;letter-spacing:.38em;color:var(--g5);text-transform:uppercase;margin-bottom:11px}
+/* KENOS hero */
 .hero-h{
   font-family:var(--fd);font-size:clamp(58px,15vw,88px);
   font-weight:300;letter-spacing:.14em;line-height:1;
-  color:#fff;margin-bottom:9px;
-  animation:glow 4s ease-in-out infinite;
+  color:#fff;display:block;text-align:center;
+  cursor:default;animation:glow 4s ease-in-out infinite;
 }
 .hero-sub{font-size:11px;letter-spacing:.22em;color:var(--g5);text-transform:uppercase}
 .divider{width:34px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);margin:16px auto}
@@ -680,7 +698,9 @@ a{color:inherit}
 <div id="app">
   <header class="hdr">
     <div class="hdr-profile">
-      <div class="hdr-avatar" id="hdr-av"><svg width="15" height="15"><use href="#i-user"/></svg></div>
+      <div class="hdr-avatar-wrap">
+        <div class="hdr-avatar" id="hdr-av"><svg width="15" height="15"><use href="#i-user"/></svg></div>
+      </div>
       <span class="hdr-name" id="hdr-nm">—</span>
     </div>
     <div class="hdr-logo"><span class="logo-t">KENOS</span><span class="logo-d"></span></div>
@@ -979,7 +999,7 @@ const tgU=tg?.initDataUnsafe?.user||{};
 ══════════════════════════════════════ */
 const TR={
 ru:{
-'hero.eye':'Emulator Solutions','hero.sub':'Premium · BlueStacks · Custom',
+'hero.eye':'Emulator Solutions','hero.sub':'Premium · BlueStacks · Custom','hero.tip':'совершенству нет предела',
 'sec.svc':'Услуги','sec.lnk':'Ссылки',
 'svc.bs':'Custom BlueStacks','svc.bs.d':'Настройка под вас',
 'svc.key':'Ключ доступа','svc.key.d':'HWID лицензия',
@@ -1015,7 +1035,7 @@ ru:{
 'toast.cp':'Скопировано','toast.sent':'Отправлено','toast.fill':'Заполните все поля','toast.ref':'Обновлено',
 },
 en:{
-'hero.eye':'Emulator Solutions','hero.sub':'Premium · BlueStacks · Custom',
+'hero.eye':'Emulator Solutions','hero.sub':'Premium · BlueStacks · Custom','hero.tip':'perfection has no limits',
 'sec.svc':'Services','sec.lnk':'Links',
 'svc.bs':'Custom BlueStacks','svc.bs.d':'Tailored for you',
 'svc.key':'Access Key','svc.key.d':'HWID License',
@@ -1066,11 +1086,13 @@ function setLang(l){
   document.querySelectorAll('option[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
   // Переводим placeholder у textarea
   document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = t(el.dataset.i18nPh));
+  // Переводим data-tip атрибуты
+  document.querySelectorAll('[data-tip-key]').forEach(el => el.dataset.tip = t(el.dataset.tipKey));
+  // Переводим kenos-tip span
+  const tip = document.getElementById('kenos-tip');
+  if(tip) tip.textContent = t('hero.tip');
 }
 
-/* ══════════════════════════════════════
-   NAVIGATE — мгновенный отклик, GPU анимация
-══════════════════════════════════════ */
 const SEC_NAV = {
   's-home':'n-home','s-buy':'n-buy','s-pay':'n-pay',
   's-key':'n-key','s-hlp':'n-hlp','s-inf':'n-inf','s-adm':'n-adm','s-abt':'n-abt'
