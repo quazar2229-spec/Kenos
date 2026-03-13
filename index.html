@@ -890,8 +890,8 @@ a{color:inherit}
   <!-- ИНФО -->
   <section id="s-inf" class="sec">
     <div class="hero" style="padding-bottom:12px">
-      <p class="hero-eye">Статус · Новости</p>
-      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Инфо</h1>
+      <p class="hero-eye" data-i18n="inf.eye">Статус · Новости</p>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)" data-i18n="inf.h">Инфо</h1>
     </div>
     <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
       <div class="svc-card" onclick="go('s-buy')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-gear"/></svg></div><div class="svc-name" data-i18n="nav.by">Купить</div></div>
@@ -899,10 +899,10 @@ a{color:inherit}
       <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
     </div>
     <div class="panel">
-      <div class="p-title"><svg width="17" height="17" style="color:rgba(180,180,180,.55)"><use href="#i-zap"/></svg>Информация</div>
-      <div class="p-sub">Тех. работы · Статус сервиса · Новости</div>
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(180,180,180,.55)"><use href="#i-zap"/></svg><span data-i18n="inf.panel">Информация</span></div>
+      <div class="p-sub" data-i18n="inf.panel.d">Тех. работы · Статус сервиса · Новости</div>
       <div id="inf-list">
-        <div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">Нет активных объявлений</div></div>
+        <div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0" data-i18n="inf.empty">Нет активных объявлений</div></div>
       </div>
     </div>
   </section>
@@ -963,6 +963,7 @@ ru:{
 'hlp.ct':'Прямые контакты','hlp.ct.d':'Для срочных вопросов',
 'ct.own':'Владелец','ct.ch':'Канал','ct.dev':'Кодер','ct.loh':'Кодер-лох',
 'nav.hm':'Главная','nav.by':'Купить','nav.py':'Оплата','nav.ky':'Ключ','nav.hp':'Помощь','nav.ab':'О нас',
+'inf.eye':'Статус · Новости','inf.h':'Инфо','inf.panel':'Информация','inf.panel.d':'Тех. работы · Статус сервиса · Новости','inf.empty':'Нет активных объявлений',
 'abt.eye':'О проекте','abt.h':'О нас','abt.p.d':'Standoff 2 · Premium Emulator',
 'abt.p.t':'KENOS — ваш идеал для игры в <b style="color:#fff">Standoff 2</b>.<br>Лучшая производительность и сенса на рынке.',
 'abt.cl':'Обновления','abt.cl.d':'История версий бота',
@@ -998,6 +999,7 @@ en:{
 'hlp.ct':'Direct Contacts','hlp.ct.d':'For urgent matters',
 'ct.own':'Owner','ct.ch':'Channel','ct.dev':'Developer','ct.loh':'Coder-loh',
 'nav.hm':'Home','nav.by':'Buy','nav.py':'Pay','nav.ky':'Key','nav.hp':'Help','nav.ab':'About',
+'inf.eye':'Status · News','inf.h':'Info','inf.panel':'Information','inf.panel.d':'Maintenance · Service Status · News','inf.empty':'No active announcements',
 'abt.eye':'About project','abt.h':'About us','abt.p.d':'Standoff 2 · Premium Emulator',
 'abt.p.t':'KENOS — your ideal for <b style="color:#fff">Standoff 2</b>.<br>Best performance and sensitivity on market.',
 'abt.cl':'Updates','abt.cl.d':'Bot version history',
