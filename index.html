@@ -204,9 +204,41 @@ a{color:inherit}
 .hdr-logo{display:flex;align-items:center;gap:5px}
 .logo-t{font-family:var(--fd);font-size:24px;font-weight:300;letter-spacing:.22em;color:#fff;animation:logoGlow 4s ease-in-out infinite}
 .logo-d{width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.9);animation:logoGlow 4s ease-in-out infinite}
-.lang-sw{display:flex;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:18px;overflow:hidden}
-.lang-b{padding:5px 10px;font-family:var(--fb);font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.32);background:transparent;border:none;cursor:pointer;transition:all .2s ease}
-.lang-b.on{background:rgba(255,255,255,.11);color:#fff}
+.lang-sw{
+  display:flex;position:relative;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:20px;
+  padding:2px;
+  gap:0;
+}
+/* ползунок — строго половина контейнера */
+.lang-sw::before{
+  content:'';
+  position:absolute;
+  top:2px;bottom:2px;left:2px;
+  width:calc(50% - 2px);
+  background:rgba(255,255,255,.13);
+  border-radius:16px;
+  transition:transform .28s cubic-bezier(.16,1,.3,1);
+  pointer-events:none;
+}
+.lang-sw[data-lang="en"]::before{
+  transform:translateX(100%);
+}
+.lang-sw[data-lang="ru"]::before{
+  transform:translateX(0);
+}
+.lang-b{
+  position:relative;z-index:1;
+  padding:4px 0;
+  width:36px;text-align:center;
+  font-family:var(--fb);font-size:10px;font-weight:500;letter-spacing:.1em;
+  color:rgba(255,255,255,.32);background:transparent;border:none;cursor:pointer;
+  border-radius:16px;
+  transition:color .22s ease;
+}
+.lang-b.on{ color:#fff; }
 
 /* ═══════════════════════════════════════════
    SECTIONS
@@ -502,41 +534,54 @@ a{color:inherit}
   transform:translateX(-50%);
   width:100%;max-width:480px;
   padding:5px 4px calc(5px + env(safe-area-inset-bottom));
-  /* полностью непрозрачный — никакого просвечивания */
   background:#0b0b0b;
   border-top:1px solid rgba(255,255,255,.09);
   display:flex;justify-content:space-around;
   z-index:200;
 }
+
+/* Скользящая подложка активной вкладки */
+#nav-slider{
+  position:absolute;
+  left:0;top:5px;
+  height:calc(100% - 5px - env(safe-area-inset-bottom));
+  width:44px;
+  border-radius:11px;
+  background:rgba(255,255,255,.055);
+  transition:left .55s cubic-bezier(.16,1,.3,1), width .55s cubic-bezier(.16,1,.3,1);
+  pointer-events:none;
+  z-index:0;
+}
+
 .ni{
   display:flex;flex-direction:column;align-items:center;gap:3px;
   cursor:pointer;padding:6px 4px 4px;border-radius:11px;
-  min-width:44px;position:relative;overflow:hidden;
-  transition:background var(--fast) ease;
+  min-width:44px;position:relative;
+  transition:none;
+  z-index:1;
 }
 .ni svg{
   color:rgba(255,255,255,.22);
-  display:block;position:relative;z-index:1;
-  transition:color var(--fast) ease,transform var(--mid) var(--ease),filter var(--fast) ease;
+  display:block;
+  transition:color .22s ease, transform .38s cubic-bezier(.16,1,.3,1), filter .22s ease;
 }
 .ni span{
   font-size:8px;letter-spacing:.06em;text-transform:uppercase;
   color:rgba(255,255,255,.22);white-space:nowrap;
-  position:relative;z-index:1;
-  transition:color var(--fast) ease;
+  transition:color .22s ease;
 }
-.ni:hover svg{color:rgba(255,255,255,.58);transform:translateY(-2px) scale(1.07)}
-.ni:hover span{color:rgba(255,255,255,.45)}
-.ni:active{transform:scale(.9)}
+.ni:hover svg{ color:rgba(255,255,255,.55); transform:translateY(-2px) scale(1.07); }
+.ni:hover span{ color:rgba(255,255,255,.45); }
+.ni:active{ transform:scale(.9); }
 
-/* активная вкладка */
-.ni.on{background:rgba(255,255,255,.055)}
-.ni.on span{color:#fff}
+/* Активная вкладка — только цвет, фон даёт слайдер */
+.ni.on span{ color:#fff; }
 .ni.on svg{
   color:#fff;
   animation:navIn .42s var(--ease) both, navGlow 4s .5s ease-in-out infinite;
 }
-/* индикатор сверху */
+
+/* Линия-индикатор снизу */
 .ni::before{
   content:'';position:absolute;
   bottom:3px;left:50%;
@@ -544,10 +589,10 @@ a{color:inherit}
   width:16px;height:1.5px;border-radius:1px;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent);
   box-shadow:0 0 5px rgba(255,255,255,.3);
-  transition:transform .38s var(--ease),opacity var(--fast) ease;
+  transition:transform .35s var(--ease), opacity .22s ease;
   opacity:0;
 }
-.ni.on::before{transform:translateX(-50%) scaleX(1);opacity:.7}
+.ni.on::before{ transform:translateX(-50%) scaleX(1); opacity:.7; }
 
 /* ═══════════════════════════════════════════
    TOAST
@@ -597,7 +642,7 @@ a{color:inherit}
       <span class="hdr-name" id="hdr-nm">—</span>
     </div>
     <div class="hdr-logo"><span class="logo-t">KENOS</span><span class="logo-d"></span></div>
-    <div class="lang-sw">
+    <div class="lang-sw" id="lang-sw" data-lang="ru">
       <button class="lang-b on" onclick="setLang('ru')">RU</button>
       <button class="lang-b"    onclick="setLang('en')">EN</button>
     </div>
@@ -640,7 +685,7 @@ a{color:inherit}
       <a class="lpill" href="https://t.me/scantoptmz"    target="_blank"><svg width="12" height="12"><use href="#i-mega"/></svg><span data-i18n="lnk.ch">Канал</span></a>
       <a class="lpill" href="https://t.me/scantoptmz"    target="_blank"><svg width="12" height="12"><use href="#i-chat"/></svg><span data-i18n="lnk.ct">Чат</span></a>
       <a class="lpill" href="https://t.me/datadied"      target="_blank"><svg width="12" height="12"><use href="#i-user"/></svg><span data-i18n="lnk.ow">Владелец</span></a>
-      <a class="lpill" href="https://t.me/WindowsInput32" target="_blank"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="lnk.dev">Кодеры</span></a>
+      <a class="lpill" href="https://t.me/WinInput32" target="_blank"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="lnk.dev">Кодеры</span></a>
     </div>
   </section>
 
@@ -693,19 +738,19 @@ a{color:inherit}
       <div class="p-title" data-i18n="pay.card">Банковская карта</div>
       <div class="p-sub" data-i18n="pay.card.d">Перевод по СБП · 800 ₽</div>
       <div class="note" data-i18n="pay.card.n">Реквизиты и детали оплаты вы получите напрямую у кодера после нажатия кнопки ниже.</div>
-      <a class="btn btn-p" href="https://t.me/WindowsInput32" target="_blank"><svg width="13" height="13"><use href="#i-arr"/></svg><span data-i18n="btn.buy">Купить</span></a>
+      <a class="btn btn-p" href="https://t.me/WinInput32" target="_blank"><svg width="13" height="13"><use href="#i-arr"/></svg><span data-i18n="btn.buy">Купить</span></a>
     </div>
     <div class="panel">
       <div class="p-title" data-i18n="pay.g">G-голда</div>
       <div class="p-sub">2000 G · Standoff 2</div>
       <div class="note" data-i18n="pay.g.n">Оплата голдой <b>Standoff 2</b> — только через нашего кодера.</div>
-      <a class="btn btn-p" href="https://t.me/WindowsInput32" target="_blank"><svg width="13" height="13"><use href="#i-arr"/></svg><span data-i18n="btn.buy">Купить</span></a>
+      <a class="btn btn-p" href="https://t.me/WinInput32" target="_blank"><svg width="13" height="13"><use href="#i-arr"/></svg><span data-i18n="btn.buy">Купить</span></a>
     </div>
     <div class="panel">
       <div class="p-title"><svg width="15" height="15" style="color:rgba(255,255,255,.78)"><use href="#i-star"/></svg>Telegram Stars</div>
       <div class="p-sub" data-i18n="pay.st.d">Прямо внутри Telegram · 400 Stars</div>
       <div class="note" data-i18n="pay.st.n">Оплата через <b>Telegram Stars</b> — только у нашего кодера.</div>
-      <a class="btn btn-p" href="https://t.me/WindowsInput32" target="_blank"><svg width="13" height="13" style="color:rgba(0,0,0,.55)"><use href="#i-star"/></svg><span data-i18n="btn.st">Купить через Stars</span></a>
+      <a class="btn btn-p" href="https://t.me/WinInput32" target="_blank"><svg width="13" height="13" style="color:rgba(0,0,0,.55)"><use href="#i-star"/></svg><span data-i18n="btn.st">Купить через Stars</span></a>
     </div>
   </section>
 
@@ -792,7 +837,7 @@ a{color:inherit}
       <div class="p-sub" data-i18n="hlp.ct.d">Для срочных вопросов</div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg><span data-i18n="ct.own">Владелец</span></span><a href="https://t.me/datadied" class="info-v" style="text-decoration:none;color:#ddd">@datadied</a></div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-mega"/></svg><span data-i18n="ct.ch">Канал</span></span><a href="https://t.me/scantoptmz" class="info-v" style="text-decoration:none;color:#ddd">@scantoptmz</a></div>
-      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.dev">Кодер</span></span><a href="https://t.me/WindowsInput32" class="info-v" style="text-decoration:none;color:#ddd">@WindowsInput32</a></div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.dev">Кодер</span></span><a href="https://t.me/WinInput32" class="info-v" style="text-decoration:none;color:#ddd">@WinInput32</a></div>
     </div>
   </section>
 
@@ -838,7 +883,7 @@ a{color:inherit}
       <div class="p-sub" data-i18n="abt.team.d">Наша команда</div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg><span data-i18n="ct.own">Владелец</span></span><a href="https://t.me/datadied" class="info-v" style="text-decoration:none;color:#ddd">@datadied</a></div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-mega"/></svg><span data-i18n="ct.ch">Канал</span></span><a href="https://t.me/scantoptmz" class="info-v" style="text-decoration:none;color:#ddd">@scantoptmz</a></div>
-      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.dev">Кодер</span></span><a href="https://t.me/WindowsInput32" class="info-v" style="text-decoration:none;color:#ddd">@WindowsInput32</a></div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.dev">Кодер</span></span><a href="https://t.me/WinInput32" class="info-v" style="text-decoration:none;color:#ddd">@WinInput32</a></div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.loh">Кодер-лох</span></span><a href="https://t.me/xxaof" class="info-v" style="text-decoration:none;color:#ddd">@xxaof</a></div>
     </div>
   </section>
@@ -865,7 +910,8 @@ a{color:inherit}
 </div>
 
 <!-- ══ NAV ══ -->
-<nav class="nav">
+<nav class="nav" id="nav">
+  <div id="nav-slider"></div>
   <div class="ni on" id="n-home" onclick="go('s-home')"><svg width="19" height="19"><use href="#i-home"/></svg><span data-i18n="nav.hm">Главная</span></div>
   <div class="ni"    id="n-buy"  onclick="go('s-buy')"> <svg width="19" height="19"><use href="#i-gear"/></svg><span data-i18n="nav.by">Купить</span></div>
   <div class="ni"    id="n-pay"  onclick="go('s-pay')"> <svg width="19" height="19"><use href="#i-card"/></svg><span data-i18n="nav.py">Оплата</span></div>
@@ -965,10 +1011,13 @@ let lang='ru';
 const t=k=>TR[lang][k]||TR.ru[k]||k;
 
 function setLang(l){
-  lang=l;
-  document.querySelectorAll('.lang-b').forEach(b=>b.classList.toggle('on',b.textContent===l.toUpperCase()));
-  // batch DOM updates — один проход
-  document.querySelectorAll('[data-i18n]').forEach(el=>el.innerHTML=t(el.dataset.i18n));
+  lang = l;
+  // Двигаем ползунок переключателя языка
+  document.getElementById('lang-sw').dataset.lang = l;
+  // Подсвечиваем активную кнопку
+  document.querySelectorAll('.lang-b').forEach(b => b.classList.toggle('on', b.textContent === l.toUpperCase()));
+  // Переводим все элементы с data-i18n за один проход
+  document.querySelectorAll('[data-i18n]').forEach(el => el.innerHTML = t(el.dataset.i18n));
 }
 
 /* ══════════════════════════════════════
@@ -977,45 +1026,59 @@ function setLang(l){
    2. Следующая → .on (анимация in 420ms)
    3. После 220ms убираем .leaving
 ══════════════════════════════════════ */
-const SEC_NAV={
+const SEC_NAV = {
   's-home':'n-home','s-buy':'n-buy','s-pay':'n-pay',
   's-key':'n-key','s-hlp':'n-hlp','s-inf':'n-inf','s-adm':'n-adm','s-abt':'n-abt'
 };
-let _cur='s-home';
-let _busy=false;
+let _cur  = 's-home';
+let _busy = false;
+
+// Двигаем белую подложку навбара к активной вкладке
+function moveSlider(navItemEl){
+  const slider = document.getElementById('nav-slider');
+  if(!slider || !navItemEl) return;
+  slider.style.left  = navItemEl.offsetLeft + 'px';
+  slider.style.width = navItemEl.offsetWidth + 'px';
+}
 
 function go(id){
-  if(id===_cur||_busy)return;
-  const prev=document.getElementById(_cur);
-  const next=document.getElementById(id);
-  if(!next)return;
+  if(id === _cur || _busy) return;
+  const prev = document.getElementById(_cur);
+  const next = document.getElementById(id);
+  if(!next) return;
 
-  _busy=true;
+  _busy = true;
 
-  /* 1. Убираем .on с текущей, даём .leaving для fade-out */
+  // 1. Текущая секция → fade-out анимация
   prev.classList.remove('on');
   prev.classList.add('leaving');
 
-  /* 2. Скроллим вверх мгновенно */
-  window.scrollTo({top:0,behavior:'instant'});
+  // 2. Скролл вверх мгновенно
+  window.scrollTo({ top:0, behavior:'instant' });
 
-  /* 3. Обновляем nav сразу — отзывчивость важнее */
-  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
-  document.getElementById(SEC_NAV[id])?.classList.add('on');
+  // 3. Обновляем навбар сразу (ощущение отзывчивости)
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
+  const activeNav = document.getElementById(SEC_NAV[id]);
+  activeNav?.classList.add('on');
+  moveSlider(activeNav);
 
-  /* 4. Запускаем следующую секцию через микро-задержку
-        чтобы браузер успел отрисовать leaving-анимацию */
-  requestAnimationFrame(()=>{
+  // 4. Запускаем следующую секцию в следующем кадре
+  requestAnimationFrame(() => {
     next.classList.add('on');
-    _cur=id;
+    _cur = id;
 
-    /* 5. Через 230ms (длина secOut) убираем leaving */
-    setTimeout(()=>{
+    // 5. Через 230ms убираем leaving (длина анимации secOut)
+    setTimeout(() => {
       prev.classList.remove('leaving');
-      _busy=false;
-    },230);
+      _busy = false;
+    }, 230);
   });
 }
+
+// Инициализация слайдера — после полного рендера
+setTimeout(() => {
+  moveSlider(document.getElementById('n-home'));
+}, 50);
 
 /* ══════════════════════════════════════
    TOAST — shared instance
@@ -1067,43 +1130,51 @@ function loadKey(){
 function refreshKey(){toast(t('toast.ref'));loadKey();}
 
 /* ══════════════════════════════════════
-   SUPPORT
+   SUPPORT — отправка через Bot API
+   Сообщение идёт обоим администраторам
 ══════════════════════════════════════ */
-/* ══════════════════════════════════════
-   SUPPORT — реальная отправка через Bot API
-   Сообщение приходит на ОБА аккаунта
-══════════════════════════════════════ */
-const BOT_TOKEN='8297258284:AAFjq8Yn5en7c1XS0qKM4YMylnswzCSRgTM';
-const ADMINS=[8306863943,6641882724];
+const BOT_TOKEN = '8297258284:AAFjq8Yn5en7c1XS0qKM4YMylnswzCSRgTM';
+const ADMINS    = [8306863943, 6641882724];
 
-async function tgSend(chat_id,text){
-  return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({chat_id,text,parse_mode:'HTML'})
+// Отправить сообщение через Telegram Bot API
+function tgSend(chat_id, text){
+  return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id, text, parse_mode: 'HTML' })
   });
 }
 
+// Отправить обращение в поддержку
 async function sendSup(){
-  const subjEl=document.getElementById('sp-subj');
-  const msgEl =document.getElementById('sp-msg');
-  const subj=subjEl.value, msg=msgEl.value.trim();
-  if(!subj||!msg){toast(t('toast.fill'));return;}
-  const btn=document.querySelector('#hlp-form-panel .btn-p');
-  if(btn){btn.style.opacity='.5';btn.style.pointerEvents='none';}
-  const user=tgU.username?`@${tgU.username}`:(tgU.first_name||'Аноним');
-  const uid=tgU.id?`[${tgU.id}]`:'';
-  const labels={buy:'Покупка/Оплата',key:'Проблема с ключом',hwid:'Привязка HWID',tech:'Техн. проблема',oth:'Другое'};
-  const text=`<b>Обращение KENOS</b>\n\nОт: ${user} ${uid}\nТема: ${labels[subj]||subj}\n\n${msg}`;
+  const subjEl = document.getElementById('sp-subj');
+  const msgEl  = document.getElementById('sp-msg');
+  const subj   = subjEl.value;
+  const msg    = msgEl.value.trim();
+
+  if(!subj || !msg){ toast(t('toast.fill')); return; }
+
+  // Блокируем кнопку пока отправляем
+  const btn = document.querySelector('#hlp-form-panel .btn-p');
+  if(btn){ btn.style.opacity = '.5'; btn.style.pointerEvents = 'none'; }
+
+  const user   = tgU.username ? `@${tgU.username}` : (tgU.first_name || 'Аноним');
+  const uid    = tgU.id ? `[${tgU.id}]` : '';
+  const labels = { buy:'Покупка/Оплата', key:'Проблема с ключом', hwid:'Привязка HWID', tech:'Техн. проблема', oth:'Другое' };
+  const text   = `<b>Обращение KENOS</b>\n\nОт: ${user} ${uid}\nТема: ${labels[subj]||subj}\n\n${msg}`;
+
   try{
-    await Promise.all(ADMINS.map(id=>tgSend(id,text)));
+    // Шлём всем админам параллельно
+    await Promise.all(ADMINS.map(id => tgSend(id, text)));
     toast(t('toast.sent'));
-    subjEl.value='';msgEl.value='';
-  }catch{
-    if(tg?.sendData)tg.sendData(JSON.stringify({type:'support',subject:subj,message:msg,user_id:tgU.id||0}));
+    subjEl.value = '';
+    msgEl.value  = '';
+  } catch {
+    // Fallback: отправить данные напрямую в бот
+    tg?.sendData?.(JSON.stringify({ type:'support', subject:subj, message:msg, user_id:tgU.id||0 }));
     toast(t('toast.sent'));
-  }finally{
-    if(btn){btn.style.opacity='';btn.style.pointerEvents='';}
+  } finally {
+    if(btn){ btn.style.opacity = ''; btn.style.pointerEvents = ''; }
   }
 }
 
@@ -1264,7 +1335,11 @@ initSakura('cvs-loader',26,.62);
       if(v>=100)fill.style.boxShadow='0 0 20px 4px rgba(255,255,255,.68)';
     }
     if(p<1)requestAnimationFrame(tick);
-    else setTimeout(()=>ld.classList.add('hidden'),400);
+    else setTimeout(()=>{
+      ld.classList.add('hidden');
+      // Теперь nav точно виден и имеет правильные размеры
+      moveSlider(document.getElementById('n-home'));
+    }, 400);
   }
 
   setTimeout(()=>requestAnimationFrame(tick),900);
