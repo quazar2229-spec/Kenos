@@ -144,11 +144,10 @@ a{color:inherit}
 }
 
 /* ═══════════════════════════════════════════
-   PERFORMANCE — GPU layers + paint containment
+   PERFORMANCE — GPU layers
 ═══════════════════════════════════════════ */
 .panel{ contain:layout style; }
 .ni{ contain:layout style; }
-.sec{ contain:layout; transform:translateZ(0); }
 #cvs-sakura{ transform:translateZ(0); }
 .nav{ transform:translateZ(0); }
 .hdr{ transform:translateZ(0); }
@@ -290,39 +289,36 @@ a{color:inherit}
    — браузер не рендерит невидимые секции
 ═══════════════════════════════════════════ */
 /* ═══════════════════════════════════════════
-   SECTIONS — плавные переходы (только GPU)
-   opacity + transform — никакого layout recalc
+   SECTIONS — 60fps переходы
+   Все секции position:absolute, #view растягивается
+   по активной через min-height на .sec.on
+   Только opacity+translateY — строго GPU
 ═══════════════════════════════════════════ */
-#view{ position:relative; min-height:calc(100vh - 120px); }
+#view{
+  position:relative;
+  /* минимальная высота чтобы nav не перекрывал контент */
+  min-height:calc(100vh - 60px);
+}
 
 .sec{
-  position:absolute; top:0; left:0; right:0;
+  position:absolute;
+  top:0; left:0; right:0;
   opacity:0;
+  transform:translateY(12px);
   pointer-events:none;
   visibility:hidden;
+  /* transition вместо animation — нет reflow */
+  transition:opacity .28s ease, transform .28s ease;
   will-change:opacity, transform;
 }
+
+/* Активная секция — занимает место в потоке */
 .sec.on{
   position:relative;
   opacity:1;
+  transform:translateY(0);
   pointer-events:auto;
   visibility:visible;
-  animation:secIn .32s cubic-bezier(.25,.46,.45,.94) both;
-}
-.sec.leaving{
-  position:absolute; top:0; left:0; right:0;
-  pointer-events:none;
-  visibility:visible;
-  animation:secOut .18s ease-in both;
-}
-
-@keyframes secIn{
-  from{ opacity:0; transform:translateY(10px); }
-  to  { opacity:1; transform:translateY(0); }
-}
-@keyframes secOut{
-  from{ opacity:1; transform:translateY(0); }
-  to  { opacity:0; transform:translateY(-6px); }
 }
 
 /* ═══════════════════════════════════════════
@@ -1067,23 +1063,24 @@ function moveSlider(navItemEl){
 
 function go(id){
   if(id === _cur) return;
+
   const prev = document.getElementById(_cur);
   const next = document.getElementById(id);
   if(!next) return;
 
-  // Убираем предыдущую секцию
-  prev.classList.remove('on');
-  prev.classList.add('leaving');
-  setTimeout(() => prev.classList.remove('leaving'), 200);
-
-  // Показываем новую
-  next.classList.add('on');
   _cur = id;
 
-  // Скролл вверх
-  window.scrollTo({ top:0, behavior:'instant' });
+  // Убираем активную — transition уберёт плавно
+  prev.classList.remove('on');
 
-  // Слайдер навбара
+  // Показываем новую в следующем кадре — браузер успевает
+  // применить transition к prev до того как next появится
+  requestAnimationFrame(() => {
+    next.classList.add('on');
+    window.scrollTo({ top:0, behavior:'instant' });
+  });
+
+  // Навбар — сразу, без задержки
   document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
   const activeNav = document.getElementById(SEC_NAV[id]);
   activeNav?.classList.add('on');
