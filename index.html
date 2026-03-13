@@ -805,29 +805,27 @@ a{color:inherit}
       <div class="svc-card" onclick="go('s-key')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-key"/></svg></div><div class="svc-name" data-i18n="nav.ky">Ключ</div></div>
     </div>
 
-
-    <!-- ФОРМА НОВОГО ТИКЕТА -->
     <div class="panel" id="hlp-form-panel">
-      <div class="p-title"><svg width="17" height="17" style="color:rgba(255,255,255,.45)"><use href="#i-chat"/></svg>Связаться с оператором</div>
-      <div class="p-sub">Ответим в течение 15 минут</div>
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(255,255,255,.45)"><use href="#i-chat"/></svg><span data-i18n="hlp.op">Связаться с оператором</span></div>
+      <div class="p-sub" data-i18n="hlp.op.d">Ответим в течение 15 минут</div>
       <div class="form">
         <div class="form-g">
-          <label class="form-l">Тема</label>
+          <label class="form-l" data-i18n="frm.subj">Тема</label>
           <select class="form-i" id="sp-subj" style="appearance:none;cursor:pointer">
-            <option value="">Выберите тему...</option>
-            <option value="buy">Покупка / Оплата</option>
-            <option value="key">Проблема с ключом</option>
-            <option value="hwid">Привязка HWID</option>
-            <option value="tech">Техническая проблема</option>
-            <option value="oth">Другое</option>
+            <option value="" data-i18n="frm.s0">Выберите тему...</option>
+            <option value="buy" data-i18n="frm.s1">Покупка / Оплата</option>
+            <option value="key" data-i18n="frm.s2">Проблема с ключом</option>
+            <option value="hwid" data-i18n="frm.s3">Привязка HWID</option>
+            <option value="tech" data-i18n="frm.s4">Техническая проблема</option>
+            <option value="oth" data-i18n="frm.s5">Другое</option>
           </select>
         </div>
         <div class="form-g">
-          <label class="form-l">Сообщение</label>
-          <textarea class="form-ta" id="sp-msg" rows="3" placeholder="Опишите проблему..."></textarea>
+          <label class="form-l" data-i18n="frm.msg">Сообщение</label>
+          <textarea class="form-ta" id="sp-msg" rows="3" data-i18n-ph="frm.ph"></textarea>
         </div>
         <button class="btn btn-p" onclick="sendSup()">
-          <svg width="13" height="13"><use href="#i-send"/></svg><span>Отправить</span>
+          <svg width="13" height="13"><use href="#i-send"/></svg><span data-i18n="btn.send">Отправить</span>
         </button>
       </div>
     </div>
@@ -837,6 +835,7 @@ a{color:inherit}
       <div class="p-sub" data-i18n="hlp.ct.d">Для срочных вопросов</div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg><span data-i18n="ct.own">Владелец</span></span><a href="https://t.me/datadied" class="info-v" style="text-decoration:none;color:#ddd">@datadied</a></div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-mega"/></svg><span data-i18n="ct.ch">Канал</span></span><a href="https://t.me/scantoptmz" class="info-v" style="text-decoration:none;color:#ddd">@scantoptmz</a></div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-chat"/></svg><span data-i18n="ct.chat">Чат</span></span><a href="https://t.me/+MWTDqw6iilY4MDli" class="info-v" style="text-decoration:none;color:#ddd">KENOS Chat</a></div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.dev">Кодер</span></span><a href="https://t.me/WinInput32" class="info-v" style="text-decoration:none;color:#ddd">@WinInput32</a></div>
     </div>
   </section>
@@ -883,6 +882,7 @@ a{color:inherit}
       <div class="p-sub" data-i18n="abt.team.d">Наша команда</div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg><span data-i18n="ct.own">Владелец</span></span><a href="https://t.me/datadied" class="info-v" style="text-decoration:none;color:#ddd">@datadied</a></div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-mega"/></svg><span data-i18n="ct.ch">Канал</span></span><a href="https://t.me/scantoptmz" class="info-v" style="text-decoration:none;color:#ddd">@scantoptmz</a></div>
+      <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-chat"/></svg><span data-i18n="ct.chat">Чат</span></span><a href="https://t.me/+MWTDqw6iilY4MDli" class="info-v" style="text-decoration:none;color:#ddd">KENOS Chat</a></div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.dev">Кодер</span></span><a href="https://t.me/WinInput32" class="info-v" style="text-decoration:none;color:#ddd">@WinInput32</a></div>
       <div class="info-r"><span class="info-k"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="ct.loh">Кодер-лох</span></span><a href="https://t.me/xxaof" class="info-v" style="text-decoration:none;color:#ddd">@xxaof</a></div>
     </div>
@@ -959,9 +959,9 @@ ru:{
 'key.hw':'HWID','key.exp':'Истекает','key.none':'Ключ не куплен',
 'hlp.eye':'Всегда на связи','hlp.h':'Поддержка','hlp.op':'Связаться с оператором','hlp.op.d':'Ответим в течение 15 минут',
 'frm.subj':'Тема','frm.s0':'Выберите тему...','frm.s1':'Покупка / Оплата','frm.s2':'Проблема с ключом','frm.s3':'Привязка HWID','frm.s4':'Техническая проблема','frm.s5':'Другое',
-'frm.msg':'Сообщение',
+'frm.msg':'Сообщение','frm.ph':'Опишите проблему...',
 'hlp.ct':'Прямые контакты','hlp.ct.d':'Для срочных вопросов',
-'ct.own':'Владелец','ct.ch':'Канал','ct.dev':'Кодер','ct.loh':'Кодер-лох',
+'ct.own':'Владелец','ct.ch':'Канал','ct.chat':'Чат','ct.dev':'Кодер','ct.loh':'Кодер-лох',
 'nav.hm':'Главная','nav.by':'Купить','nav.py':'Оплата','nav.ky':'Ключ','nav.hp':'Помощь','nav.ab':'О нас',
 'inf.eye':'Статус · Новости','inf.h':'Инфо','inf.panel':'Информация','inf.panel.d':'Тех. работы · Статус сервиса · Новости','inf.empty':'Нет активных объявлений',
 'abt.eye':'О проекте','abt.h':'О нас','abt.p.d':'Standoff 2 · Premium Emulator',
@@ -995,9 +995,9 @@ en:{
 'key.hw':'HWID','key.exp':'Expires','key.none':'No key purchased',
 'hlp.eye':'Always in touch','hlp.h':'Support','hlp.op':'Contact Operator','hlp.op.d':'Response in 15 minutes',
 'frm.subj':'Subject','frm.s0':'Select topic...','frm.s1':'Purchase / Payment','frm.s2':'Key Issue','frm.s3':'HWID Binding','frm.s4':'Technical Issue','frm.s5':'Other',
-'frm.msg':'Message',
+'frm.msg':'Message','frm.ph':'Describe your issue...',
 'hlp.ct':'Direct Contacts','hlp.ct.d':'For urgent matters',
-'ct.own':'Owner','ct.ch':'Channel','ct.dev':'Developer','ct.loh':'Coder-loh',
+'ct.own':'Owner','ct.ch':'Channel','ct.chat':'Chat','ct.dev':'Developer','ct.loh':'Coder-loh',
 'nav.hm':'Home','nav.by':'Buy','nav.py':'Pay','nav.ky':'Key','nav.hp':'Help','nav.ab':'About',
 'inf.eye':'Status · News','inf.h':'Info','inf.panel':'Information','inf.panel.d':'Maintenance · Service Status · News','inf.empty':'No active announcements',
 'abt.eye':'About project','abt.h':'About us','abt.p.d':'Standoff 2 · Premium Emulator',
@@ -1018,8 +1018,12 @@ function setLang(l){
   document.getElementById('lang-sw').dataset.lang = l;
   // Подсвечиваем активную кнопку
   document.querySelectorAll('.lang-b').forEach(b => b.classList.toggle('on', b.textContent === l.toUpperCase()));
-  // Переводим все элементы с data-i18n за один проход
+  // Переводим обычные элементы
   document.querySelectorAll('[data-i18n]').forEach(el => el.innerHTML = t(el.dataset.i18n));
+  // Переводим <option> внутри <select>
+  document.querySelectorAll('option[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
+  // Переводим placeholder у textarea
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = t(el.dataset.i18nPh));
 }
 
 /* ══════════════════════════════════════
