@@ -171,9 +171,8 @@ a{color:inherit}
   to  {opacity:1;transform:translateY(0)}
 }
 @keyframes navIn{
-  0%  {transform:translateY(5px) scale(.82);opacity:.2}
-  65% {transform:translateY(-3px) scale(1.14)}
-  100%{transform:translateY(0) scale(1);opacity:1}
+  0%  {opacity:.2}
+  100%{opacity:1}
 }
 @keyframes navGlow{
   0%,100%{filter:drop-shadow(0 0 2px rgba(255,255,255,.15))}
@@ -368,24 +367,28 @@ a{color:inherit}
 ═══════════════════════════════════════════ */
 .svc-grid{padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .svc-card{
-  padding:20px 12px 15px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  cursor:pointer;text-align:center;
-  position:relative;overflow:hidden;
-  contain:layout style paint;
-  /* только transform/opacity на GPU */
-  transition:transform var(--fast) var(--ease),
-             border-color var(--fast) ease,
-             box-shadow var(--fast) ease;
+  background:rgba(14,14,14,.97);border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:18px 14px 14px;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform var(--fast) var(--ease), border-color var(--fast) ease, box-shadow var(--fast) ease;
+  box-shadow:0 4px 20px rgba(0,0,0,.45);
   will-change:transform;
 }
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);pointer-events:none}
 .svc-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.05) 0%,transparent 58%);pointer-events:none}
 .svc-card:hover{transform:translateY(-2px) scale(1.02);border-color:rgba(255,255,255,.16);box-shadow:0 8px 22px rgba(0,0,0,.5)}
 .svc-card:active{transform:scale(.96)}
-.svc-ico{display:flex;justify-content:center;margin-bottom:9px;color:rgba(255,255,255,.48);position:relative;z-index:1}
+.svc-ico{
+  display:flex;justify-content:center;align-items:center;
+  margin-bottom:12px;color:rgba(255,255,255,.55);
+  position:relative;z-index:1;
+  animation:float 4s ease-in-out infinite;
+  will-change:transform;
+}
+.svc-card:nth-child(1) .svc-ico{animation-delay:0s}
+.svc-card:nth-child(2) .svc-ico{animation-delay:-1s}
+.svc-card:nth-child(3) .svc-ico{animation-delay:-2s}
+.svc-card:nth-child(4) .svc-ico{animation-delay:-3s}
 .svc-name{font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:#fff;margin-bottom:3px;position:relative;z-index:1}
 .svc-desc{font-size:10px;color:var(--g5);position:relative;z-index:1}
 
@@ -581,22 +584,42 @@ a{color:inherit}
 .ni svg{
   color:rgba(255,255,255,.22);
   display:block;
-  transition:color .22s ease, transform .38s cubic-bezier(.16,1,.3,1), filter .22s ease;
+  /* transition только для color и filter — transform анимируется через float */
+  transition:color .3s ease, filter .3s ease;
+  animation:float 4s ease-in-out infinite;
+  will-change:transform;
+  /* filter:none явно — чтобы transition работал */
+  filter:none;
+}
+/* Задержки — браузер НЕ меняет animation при смене класса .on,
+   потому что animation-name/duration одинаковые — float не перезапустится */
+.ni:nth-child(1) svg{animation-delay:0s}
+.ni:nth-child(2) svg{animation-delay:-.5s}
+.ni:nth-child(3) svg{animation-delay:-1s}
+.ni:nth-child(4) svg{animation-delay:-1.5s}
+.ni:nth-child(5) svg{animation-delay:-2s}
+.ni:nth-child(6) svg{animation-delay:-2.5s}
+.ni:nth-child(7) svg{animation-delay:-3s}
+.ni:nth-child(8) svg{animation-delay:-3.5s}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%    {transform:translateY(-5px)}
 }
 .ni span{
   font-size:8px;letter-spacing:.06em;text-transform:uppercase;
   color:rgba(255,255,255,.22);white-space:nowrap;
-  transition:color .22s ease;
+  transition:color .3s ease;
 }
-.ni:hover svg{ color:rgba(255,255,255,.55); transform:translateY(-2px) scale(1.07); }
+.ni:hover svg{ color:rgba(255,255,255,.55); }
 .ni:hover span{ color:rgba(255,255,255,.45); }
 .ni:active{ transform:scale(.9); }
 
-/* Активная вкладка — только цвет, фон даёт слайдер */
+/* Активная — только color и glow через filter transition, float НЕ трогаем */
 .ni.on span{ color:#fff; }
 .ni.on svg{
   color:#fff;
-  animation:navIn .42s var(--ease) both, navGlow 4s .5s ease-in-out infinite;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,.7));
 }
 
 /* Линия-индикатор снизу */
@@ -679,22 +702,22 @@ a{color:inherit}
     <p class="sec-title" data-i18n="sec.svc">Услуги</p>
     <div class="svc-grid">
       <div class="svc-card" onclick="go('s-buy')">
-        <div class="svc-ico"><svg width="26" height="26"><use href="#i-gear"/></svg></div>
+        <div class="svc-ico"><svg width="32" height="32"><use href="#i-gear"/></svg></div>
         <div class="svc-name" data-i18n="svc.bs">Custom BlueStacks</div>
         <div class="svc-desc" data-i18n="svc.bs.d">Настройка под вас</div>
       </div>
       <div class="svc-card" onclick="go('s-key')">
-        <div class="svc-ico"><svg width="26" height="26"><use href="#i-key"/></svg></div>
+        <div class="svc-ico"><svg width="32" height="32"><use href="#i-key"/></svg></div>
         <div class="svc-name" data-i18n="svc.key">Ключ доступа</div>
         <div class="svc-desc" data-i18n="svc.key.d">HWID лицензия</div>
       </div>
       <div class="svc-card" onclick="go('s-pay')">
-        <div class="svc-ico"><svg width="26" height="26"><use href="#i-card"/></svg></div>
+        <div class="svc-ico"><svg width="32" height="32"><use href="#i-card"/></svg></div>
         <div class="svc-name" data-i18n="svc.pay">Оплата</div>
         <div class="svc-desc" data-i18n="svc.pay.d">Реквизиты</div>
       </div>
       <div class="svc-card" onclick="go('s-hlp')">
-        <div class="svc-ico"><svg width="26" height="26"><use href="#i-chat"/></svg></div>
+        <div class="svc-ico"><svg width="32" height="32"><use href="#i-chat"/></svg></div>
         <div class="svc-name" data-i18n="svc.hlp">Поддержка</div>
         <div class="svc-desc" data-i18n="svc.hlp.d">Связаться с нами</div>
       </div>
