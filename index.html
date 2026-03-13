@@ -76,7 +76,7 @@ a{color:inherit}
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   background:var(--bg);
-  transition:opacity 1.2s var(--ease), visibility 1.2s;
+  transition:opacity .45s ease-out, visibility .45s;
   will-change:opacity;
 }
 #loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
@@ -148,8 +148,10 @@ a{color:inherit}
 ═══════════════════════════════════════════ */
 .panel{ contain:layout style; }
 .ni{ contain:layout style; }
-.sec{ contain:layout; }
-.btn{ contain:layout style; }
+.sec{ contain:layout; transform:translateZ(0); }
+#cvs-sakura{ transform:translateZ(0); }
+.nav{ transform:translateZ(0); }
+.hdr{ transform:translateZ(0); }
 
 @keyframes glowPulse{
   0%,100%{text-shadow:0 0 8px rgba(255,255,255,.06)}
@@ -1203,109 +1205,103 @@ async function sendSup(){
    3. Один общий resize через ResizeObserver
    4. Запрос анимации только если вкладка активна (visibilitychange)
 ══════════════════════════════════════ */
-function initSakura(canvasId,count,alpha){
-  const cvs=document.getElementById(canvasId);
-  if(!cvs)return;
-  const ctx=cvs.getContext('2d',{alpha:true,desynchronized:true});
+function initSakura(canvasId, count, alpha){
+  const cvs = document.getElementById(canvasId);
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d', { alpha:true, desynchronized:true });
 
-  let W=0,H=0;
+  let W=0, H=0;
 
-  // Пре-рендер лепестка в кэш-канвас для каждого размера
-  const SIZES=[5,7,9,11,13];
-  const cache=new Map();
-  SIZES.forEach(r=>{
-    const cc=document.createElement('canvas');
-    const d=Math.ceil(r*2.4);
-    cc.width=cc.height=d;
-    const cx=cc.getContext('2d');
-    const cx2=d/2;
-    for(let i=0;i<5;i++){
-      const ang=(i/5)*Math.PI*2-Math.PI/2;
-      const ox=Math.cos(ang)*r*.45+cx2, oy=Math.sin(ang)*r*.45+cx2;
-      cx.save();cx.translate(ox,oy);cx.rotate(ang);cx.scale(1,.52);
-      cx.beginPath();cx.arc(0,0,r*.5,0,Math.PI*2);
-      const g=cx.createRadialGradient(0,0,0,0,0,r*.5);
+  // Пре-рендер лепестков в кэш
+  const SIZES = [5,7,9,11,13];
+  const cache = new Map();
+  SIZES.forEach(r => {
+    const cc = document.createElement('canvas');
+    const d  = Math.ceil(r * 2.4);
+    cc.width = cc.height = d;
+    const cx = cc.getContext('2d');
+    const cx2 = d / 2;
+    for(let i=0; i<5; i++){
+      const ang = (i/5)*Math.PI*2 - Math.PI/2;
+      const ox  = Math.cos(ang)*r*.45 + cx2;
+      const oy  = Math.sin(ang)*r*.45 + cx2;
+      cx.save(); cx.translate(ox,oy); cx.rotate(ang); cx.scale(1,.52);
+      cx.beginPath(); cx.arc(0,0,r*.5,0,Math.PI*2);
+      const g = cx.createRadialGradient(0,0,0,0,0,r*.5);
       g.addColorStop(0,'rgba(255,220,230,.9)');
       g.addColorStop(.5,'rgba(230,185,205,.52)');
       g.addColorStop(1,'rgba(200,155,180,0)');
-      cx.fillStyle=g;cx.fill();cx.restore();
+      cx.fillStyle=g; cx.fill(); cx.restore();
     }
-    cache.set(r,cc);
+    cache.set(r, cc);
   });
 
-  // Float32Array: x,y,r_idx,vx,vy,a,va,sw,ss,sa,al  → 11 floats per petal
-  const STRIDE=11;
-  const buf=new Float32Array(count*STRIDE);
+  // Float32Array: x,y,ridx,vx,vy,angle,va,sw,ss,sa,al
+  const STRIDE = 11;
+  const buf = new Float32Array(count * STRIDE);
 
-  function initPetal(i,fullH){
-    const b=i*STRIDE;
-    buf[b+0]=Math.random()*W;             // x
-    buf[b+1]=fullH?Math.random()*H:-20;   // y
-    buf[b+2]=Math.floor(Math.random()*SIZES.length); // r_idx
-    buf[b+3]=(Math.random()-.5)*.5;       // vx
-    buf[b+4]=.25+Math.random()*.45;       // vy
-    buf[b+5]=Math.random()*Math.PI*2;     // angle
-    buf[b+6]=(Math.random()-.5)*.016;     // va
-    buf[b+7]=Math.random()*Math.PI*2;     // sw
-    buf[b+8]=.004+Math.random()*.008;     // ss
-    buf[b+9]=.4+Math.random()*.8;         // sa
-    buf[b+10]=.4+Math.random()*.5;        // al
+  function initPetal(i, fullH){
+    const b = i * STRIDE;
+    buf[b]   = Math.random() * W;
+    buf[b+1] = fullH ? Math.random()*H : -20;
+    buf[b+2] = Math.floor(Math.random() * SIZES.length);
+    buf[b+3] = (Math.random()-.5) * .5;
+    buf[b+4] = .25 + Math.random() * .45;
+    buf[b+5] = Math.random() * Math.PI * 2;
+    buf[b+6] = (Math.random()-.5) * .016;
+    buf[b+7] = Math.random() * Math.PI * 2;
+    buf[b+8] = .004 + Math.random() * .008;
+    buf[b+9] = .4 + Math.random() * .8;
+    buf[b+10]= .4 + Math.random() * .5;
   }
 
   function resize(){
-    W=cvs.width=window.innerWidth;
-    H=cvs.height=window.innerHeight;
+    W = cvs.width  = window.innerWidth;
+    H = cvs.height = window.innerHeight;
   }
-
-  // Debounced resize через ResizeObserver — точнее чем window resize
-  const ro=new ResizeObserver(()=>{resize();});
-  ro.observe(document.documentElement);
+  new ResizeObserver(resize).observe(document.documentElement);
   resize();
+  for(let i=0; i<count; i++) initPetal(i, true);
 
-  for(let i=0;i<count;i++)initPetal(i,true);
-
-  let raf=0;
-  let active=true;
+  let active = true;
+  document.addEventListener('visibilitychange', () => {
+    active = !document.hidden;
+    if(active) requestAnimationFrame(frame);
+  }, { passive:true });
 
   function frame(){
-    if(!active){raf=0;return;}
-    ctx.clearRect(0,0,W,H);
-    ctx.save();
-    for(let i=0;i<count;i++){
-      const b=i*STRIDE;
-      // update
-      buf[b+7]+=buf[b+8];                           // sw
-      buf[b+0]+=buf[b+3]+Math.sin(buf[b+7])*buf[b+9]*.25; // x
-      buf[b+1]+=buf[b+4];                           // y
-      buf[b+5]+=buf[b+6];                           // angle
-      // out of bounds → respawn
-      if(buf[b+1]>H+40||buf[b+0]<-50||buf[b+0]>W+50){initPetal(i,false);continue;}
-      // draw from cache
-      const r=SIZES[buf[b+2]];
-      const cc=cache.get(r);
-      const d=cc.width;
-      ctx.save();
-      ctx.globalAlpha=buf[b+10]*alpha;
-      ctx.translate(buf[b+0],buf[b+1]);
-      ctx.rotate(buf[b+5]);
-      ctx.drawImage(cc,-d/2,-d/2);
-      ctx.restore();
+    if(!active) return;
+    ctx.clearRect(0, 0, W, H);
+
+    for(let i=0; i<count; i++){
+      const b = i * STRIDE;
+      buf[b+7] += buf[b+8];
+      buf[b]   += buf[b+3] + Math.sin(buf[b+7]) * buf[b+9] * .25;
+      buf[b+1] += buf[b+4];
+      buf[b+5] += buf[b+6];
+      if(buf[b+1] > H+40 || buf[b] < -50 || buf[b] > W+50){ initPetal(i,false); continue; }
+
+      const cc = cache.get(SIZES[buf[b+2]]);
+      const d  = cc.width;
+      // Без save/restore — вручную сбрасываем transform
+      ctx.globalAlpha = buf[b+10] * alpha;
+      ctx.setTransform(
+        Math.cos(buf[b+5]), Math.sin(buf[b+5]),
+       -Math.sin(buf[b+5]), Math.cos(buf[b+5]),
+        buf[b], buf[b+1]
+      );
+      ctx.drawImage(cc, -d/2, -d/2);
     }
-    ctx.restore();
-    raf=requestAnimationFrame(frame);
+    // Сброс трансформа одним вызовом
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
   }
-
-  document.addEventListener('visibilitychange',()=>{
-    active=!document.hidden;
-    if(active&&!raf)raf=requestAnimationFrame(frame);
-  },{passive:true});
-
-  raf=requestAnimationFrame(frame);
-  return()=>ro.disconnect();
+  requestAnimationFrame(frame);
 }
 
-initSakura('cvs-sakura',45,.58);
-initSakura('cvs-loader',26,.62);
+initSakura('cvs-sakura', 38, .55);
+initSakura('cvs-loader', 20, .60);
 
 /* ══════════════════════════════════════
    LOADER — плавный прогресс с статусами
@@ -1365,7 +1361,7 @@ initSakura('cvs-loader',26,.62);
     else setTimeout(()=>{
       ld.classList.add('hidden');
       moveSlider(document.getElementById('n-home'));
-    }, 650);
+    }, 250);
   }
 
   // Старт через 1с — дать анимациям CSS появиться
