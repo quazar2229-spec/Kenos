@@ -1568,7 +1568,8 @@ function initSakura(id,count,alpha){
 
   /* STRIDE 9: x,y,si,ci,vx,vy,ai,vai,ali */
   const S=9,buf=new Float32Array(count*S);
-  const sw=new Uint16Array(count); /* swing speed */
+  const sw=new Uint16Array(count);  /* swing speed */
+  const sp=new Uint16Array(count);  /* swing phase — отдельный для каждого лепестка */
 
   function spawn(i,top){
     const b=i*S;
@@ -1581,7 +1582,8 @@ function initSakura(id,count,alpha){
     buf[b+6]=(Math.random()*LUT)|0;
     buf[b+7]=((Math.random()<.5?1:-1)*(1+(Math.random()*2)|0));
     buf[b+8]=.58+Math.random()*.42;
-    sw[i]=1+(Math.random()*3)|0;
+    sp[i]   =(Math.random()*LUT)|0;  /* случайная начальная фаза качания */
+    sw[i]   =1+(Math.random()*2)|0;  /* медленнее: 1-2 шага вместо 1-3 */
   }
 
   function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight;}
@@ -1589,8 +1591,8 @@ function initSakura(id,count,alpha){
   resize();
   for(let i=0;i<count;i++)spawn(i,true);
 
-  let alive=true,lastT=0,swi=0;
-  const CAP=1000/63; /* ~60fps cap — работает и на 120hz */
+  let alive=true,lastT=0;
+  const CAP=1000/63;
 
   document.addEventListener('visibilitychange',()=>{
     alive=!document.hidden;if(alive)requestAnimationFrame(fr);
@@ -1606,8 +1608,8 @@ function initSakura(id,count,alpha){
 
     for(let i=0;i<count;i++){
       const b=i*S;
-      swi=(swi+sw[i])&LM;
-      buf[b]  +=buf[b+4]+SINT[swi]*(.4+buf[b+8]*.3)*.28;
+      sp[i]=(sp[i]+sw[i])&LM;           /* каждый лепесток — своя фаза */
+      buf[b]  +=buf[b+4]+SINT[sp[i]]*(.35+buf[b+8]*.25)*.22;
       buf[b+1]+=buf[b+5];
       buf[b+6] =(buf[b+6]+buf[b+7]+LUT)&LM;
 
