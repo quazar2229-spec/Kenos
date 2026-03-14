@@ -334,11 +334,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .hdr-right{display:flex;align-items:center;gap:7px}
 
 /* ═══════════════════════════════════════════
-   SECTIONS
-   • translate3d(0,0,0) — форсирует GPU compositing слой
-   • content-visibility:hidden — браузер полностью пропускает рендер скрытых секций
-   • contain:layout style paint — изолируем reflow/repaint
-   • Каскадный fade-in дочерних блоков через @keyframes + nth-child задержки
+   SECTIONS — плавные переходы
 ═══════════════════════════════════════════ */
 #view{
   position:relative;
@@ -350,13 +346,11 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:absolute;
   top:0;left:0;right:0;
   opacity:0;
-  transform:translate3d(0,10px,0);
+  transform:translate3d(0,18px,0);
   pointer-events:none;
   visibility:hidden;
-  content-visibility:hidden;
-  contain:layout style paint;
-  transition:opacity .22s cubic-bezier(.16,1,.3,1),
-             transform .22s cubic-bezier(.16,1,.3,1);
+  transition:opacity .4s cubic-bezier(.25,.46,.45,.94),
+             transform .4s cubic-bezier(.25,.46,.45,.94);
   will-change:opacity,transform;
 }
 
@@ -367,71 +361,65 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   transform:translate3d(0,0,0);
   pointer-events:auto;
   visibility:visible;
-  content-visibility:visible;
   will-change:auto;
 }
 
 /* ══════════════════════════════════════
-   КАСКАДНЫЙ FADE-IN дочерних элементов
-   Запускается только когда секция становится .on
-   Каждый блок появляется чуть позже предыдущего
-   — создаёт эффект "прилёта" контента сверху вниз
+   КАСКАДНЫЙ FADE-IN — мягко, неспешно
 ══════════════════════════════════════ */
 @keyframes secItemIn{
-  from{ opacity:0; transform:translate3d(0,14px,0); }
+  from{ opacity:0; transform:translate3d(0,10px,0); }
   to  { opacity:1; transform:translate3d(0,0,0); }
 }
 
-/* Элементы-участники каскада */
+/* Все участники каскада */
 .sec.on .hero,
 .sec.on .sec-title,
 .sec.on .svc-grid,
 .sec.on .panel,
 .sec.on .links,
-.sec.on [style*="padding:0 16px"] {
+.sec.on [style*="padding:0 16px"]{
   opacity:0;
-  animation: secItemIn .38s cubic-bezier(.16,1,.3,1) forwards;
-  will-change: opacity, transform;
+  animation:secItemIn .55s cubic-bezier(.25,.46,.45,.94) forwards;
 }
 
-/* Задержки каскада — каждый следующий блок через 55ms */
-.sec.on .hero                    { animation-delay:.06s }
-.sec.on .sec-title               { animation-delay:.10s }
-.sec.on .svc-grid                { animation-delay:.14s }
-.sec.on .panel:nth-of-type(1)    { animation-delay:.14s }
-.sec.on .panel:nth-of-type(2)    { animation-delay:.20s }
-.sec.on .panel:nth-of-type(3)    { animation-delay:.26s }
-.sec.on .panel:nth-of-type(4)    { animation-delay:.32s }
-.sec.on .panel:nth-of-type(5)    { animation-delay:.38s }
-.sec.on .links                   { animation-delay:.22s }
-.sec.on [style*="padding:0 16px"]{ animation-delay:.34s }
+/* Шаг 80ms — неторопливо */
+.sec.on .hero                    { animation-delay:.10s }
+.sec.on .sec-title               { animation-delay:.16s }
+.sec.on .svc-grid                { animation-delay:.20s }
+.sec.on .panel:nth-of-type(1)    { animation-delay:.20s }
+.sec.on .panel:nth-of-type(2)    { animation-delay:.30s }
+.sec.on .panel:nth-of-type(3)    { animation-delay:.40s }
+.sec.on .panel:nth-of-type(4)    { animation-delay:.50s }
+.sec.on .panel:nth-of-type(5)    { animation-delay:.60s }
+.sec.on .links                   { animation-delay:.32s }
+.sec.on [style*="padding:0 16px"]{ animation-delay:.50s }
 
-/* Текст внутри hero появляется последовательно */
-.sec.on .hero-eye  { opacity:0; animation:secItemIn .3s .08s  cubic-bezier(.16,1,.3,1) forwards }
-.sec.on .hero-h    { opacity:0; animation:secItemIn .4s .13s  cubic-bezier(.16,1,.3,1) forwards }
-.sec.on .hero-sub  { opacity:0; animation:secItemIn .3s .19s  cubic-bezier(.16,1,.3,1) forwards }
-.sec.on .divider   { opacity:0; animation:secItemIn .3s .24s  cubic-bezier(.16,1,.3,1) forwards }
+/* Hero — строки одна за одной */
+.sec.on .hero-eye { opacity:0; animation:secItemIn .5s  .12s cubic-bezier(.25,.46,.45,.94) forwards }
+.sec.on .hero-h   { opacity:0; animation:secItemIn .6s  .20s cubic-bezier(.25,.46,.45,.94) forwards }
+.sec.on .hero-sub { opacity:0; animation:secItemIn .5s  .30s cubic-bezier(.25,.46,.45,.94) forwards }
+.sec.on .divider  { opacity:0; animation:secItemIn .45s .38s cubic-bezier(.25,.46,.45,.94) forwards }
 
-/* Карточки услуг — появляются по одной */
-.sec.on .svc-card:nth-child(1){ opacity:0; animation:secItemIn .35s .16s cubic-bezier(.16,1,.3,1) forwards }
-.sec.on .svc-card:nth-child(2){ opacity:0; animation:secItemIn .35s .22s cubic-bezier(.16,1,.3,1) forwards }
-.sec.on .svc-card:nth-child(3){ opacity:0; animation:secItemIn .35s .28s cubic-bezier(.16,1,.3,1) forwards }
-.sec.on .svc-card:nth-child(4){ opacity:0; animation:secItemIn .35s .34s cubic-bezier(.16,1,.3,1) forwards }
+/* Карточки услуг — шаг 90ms */
+.sec.on .svc-card:nth-child(1){ opacity:0; animation:secItemIn .5s .22s cubic-bezier(.25,.46,.45,.94) forwards }
+.sec.on .svc-card:nth-child(2){ opacity:0; animation:secItemIn .5s .31s cubic-bezier(.25,.46,.45,.94) forwards }
+.sec.on .svc-card:nth-child(3){ opacity:0; animation:secItemIn .5s .40s cubic-bezier(.25,.46,.45,.94) forwards }
+.sec.on .svc-card:nth-child(4){ opacity:0; animation:secItemIn .5s .49s cubic-bezier(.25,.46,.45,.94) forwards }
 
-/* Строки внутри панелей */
-.sec.on .info-r:nth-child(1){ opacity:0; animation:secItemIn .28s .18s cubic-bezier(.16,1,.3,1) forwards }
-.sec.on .info-r:nth-child(2){ opacity:0; animation:secItemIn .28s .23s cubic-bezier(.16,1,.3,1) forwards }
-.sec.on .info-r:nth-child(3){ opacity:0; animation:secItemIn .28s .28s cubic-bezier(.16,1,.3,1) forwards }
-.sec.on .info-r:nth-child(4){ opacity:0; animation:secItemIn .28s .33s cubic-bezier(.16,1,.3,1) forwards }
-.sec.on .info-r:nth-child(5){ opacity:0; animation:secItemIn .28s .38s cubic-bezier(.16,1,.3,1) forwards }
+/* Строки info-r — шаг 70ms */
+.sec.on .info-r:nth-child(1){ opacity:0; animation:secItemIn .45s .25s cubic-bezier(.25,.46,.45,.94) forwards }
+.sec.on .info-r:nth-child(2){ opacity:0; animation:secItemIn .45s .33s cubic-bezier(.25,.46,.45,.94) forwards }
+.sec.on .info-r:nth-child(3){ opacity:0; animation:secItemIn .45s .41s cubic-bezier(.25,.46,.45,.94) forwards }
+.sec.on .info-r:nth-child(4){ opacity:0; animation:secItemIn .45s .49s cubic-bezier(.25,.46,.45,.94) forwards }
+.sec.on .info-r:nth-child(5){ opacity:0; animation:secItemIn .45s .57s cubic-bezier(.25,.46,.45,.94) forwards }
 
-/* prefers-reduced-motion — отключаем все анимации если у пользователя такая настройка */
-@media (prefers-reduced-motion: reduce){
-  .sec.on .hero, .sec.on .sec-title, .sec.on .svc-grid,
-  .sec.on .panel, .sec.on .links, .sec.on [style*="padding:0 16px"],
-  .sec.on .hero-eye, .sec.on .hero-h, .sec.on .hero-sub, .sec.on .divider,
-  .sec.on .svc-card, .sec.on .info-r {
-    opacity:1; animation:none;
+/* prefers-reduced-motion */
+@media(prefers-reduced-motion:reduce){
+  .sec,.sec.on .hero,.sec.on .sec-title,.sec.on .svc-grid,.sec.on .panel,
+  .sec.on .links,.sec.on .hero-eye,.sec.on .hero-h,.sec.on .hero-sub,
+  .sec.on .divider,.sec.on .svc-card,.sec.on .info-r{
+    opacity:1;animation:none;transition:none;transform:none;
   }
 }
 
@@ -698,7 +686,9 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   width:44px;
   border-radius:11px;
   background:var(--slider-bg);
-  transition:left .55s cubic-bezier(.16,1,.3,1), width .55s cubic-bezier(.16,1,.3,1);
+  /* пружинный эффект — слайдер «догоняет» палец */
+  transition:left .48s cubic-bezier(.34,1.56,.64,1),
+             width .48s cubic-bezier(.34,1.56,.64,1);
   pointer-events:none;
   z-index:0;
 }
@@ -713,12 +703,13 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .ni svg{
   color:var(--txt-muted);
   display:block;
-  transition:color .3s ease, filter .3s ease;
+  transition:color .38s cubic-bezier(.25,.46,.45,.94),
+             filter .38s cubic-bezier(.25,.46,.45,.94);
   animation:float 4s ease-in-out infinite;
   will-change:transform;
   filter:none;
 }
-/* Задержки */
+/* Задержки float */
 .ni:nth-child(1) svg{animation-delay:0s}
 .ni:nth-child(2) svg{animation-delay:-.5s}
 .ni:nth-child(3) svg{animation-delay:-1s}
@@ -735,13 +726,13 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .ni span{
   font-size:8px;letter-spacing:.06em;text-transform:uppercase;
   color:var(--txt-muted);white-space:nowrap;
-  transition:color .3s ease;
+  transition:color .38s cubic-bezier(.25,.46,.45,.94);
 }
-.ni:hover svg{ color:var(--ac-soft); }
+.ni:hover svg { color:var(--ac-soft); }
 .ni:hover span{ color:var(--ac-soft); }
-.ni:active{ transform:scale(.9); }
+.ni:active{ transform:scale(.9); transition:transform .12s ease; }
 
-/* Активная — розовый акцент через тему */
+/* Активная — плавно светится */
 .ni.on span{ color:var(--ac); }
 .ni.on svg{
   color:var(--ac);
@@ -756,7 +747,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   width:16px;height:1.5px;border-radius:1px;
   background:linear-gradient(90deg,transparent,var(--ac),transparent);
   box-shadow:0 0 5px var(--ac-soft);
-  transition:transform .35s var(--ease), opacity .22s ease;
+  transition:transform .42s cubic-bezier(.34,1.56,.64,1),
+             opacity .3s ease;
   opacity:0;
 }
 .ni.on::before{ transform:translateX(-50%) scaleX(1); opacity:.8; }
@@ -1249,19 +1241,16 @@ function go(id){
   // Убираем старую секцию
   prev?.classList.remove('on');
 
-  // Сбрасываем анимации на следующем кадре — браузер пересчитает стили,
-  // потом добавляем .on и анимации стартуют заново
+  // Два rAF: первый — браузер применяет стили ухода,
+  // второй — добавляем .on на новую, анимации стартуют чисто
   requestAnimationFrame(() => {
-    // Форсируем reflow только на новой секции (не на всей странице)
-    next.style.display = 'none';
-    void next.offsetHeight; // минимальный reflow — только этот элемент
-    next.style.display = '';
-
-    next.classList.add('on');
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    requestAnimationFrame(() => {
+      next.classList.add('on');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
   });
 
-  // Навбар — сразу, без задержки
+  // Навбар — обновляем сразу
   document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
   const activeNav = document.getElementById(SEC_NAV[id]);
   activeNav?.classList.add('on');
@@ -1532,15 +1521,11 @@ function initSakura(canvasId, count, alpha){
   requestAnimationFrame(frame);
 }
 
-/* ── Количество лепестков ──────────────────────
-   Основной экран: оптимально для 60/120fps
-   Лоадер: чуть больше главного, но без перебора
-──────────────────────────────────────────────── */
-const _UA       = navigator.userAgent;
-const _isMob    = /iPhone|iPad|iPod|Android/i.test(_UA);
-const _isAndroid= /Android/i.test(_UA);
-initSakura('cvs-sakura', _isMob ? (_isAndroid ? 12 : 16) : 28, .65);
-initSakura('cvs-loader',  _isMob ? (_isAndroid ? 10 : 13) : 20, .72);
+/* На мобиле меньше лепестков для 60fps */
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const isAndroid = /Android/i.test(navigator.userAgent);
+initSakura('cvs-sakura', isMobile ? (isAndroid ? 10 : 14) : 26, .65);
+initSakura('cvs-loader',  isMobile ? (isAndroid ?  5 :  7) : 12, .70);
 
 /* ══════════════════════════════════════
    LOADER — плавный прогресс с статусами
