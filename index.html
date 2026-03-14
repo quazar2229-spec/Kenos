@@ -355,19 +355,15 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:absolute;
   top:0;left:0;right:0;
   opacity:0;
-  transform:translate3d(0,18px,0);
   pointer-events:none;
   visibility:hidden;
-  transition:opacity .4s cubic-bezier(.25,.46,.45,.94),
-             transform .4s cubic-bezier(.25,.46,.45,.94);
-  will-change:opacity,transform;
+  transition:opacity .32s var(--smooth);
+  will-change:opacity;
 }
 
-/* ── Активная секция ── */
 .sec.on{
   position:relative;
   opacity:1;
-  transform:translate3d(0,0,0);
   pointer-events:auto;
   visibility:visible;
   will-change:auto;
@@ -375,65 +371,6 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 
 /* ══════════════════════════════════════
    FADE-IN элементов — единый transition
-   Та же кривая что и nav, без keyframes
-══════════════════════════════════════ */
-@keyframes secItemIn{
-  from{ opacity:0; transform:translate3d(0,8px,0); }
-  to  { opacity:1; transform:translate3d(0,0,0); }
-}
-
-/* Все участники каскада */
-.sec.on .hero,
-.sec.on .sec-title,
-.sec.on .svc-grid,
-.sec.on .panel,
-.sec.on .links,
-.sec.on [style*="padding:0 16px"]{
-  opacity:0;
-  animation:secItemIn .42s var(--smooth) forwards;
-}
-
-/* Шаги — меньше задержки, ощущается живее */
-.sec.on .hero                    { animation-delay:.06s }
-.sec.on .sec-title               { animation-delay:.09s }
-.sec.on .svc-grid                { animation-delay:.09s }
-.sec.on .panel:nth-of-type(1)    { animation-delay:.09s }
-.sec.on .panel:nth-of-type(2)    { animation-delay:.16s }
-.sec.on .panel:nth-of-type(3)    { animation-delay:.23s }
-.sec.on .panel:nth-of-type(4)    { animation-delay:.30s }
-.sec.on .panel:nth-of-type(5)    { animation-delay:.37s }
-.sec.on .links                   { animation-delay:.18s }
-.sec.on [style*="padding:0 16px"]{ animation-delay:.28s }
-
-/* Hero */
-.sec.on .hero-eye { opacity:0; animation:secItemIn .38s .08s var(--smooth) forwards }
-.sec.on .hero-h   { opacity:0; animation:secItemIn .45s .14s var(--smooth) forwards }
-.sec.on .hero-sub { opacity:0; animation:secItemIn .38s .20s var(--smooth) forwards }
-.sec.on .divider  { opacity:0; animation:secItemIn .35s .26s var(--smooth) forwards }
-
-/* Карточки */
-.sec.on .svc-card:nth-child(1){ opacity:0; animation:secItemIn .4s .11s var(--smooth) forwards }
-.sec.on .svc-card:nth-child(2){ opacity:0; animation:secItemIn .4s .18s var(--smooth) forwards }
-.sec.on .svc-card:nth-child(3){ opacity:0; animation:secItemIn .4s .25s var(--smooth) forwards }
-.sec.on .svc-card:nth-child(4){ opacity:0; animation:secItemIn .4s .32s var(--smooth) forwards }
-
-/* Строки info-r */
-.sec.on .info-r:nth-child(1){ opacity:0; animation:secItemIn .38s .14s var(--smooth) forwards }
-.sec.on .info-r:nth-child(2){ opacity:0; animation:secItemIn .38s .21s var(--smooth) forwards }
-.sec.on .info-r:nth-child(3){ opacity:0; animation:secItemIn .38s .28s var(--smooth) forwards }
-.sec.on .info-r:nth-child(4){ opacity:0; animation:secItemIn .38s .35s var(--smooth) forwards }
-.sec.on .info-r:nth-child(5){ opacity:0; animation:secItemIn .38s .42s var(--smooth) forwards }
-
-/* prefers-reduced-motion */
-@media(prefers-reduced-motion:reduce){
-  .sec,.sec.on .hero,.sec.on .sec-title,.sec.on .svc-grid,.sec.on .panel,
-  .sec.on .links,.sec.on .hero-eye,.sec.on .hero-h,.sec.on .hero-sub,
-  .sec.on .divider,.sec.on .svc-card,.sec.on .info-r{
-    opacity:1;animation:none;transition:none;transform:none;
-  }
-}
-
-
 /* Акценты через тему */
 .divider{
   background:linear-gradient(90deg,transparent,var(--ac-soft),transparent);
@@ -725,14 +662,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 }
 .ni:hover svg { color:var(--ac-soft); }
 .ni:hover span{ color:var(--ac-soft); }
-.ni:active{ transform:scale(.88); transition:transform .1s ease; }
-/* На активной — уходит вниз и плавно возвращается */
-.ni.on:active{ transform:translateY(4px); transition:transform .12s ease; }
-@keyframes navBounceBack{
-  0%  { transform:translateY(4px); }
-  60% { transform:translateY(-2px); }
-  100%{ transform:translateY(0); }
-}
+.ni:active{ opacity:.7; transition:opacity .1s ease; }
+.ni.on:active{ opacity:1; } /* уже на этом разделе — никакого эффекта */
 .ni.on.bouncing{ animation:navBounceBack .38s cubic-bezier(.25,.46,.45,.94) forwards; }
 
 /* Активная иконка */
@@ -838,6 +769,73 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .promo-result.ok{ border-color:rgba(200,200,200,.25); color:rgba(220,220,220,.9); }
 .promo-result.err{ border-color:rgba(200,200,200,.1); color:rgba(150,150,150,.7); }
 ═══════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════
+   PROFILE OVERLAY
+═══════════════════════════════════════════ */
+#profile-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;
+  transition:opacity .32s var(--smooth);
+}
+#profile-overlay.open{opacity:1;pointer-events:auto;}
+.profile-sheet{
+  width:100%;max-width:480px;margin:0 auto;
+  background:#111;
+  border-radius:24px 24px 0 0;
+  border-top:1px solid var(--border);
+  padding-bottom:calc(20px + env(safe-area-inset-bottom));
+  transform:translateY(100%);
+  transition:transform .38s cubic-bezier(.25,.46,.45,.94);
+}
+#profile-overlay.open .profile-sheet{transform:translateY(0);}
+.profile-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);margin:12px auto 0;}
+.profile-head{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 20px 16px;border-bottom:1px solid var(--border);
+}
+.profile-ava{
+  width:52px;height:52px;border-radius:50%;flex-shrink:0;
+  background:var(--ac-dim);border:1.5px solid var(--border-ac);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;color:var(--txt-muted);position:relative;
+}
+.profile-ava::after{
+  content:'';position:absolute;inset:-3px;border-radius:50%;
+  border:1.5px solid transparent;
+  border-top-color:var(--ac);border-right-color:var(--ac-dim);
+  animation:spin 2.2s linear infinite;
+  pointer-events:none;
+}
+.profile-ava img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.profile-name{font-size:17px;font-weight:600;letter-spacing:.03em;color:var(--txt)}
+.profile-uid{font-size:11px;color:var(--g5);letter-spacing:.05em;margin-top:2px}
+.profile-body{padding:0 20px}
+.profile-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 0;border-bottom:1px solid var(--border);
+}
+.profile-row:last-of-type{border-bottom:none}
+.profile-lbl{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--g5);letter-spacing:.08em;text-transform:uppercase}
+.profile-lbl svg{color:var(--txt-muted);flex-shrink:0}
+.profile-val{
+  font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:300;
+  color:var(--txt);letter-spacing:.05em;max-width:58%;text-align:right;word-break:break-all;
+}
+.profile-close{
+  display:block;margin:14px 20px 0;
+  padding:13px;border-radius:14px;
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  color:var(--txt-muted);font-family:var(--fb);font-size:12px;
+  font-weight:600;letter-spacing:.12em;cursor:pointer;width:calc(100% - 40px);
+  transition:background .28s var(--smooth),color .28s var(--smooth);
+  text-align:center;
+}
+.profile-close:active{background:rgba(255,255,255,.1);color:var(--txt)}
+
 #toast{
   position:fixed;bottom:80px;left:50%;
   transform:translateX(-50%) translateY(8px);
@@ -900,7 +898,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 <div id="app">
   <header class="hdr">
     <div class="hdr-profile">
-      <div class="hdr-avatar-wrap">
+      <div class="hdr-avatar-wrap" onclick="openProfile()" style="cursor:pointer">
         <div class="hdr-avatar" id="hdr-av"><svg width="15" height="15"><use href="#i-user"/></svg></div>
       </div>
       <span class="hdr-name" id="hdr-nm">—</span>
@@ -1176,6 +1174,43 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   </section>
 
   </div><!-- /#view -->
+</div>
+
+<!-- ══ PROFILE OVERLAY ══ -->
+<div id="profile-overlay" onclick="closeProfile(event)">
+  <div class="profile-sheet">
+    <div class="profile-handle"></div>
+    <div class="profile-head">
+      <div class="profile-ava" id="prf-ava"><svg width="22" height="22"><use href="#i-user"/></svg></div>
+      <div>
+        <div class="profile-name" id="prf-name">—</div>
+        <div class="profile-uid" id="prf-uid">ID: —</div>
+      </div>
+    </div>
+    <div class="profile-body">
+      <div class="profile-row">
+        <span class="profile-lbl"><svg width="13" height="13"><use href="#i-key"/></svg>Ключ</span>
+        <span class="profile-val" id="prf-key">Не активен</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-lbl"><svg width="13" height="13"><use href="#i-gear"/></svg>HWID</span>
+        <span class="profile-val" id="prf-hwid">—</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-lbl"><svg width="13" height="13"><use href="#i-zap"/></svg>Истекает</span>
+        <span class="profile-val" id="prf-exp">—</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-lbl"><svg width="13" height="13"><use href="#i-ref"/></svg>Сброс HWID</span>
+        <span class="profile-val" id="prf-reset">Недоступно</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-lbl"><svg width="13" height="13"><use href="#i-shld"/></svg>Компилятор</span>
+        <span class="profile-val" id="prf-compiler">Стандартный</span>
+      </div>
+    </div>
+    <button class="profile-close" onclick="closeProfile()">Закрыть</button>
+  </div>
 </div>
 
 <!-- ══ NAV ══ -->
@@ -1495,9 +1530,53 @@ async function sendSup(){
 ══════════════════════════════════════ */
 (()=>{
   const nm=tgU.username?'@'+tgU.username:tgU.first_name||'';
-  if(nm)document.getElementById('hdr-nm').textContent=nm;
-  if(tgU.photo_url)document.getElementById('hdr-av').innerHTML=`<img src="${tgU.photo_url}" alt="">`;
+  if(nm) document.getElementById('hdr-nm').textContent=nm;
+  const av = document.getElementById('hdr-av');
+  const pa = document.getElementById('prf-ava');
+  if(tgU.photo_url){
+    const img=`<img src="${tgU.photo_url}" alt="">`;
+    av.innerHTML=img;
+    pa.innerHTML=img;
+  }
 })();
+
+function openProfile(){
+  const ov = document.getElementById('profile-overlay');
+  if(!ov) return;
+
+  // Заполняем данные
+  const nm = tgU.username?'@'+tgU.username:(tgU.first_name||'—');
+  const el = id => document.getElementById(id);
+  el('prf-name').textContent = nm;
+  el('prf-uid').textContent  = tgU.id ? 'ID: '+tgU.id : 'ID: —';
+
+  // Данные ключа из уже загруженных элементов
+  const kv  = el('key-val')?.textContent  || '—';
+  const kh  = el('hwid-v')?.textContent   || '—';
+  const ke  = el('key-exp')?.textContent  || '—';
+  const act = el('key-st')?.classList.contains('act');
+
+  el('prf-key').textContent      = kv;
+  el('prf-hwid').textContent     = kh;
+  el('prf-exp').textContent      = ke;
+  el('prf-reset').textContent    = act ? 'Обратитесь в поддержку' : 'Ключ не активен';
+  el('prf-compiler').textContent = act ? 'KENOS Custom' : 'Стандартный';
+
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeProfile(e){
+  if(e){
+    /* закрываем только если кликнули по тёмному фону или кнопке */
+    const t=e.target;
+    if(!t.classList.contains('profile-close') && t.id!=='profile-overlay') return;
+  }
+  const ov=document.getElementById('profile-overlay');
+  if(!ov) return;
+  ov.classList.remove('open');
+  document.body.style.overflow='';
+}
 
 /* ══════════════════════════════════════
    SAKURA v4 — максимальная оптимизация
