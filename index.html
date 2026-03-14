@@ -244,7 +244,11 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:relative;z-index:1;
   max-width:480px;margin:0 auto;
   padding-bottom:70px;min-height:100vh;
+  /* скрыт до конца лоадера — нет мигания контента */
+  opacity:0;
+  transition:opacity .3s ease;
 }
+#app.ready{ opacity:1; }
 
 /* ambient убран — постоянная анимация opacity грела GPU */
 #app::before{ display:none; }
@@ -263,34 +267,35 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .hdr-profile{display:flex;align-items:center;gap:8px}
 .hdr-profile{display:flex;align-items:center;gap:8px;position:relative}
 
-/* обёртка для кольца — чтобы overflow:hidden аватарки не обрезал кольцо */
+/* обёртка для колец */
 .hdr-avatar-wrap{position:relative;flex-shrink:0}
+
+/* Кольцо 1 — внутреннее, крутится по часовой */
 .hdr-avatar-wrap::before{
   content:'';
-  position:absolute;inset:-2px;
+  position:absolute;inset:-3px;
   border-radius:50%;
   border:1.5px solid transparent;
   border-top-color:var(--ac);
   border-right-color:var(--ac-dim);
-  animation:spin 2.2s linear infinite;
+  animation:spin1 2s linear infinite;
   pointer-events:none;
   z-index:2;
 }
-/* мягкое свечение вокруг аватара */
+/* Кольцо 2 — внешнее, крутится против часовой */
 .hdr-avatar-wrap::after{
   content:'';
-  position:absolute;inset:-4px;
+  position:absolute;inset:-7px;
   border-radius:50%;
-  box-shadow:0 0 8px 2px rgba(255,255,255,.08);
-  animation:avatarPulse 2.8s ease-in-out infinite;
+  border:1px solid transparent;
+  border-bottom-color:var(--ac-soft);
+  border-left-color:var(--ac-dim);
+  animation:spin2 3.4s linear infinite;
   pointer-events:none;
   z-index:1;
 }
-@keyframes avatarPulse{
-  0%,100%{ box-shadow:0 0 6px 1px rgba(255,255,255,.05); }
-  50%    { box-shadow:0 0 14px 4px rgba(255,255,255,.16); }
-}
-@keyframes spin{ to{ transform:rotate(360deg) } }
+@keyframes spin1{ to{ transform:rotate(360deg) } }
+@keyframes spin2{ to{ transform:rotate(-360deg) } }
 
 .hdr-avatar{
   width:30px;height:30px;border-radius:50%;
@@ -372,6 +377,64 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 /* ══════════════════════════════════════
    FADE-IN элементов — единый transition
 /* Акценты через тему */
+
+/* ══════════════════════════════════════
+   ВОЛНОВОЕ ПОЯВЛЕНИЕ КОНТЕНТА
+   Каждый блок появляется снизу вверх
+   с небольшим смещением — эффект волны
+══════════════════════════════════════ */
+@keyframes waveIn{
+  from{ opacity:0; transform:translateY(18px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+
+.sec.on .hero,
+.sec.on .sec-title,
+.sec.on .svc-grid,
+.sec.on .panel,
+.sec.on .links,
+.sec.on [style*="padding:0 16px"]{
+  animation: waveIn .65s cubic-bezier(.22,1,.36,1) both;
+}
+
+/* Волна сверху вниз — каждый блок чуть позже */
+.sec.on .hero                 { animation-delay:.04s }
+.sec.on .sec-title            { animation-delay:.08s }
+.sec.on .svc-grid             { animation-delay:.10s }
+.sec.on .panel:nth-of-type(1) { animation-delay:.10s }
+.sec.on .panel:nth-of-type(2) { animation-delay:.17s }
+.sec.on .panel:nth-of-type(3) { animation-delay:.24s }
+.sec.on .panel:nth-of-type(4) { animation-delay:.31s }
+.sec.on .panel:nth-of-type(5) { animation-delay:.38s }
+.sec.on .links                { animation-delay:.20s }
+.sec.on [style*="padding:0 16px"]{ animation-delay:.30s }
+
+/* Текст внутри hero — последовательно */
+.sec.on .hero-eye{ animation:waveIn .55s .07s  cubic-bezier(.22,1,.36,1) both }
+.sec.on .hero-h  { animation:waveIn .65s .14s  cubic-bezier(.22,1,.36,1) both }
+.sec.on .hero-sub{ animation:waveIn .55s .22s  cubic-bezier(.22,1,.36,1) both }
+.sec.on .divider { animation:waveIn .5s .29s cubic-bezier(.22,1,.36,1) both }
+
+/* Карточки */
+.sec.on .svc-card:nth-child(1){ animation:waveIn .58s .14s cubic-bezier(.22,1,.36,1) both }
+.sec.on .svc-card:nth-child(2){ animation:waveIn .58s .22s cubic-bezier(.22,1,.36,1) both }
+.sec.on .svc-card:nth-child(3){ animation:waveIn .58s .30s cubic-bezier(.22,1,.36,1) both }
+.sec.on .svc-card:nth-child(4){ animation:waveIn .58s .38s cubic-bezier(.22,1,.36,1) both }
+
+/* Строки */
+.sec.on .info-r:nth-child(1){ animation:waveIn .52s .16s cubic-bezier(.22,1,.36,1) both }
+.sec.on .info-r:nth-child(2){ animation:waveIn .52s .23s cubic-bezier(.22,1,.36,1) both }
+.sec.on .info-r:nth-child(3){ animation:waveIn .52s .30s cubic-bezier(.22,1,.36,1) both }
+.sec.on .info-r:nth-child(4){ animation:waveIn .52s .37s cubic-bezier(.22,1,.36,1) both }
+.sec.on .info-r:nth-child(5){ animation:waveIn .52s .44s cubic-bezier(.22,1,.36,1) both }
+
+@media(prefers-reduced-motion:reduce){
+  .sec.on .hero,.sec.on .sec-title,.sec.on .svc-grid,.sec.on .panel,
+  .sec.on .links,.sec.on .hero-eye,.sec.on .hero-h,.sec.on .hero-sub,
+  .sec.on .divider,.sec.on .svc-card,.sec.on .info-r{
+    animation:none;opacity:1;transform:none;
+  }
+}
 .divider{
   background:linear-gradient(90deg,transparent,var(--ac-soft),transparent);
 }
@@ -803,12 +866,21 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;color:var(--txt-muted);position:relative;
 }
-.profile-ava::after{
-  content:'';position:absolute;inset:-3px;border-radius:50%;
+/* Кольцо 1 */
+.profile-ava::before{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
   border:1.5px solid transparent;
   border-top-color:var(--ac);border-right-color:var(--ac-dim);
-  animation:spin 2.2s linear infinite;
-  pointer-events:none;
+  animation:spin1 2s linear infinite;
+  pointer-events:none;z-index:2;
+}
+/* Кольцо 2 */
+.profile-ava::after{
+  content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid transparent;
+  border-bottom-color:var(--ac-soft);border-left-color:var(--ac-dim);
+  animation:spin2 3.4s linear infinite;
+  pointer-events:none;z-index:1;
 }
 .profile-ava img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .profile-name{font-size:17px;font-weight:600;letter-spacing:.03em;color:var(--txt)}
@@ -1367,10 +1439,11 @@ function go(id){
   // Убираем старую секцию
   prev?.classList.remove('on');
 
-  // Два rAF: первый — браузер применяет стили ухода,
-  // второй — добавляем .on на новую, анимации стартуют чисто
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
+      // Сбрасываем анимации — снимаем/вешаем .on чтобы waveIn перезапустился
+      next.classList.remove('on');
+      void next.offsetWidth; // reflow только этого элемента
       next.classList.add('on');
       window.scrollTo({ top: 0, behavior: 'instant' });
     });
@@ -1710,7 +1783,7 @@ function initSakura(id,count,alpha){
 }
 
 /* iPhone 15 Pro Max уровень — одинаково везде */
-const _N = _MOB ? 20 : 36;
+const _N = 20;
 initSakura('cvs-sakura', _N, .72);
 initSakura('cvs-loader',  _N, .72);
 
@@ -1770,6 +1843,7 @@ initSakura('cvs-loader',  _N, .72);
     if(p < 1) requestAnimationFrame(tick);
     else setTimeout(()=>{
       ld.classList.add('hidden');
+      document.getElementById('app')?.classList.add('ready');
       moveSlider(document.getElementById('n-home'));
     }, 250);
   }
