@@ -516,10 +516,10 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
   margin-bottom:8px;
 }
-.info-badge.tech{background:rgba(255,180,0,.12);border:1px solid rgba(255,180,0,.25);color:rgba(255,200,50,.9)}
+.info-badge.tech{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(200,200,200,.8)}
 .info-badge.info{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(200,200,200,.8)}
-.info-badge.ok  {background:rgba(100,255,150,.1);border:1px solid rgba(100,255,150,.22);color:rgba(130,255,160,.9)}
-.info-badge.warn{background:rgba(255,100,100,.1);border:1px solid rgba(255,100,100,.22);color:rgba(255,140,140,.9)}
+.info-badge.ok  {background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(200,200,200,.8)}
+.info-badge.warn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(200,200,200,.8)}
 .info-badge svg{opacity:.8}
 .info-e-title{font-size:14px;font-weight:500;color:var(--txt);letter-spacing:.04em;margin-bottom:5px}
 .info-e-body{font-size:12px;color:var(--txt-dim);line-height:1.75}
@@ -1420,7 +1420,7 @@ function initSakura(canvasId, count, alpha){
   }
 
   // Пре-рендер лепестков разных размеров + цветов в кэш
-  const SIZES   = [4, 6, 9, 12, 15, 18]; // чуть крупнее
+  const SIZES   = [3, 5, 7, 9, 12, 15]; // чуть меньше
   const COLORS_N = 4;
   const cache   = new Map();
   SIZES.forEach(r => {
@@ -1452,8 +1452,8 @@ function initSakura(canvasId, count, alpha){
     buf[b+8] = Math.random() * Math.PI * 2;         // sw качание
     buf[b+9] = .003 + Math.random() * .006;         // ss скорость качания
     buf[b+10]= .5  + Math.random() * .9;            // sa амплитуда
-    buf[b+11]= .40 + Math.random() * .45;           // al — чуть виднее
-    buf[b+12]= Math.random() < .08 ? 1 : 0;        // blur — почти все чёткие
+    buf[b+11]= .60 + Math.random() * .40;           // al — ярче, чётче
+    buf[b+12]= 0; // blur отключён — все лепестки чёткие
   }
 
   function resize(){
@@ -1523,8 +1523,8 @@ function initSakura(canvasId, count, alpha){
 /* На мобиле меньше лепестков для 60fps */
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 const isAndroid = /Android/i.test(navigator.userAgent);
-initSakura('cvs-sakura', isMobile ? (isAndroid ? 10 : 14) : 26, .65);
-initSakura('cvs-loader',  isMobile ? (isAndroid ?  5 :  7) : 12, .70);
+initSakura('cvs-sakura', isMobile ? (isAndroid ? 22 : 28) : 50, .72);
+initSakura('cvs-loader',  isMobile ? (isAndroid ? 22 : 28) : 50, .72);
 
 /* ══════════════════════════════════════
    LOADER — плавный прогресс с статусами
