@@ -246,15 +246,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   padding-bottom:70px;min-height:100vh;
 }
 
-/* ambient glow — без transform в animation, без isolation */
-#app::before{
-  content:'';position:fixed;
-  top:calc(18% - 190px);left:calc(50% - 190px);
-  width:380px;height:380px;
-  background:radial-gradient(circle,rgba(170,130,155,.065) 0%,transparent 68%);
-  pointer-events:none;z-index:0;
-  animation:ambient 7s ease-in-out infinite;
-}
+/* ambient убран — постоянная анимация opacity грела GPU */
+#app::before{ display:none; }
 
 /* ═══════════════════════════════════════════
    HEADER
@@ -309,8 +302,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .hdr-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .hdr-name{font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--txt-dim);max-width:86px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hdr-logo{display:flex;align-items:center;gap:5px}
-.logo-t{font-family:var(--fd);font-size:24px;font-weight:300;letter-spacing:.22em;color:var(--txt);animation:logoGlow 4s ease-in-out infinite}
-.logo-d{width:5px;height:5px;border-radius:50%;background:var(--ac);box-shadow:0 0 6px var(--ac-glow);animation:logoGlow 4s ease-in-out infinite}
+.logo-t{font-family:var(--fd);font-size:24px;font-weight:300;letter-spacing:.22em;color:var(--txt)}
+.logo-d{width:5px;height:5px;border-radius:50%;background:var(--ac);box-shadow:0 0 6px var(--ac-glow)}
 .lang-sw{
   display:flex;position:relative;
   background:rgba(255,255,255,.04);
@@ -464,7 +457,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   font-family:var(--fd);font-size:clamp(58px,15vw,88px);
   font-weight:300;letter-spacing:.14em;line-height:1;
   color:var(--txt);display:block;text-align:center;
-  cursor:default;animation:glow 4s ease-in-out infinite;
+  cursor:default;
 }
 .hero-sub{font-size:11px;letter-spacing:.22em;color:var(--g5);text-transform:uppercase}
 .divider{width:34px;height:1px;margin:16px auto}
@@ -733,7 +726,14 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .ni:hover svg { color:var(--ac-soft); }
 .ni:hover span{ color:var(--ac-soft); }
 .ni:active{ transform:scale(.88); transition:transform .1s ease; }
-.ni.on:active{ transform:none; } /* уже на этой вкладке — не нажимается */
+/* На активной — уходит вниз и плавно возвращается */
+.ni.on:active{ transform:translateY(4px); transition:transform .12s ease; }
+@keyframes navBounceBack{
+  0%  { transform:translateY(4px); }
+  60% { transform:translateY(-2px); }
+  100%{ transform:translateY(0); }
+}
+.ni.on.bouncing{ animation:navBounceBack .38s cubic-bezier(.25,.46,.45,.94) forwards; }
 
 /* Активная иконка */
 .ni.on span{ color:var(--ac); }
@@ -1165,20 +1165,6 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
     </div>
 
-    <!-- Статус серверов -->
-    <div class="panel">
-      <div class="p-title"><svg width="16" height="16" style="color:rgba(200,200,200,.5)"><use href="#i-pulse"/></svg>Статус серверов</div>
-      <div class="p-sub">Мониторинг в реальном времени</div>
-      <div class="status-row">
-        <span class="status-label"><svg width="14" height="14"><use href="#i-zap"/></svg>Бот KENOS</span>
-        <span class="status-badge loading" id="st-bot"><span class="dot"></span><span id="st-bot-txt">...</span></span>
-      </div>
-      <div class="status-row" style="border-bottom:none">
-        <span class="status-label"><svg width="14" height="14"><use href="#i-gear"/></svg>Сервер эмулятора</span>
-        <span class="status-badge loading" id="st-emu"><span class="dot"></span><span id="st-emu-txt">...</span></span>
-      </div>
-    </div>
-
     <!-- Объявления -->
     <div class="panel">
       <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-zap"/></svg><span data-i18n="inf.panel">Информация</span></div>
@@ -1189,94 +1175,20 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
     </div>
   </section>
 
-  <!-- ОТЗЫВЫ -->
-  <section id="s-rev" class="sec">
-    <div class="hero" style="padding-bottom:12px">
-      <p class="hero-eye">Мнения клиентов</p>
-      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Отзывы</h1>
-    </div>
-    <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
-      <div class="svc-card" onclick="go('s-buy')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-gear"/></svg></div><div class="svc-name">Купить</div></div>
-      <div class="svc-card" onclick="go('s-key')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-key"/></svg></div><div class="svc-name">Ключ</div></div>
-      <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name">Помощь</div></div>
-    </div>
-    <div class="panel">
-      <div class="p-title"><svg width="16" height="16" style="color:rgba(200,200,200,.5)"><use href="#i-msg"/></svg>Отзывы о KENOS</div>
-      <div class="p-sub">Реальные покупатели</div>
-      <div id="rev-list">
-        <div class="rev-empty">Загрузка отзывов...</div>
-      </div>
-    </div>
-    <div style="padding:0 16px 16px">
-      <a class="btn btn-p" href="https://t.me/kenosobzor" target="_blank">
-        <svg width="13" height="13"><use href="#i-msg"/></svg>
-        <span>Оставить отзыв</span>
-      </a>
-      <a class="btn btn-s mt" href="https://t.me/kenosobzor" target="_blank">
-        <svg width="13" height="13"><use href="#i-mega"/></svg>
-        <span>Все отзывы в канале</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- ПРОМОКОД -->
-  <section id="s-promo" class="sec">
-    <div class="hero" style="padding-bottom:12px">
-      <p class="hero-eye">Скидки и акции</p>
-      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Промокод</h1>
-    </div>
-    <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
-      <div class="svc-card" onclick="go('s-pay')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-card"/></svg></div><div class="svc-name">Оплата</div></div>
-      <div class="svc-card" onclick="go('s-key')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-key"/></svg></div><div class="svc-name">Ключ</div></div>
-      <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name">Помощь</div></div>
-    </div>
-    <div class="panel">
-      <div class="p-title"><svg width="16" height="16" style="color:rgba(200,200,200,.5)"><use href="#i-ticket"/></svg>Активировать промокод</div>
-      <div class="p-sub">Введи код и получи скидку</div>
-      <div class="promo-wrap">
-        <input class="form-i" id="promo-inp" type="text" placeholder="KENOS2024" maxlength="20"
-               style="text-transform:uppercase;letter-spacing:.12em"
-               oninput="this.value=this.value.toUpperCase()">
-        <button class="promo-btn" onclick="applyPromo()">Применить</button>
-      </div>
-      <div class="promo-result" id="promo-result"></div>
-    </div>
-    <div class="panel">
-      <div class="p-title"><svg width="16" height="16" style="color:rgba(200,200,200,.5)"><use href="#i-star"/></svg>Как получить скидку</div>
-      <div class="p-sub">Способы сэкономить</div>
-      <div class="info-r">
-        <span class="info-k"><svg width="12" height="12"><use href="#i-ref"/></svg>Приведи друга</span>
-        <span class="info-v">−15%</span>
-      </div>
-      <div class="info-r">
-        <span class="info-k"><svg width="12" height="12"><use href="#i-mega"/></svg>Подписка на канал</span>
-        <span class="info-v">−5%</span>
-      </div>
-      <div class="info-r">
-        <span class="info-k"><svg width="12" height="12"><use href="#i-msg"/></svg>Оставить отзыв</span>
-        <span class="info-v">−5%</span>
-      </div>
-      <div class="info-r" style="border-bottom:none">
-        <span class="info-k"><svg width="12" height="12"><use href="#i-ticket"/></svg>Промокод</span>
-        <span class="info-v">до −30%</span>
-      </div>
-    </div>
-  </section>
-
   </div><!-- /#view -->
 </div>
 
 <!-- ══ NAV ══ -->
 <nav class="nav" id="nav">
   <div id="nav-slider"></div>
-  <div class="ni on" id="n-home"  onclick="go('s-home')"> <svg width="19" height="19"><use href="#i-home"/></svg>  <span data-i18n="nav.hm">Главная</span></div>
-  <div class="ni"    id="n-buy"   onclick="go('s-buy')">  <svg width="19" height="19"><use href="#i-gear"/></svg>  <span data-i18n="nav.by">Купить</span></div>
-  <div class="ni"    id="n-key"   onclick="go('s-key')">  <svg width="19" height="19"><use href="#i-key"/></svg>   <span data-i18n="nav.ky">Ключ</span></div>
-  <div class="ni"    id="n-promo" onclick="go('s-promo')"><svg width="19" height="19"><use href="#i-ticket"/></svg><span>Промо</span></div>
-  <div class="ni"    id="n-rev"   onclick="go('s-rev')">  <svg width="19" height="19"><use href="#i-msg"/></svg>   <span>Отзывы</span></div>
-  <div class="ni"    id="n-inf"   onclick="go('s-inf')">  <svg width="19" height="19"><use href="#i-pulse"/></svg> <span>Статус</span></div>
-  <div class="ni"    id="n-abt"   onclick="go('s-abt')">  <svg width="19" height="19"><use href="#i-awd"/></svg>   <span data-i18n="nav.ab">О нас</span></div>
-  <div class="ni"    id="n-adm"   onclick="go('s-adm')" style="display:none"><svg width="19" height="19"><use href="#i-shld"/></svg><span>Тикеты</span></div>
+  <div class="ni on" id="n-home" onclick="go('s-home')"><svg width="19" height="19"><use href="#i-home"/></svg><span data-i18n="nav.hm">Главная</span></div>
+  <div class="ni"    id="n-buy"  onclick="go('s-buy')"> <svg width="19" height="19"><use href="#i-gear"/></svg><span data-i18n="nav.by">Купить</span></div>
+  <div class="ni"    id="n-pay"  onclick="go('s-pay')"> <svg width="19" height="19"><use href="#i-card"/></svg><span data-i18n="nav.py">Оплата</span></div>
+  <div class="ni"    id="n-key"  onclick="go('s-key')"> <svg width="19" height="19"><use href="#i-key"/></svg> <span data-i18n="nav.ky">Ключ</span></div>
+  <div class="ni"    id="n-hlp"  onclick="go('s-hlp')"> <svg width="19" height="19"><use href="#i-chat"/></svg><span data-i18n="nav.hp">Помощь</span></div>
+  <div class="ni"    id="n-inf"  onclick="go('s-inf')"> <svg width="19" height="19"><use href="#i-zap"/></svg>  <span>Инфо</span></div>
+  <div class="ni"    id="n-abt"  onclick="go('s-abt')"> <svg width="19" height="19"><use href="#i-awd"/></svg> <span data-i18n="nav.ab">О нас</span></div>
+  <div class="ni"    id="n-adm"  onclick="go('s-adm')" style="display:none"><svg width="19" height="19"><use href="#i-shld"/></svg><span>Тикеты</span></div>
 </nav>
 <div id="toast"></div>
 
@@ -1392,8 +1304,7 @@ function setLang(l){
 const SEC_NAV = {
   's-home':'n-home','s-buy':'n-buy','s-pay':'n-pay',
   's-key':'n-key','s-hlp':'n-hlp','s-inf':'n-inf',
-  's-adm':'n-adm','s-abt':'n-abt',
-  's-rev':'n-rev','s-promo':'n-promo'
+  's-adm':'n-adm','s-abt':'n-abt'
 };
 let _cur = 's-home';
 
@@ -1405,7 +1316,12 @@ function moveSlider(navItemEl){
 }
 
 function go(id){
-  if(id === _cur) return;
+  if(id === _cur){
+    /* тапнул на тот же раздел — bounce */
+    const el = document.getElementById(SEC_NAV[id]);
+    if(el){ el.classList.add('bouncing'); el.addEventListener('animationend',()=>el.classList.remove('bouncing'),{once:true}); }
+    return;
+  }
 
   const prev = document.getElementById(_cur);
   const next = document.getElementById(id);
@@ -1584,167 +1500,138 @@ async function sendSup(){
 })();
 
 /* ══════════════════════════════════════
-   SAKURA — OffscreenCanvas + пре-рендер лепестков
-   Оптимизации:
-   1. Лепестки pre-rendered в кэш-канвас (одна радиальная градиент на весь размер)
-   2. Позиция обновляется через Float32Array — нет создания объектов
-   3. Один общий resize через ResizeObserver
-   4. Запрос анимации только если вкладка активна (visibilitychange)
+   SAKURA v4 — максимальная оптимизация
+   • Sin/Cos LUT (1024) — ноль Math.trig в hot loop
+   • ImageBitmap — GPU текстуры без CPU→GPU копии
+   • Timestamp cap — точный 60fps на 60/120hz панелях
+   • STRIDE 9 — минимум памяти
+   • Одинаковое кол-во лепестков везде (iPhone-уровень)
 ══════════════════════════════════════ */
-function initSakura(canvasId, count, alpha){
-  const cvs = document.getElementById(canvasId);
-  if(!cvs) return;
-  const ctx = cvs.getContext('2d', { alpha:true, desynchronized:true });
-  const _isAndroid = /Android/i.test(navigator.userAgent);
-  const _isMobile  = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  // На Android — 30fps через пропуск каждого второго кадра
-  const FPS_SKIP = _isAndroid ? 2 : 1;
-  let _frame = 0;
-  let W=0, H=0;
+const _UA  = navigator.userAgent;
+const _MOB = /iPhone|iPad|iPod|Android/i.test(_UA);
 
-  // Реалистичный лепесток: вытянутая форма, как на фото
-  function drawPetal(cx, r, colorIdx){
-    // Бледные розовые оттенки — чуть виднее
-    const COLORS = [
-      ['rgba(255,210,225,.82)', 'rgba(240,130,165,.60)',  'rgba(210,70,110,0)'],
-      ['rgba(255,200,218,.78)', 'rgba(230,115,155,.55)',  'rgba(195,60,100,0)'],
-      ['rgba(255,220,232,.82)', 'rgba(245,145,175,.60)',  'rgba(215,80,120,0)'],
-      ['rgba(250,190,210,.78)', 'rgba(225,105,145,.55)',  'rgba(190,50,90,0)'],
-    ];
-    const col = COLORS[colorIdx % COLORS.length];
-    const w = r * 1.0, h = r * 1.6;
+/* ── Sin/Cos LUT ── */
+const LUT  = 1024;
+const LM   = LUT - 1;
+const SINT = new Float32Array(LUT);
+const COST = new Float32Array(LUT);
+for(let i=0;i<LUT;i++){const a=i/LUT*6.2831853;SINT[i]=Math.sin(a);COST[i]=Math.cos(a);}
 
-    cx.save();
-    // Основная форма лепестка — кривая Безье
-    cx.beginPath();
-    cx.moveTo(0, -h);
-    cx.bezierCurveTo( w*.8, -h*.5,  w,  h*.2,  0,  h);
-    cx.bezierCurveTo(-w,    h*.2,  -w*.8, -h*.5, 0, -h);
-    cx.closePath();
+/* ── Цвета и размеры лепестков ── */
+const _PC=[
+  ['rgba(255,210,225,.82)','rgba(240,130,165,.60)','rgba(210,70,110,0)'],
+  ['rgba(255,200,218,.78)','rgba(230,115,155,.55)','rgba(195,60,100,0)'],
+  ['rgba(255,220,232,.82)','rgba(245,145,175,.60)','rgba(215,80,120,0)'],
+  ['rgba(250,190,210,.78)','rgba(225,105,145,.55)','rgba(190,50,90,0)'],
+];
+const _SZ=[3,5,7,9,12,15];
+const _CN=4;
 
-    const g = cx.createRadialGradient(0, -h*.15, r*.1, 0, 0, h);
-    g.addColorStop(0,   col[0]);
-    g.addColorStop(.4,  col[1]);
-    g.addColorStop(1,   col[2]);
-    cx.fillStyle = g;
-    cx.fill();
-
-    // Прожилка
-    cx.beginPath();
-    cx.moveTo(0, -h*.9);
-    cx.quadraticCurveTo(w*.15, 0, 0, h*.85);
-    cx.strokeStyle = 'rgba(200,80,120,.3)';
-    cx.lineWidth   = r * .06;
-    cx.stroke();
-    cx.restore();
-  }
-
-  // Пре-рендер лепестков разных размеров + цветов в кэш
-  const SIZES   = [3, 5, 7, 9, 12, 15]; // чуть меньше
-  const COLORS_N = 4;
-  const cache   = new Map();
-  SIZES.forEach(r => {
-    for(let c=0; c<COLORS_N; c++){
-      const pad = r * 2.2;
-      const cc  = document.createElement('canvas');
-      cc.width  = cc.height = Math.ceil(pad * 2);
-      const cx  = cc.getContext('2d');
-      cx.translate(pad, pad);
-      drawPetal(cx, r, c);
-      cache.set(`${r}_${c}`, cc);
-    }
-  });
-
-  // STRIDE: x,y,sizeIdx,colorIdx,vx,vy,angle,va,sw,ss,sa,al,blur
-  const STRIDE = 13;
-  const buf    = new Float32Array(count * STRIDE);
-
-  function initPetal(i, fullH){
-    const b      = i * STRIDE;
-    buf[b]   = Math.random() * W;
-    buf[b+1] = fullH ? Math.random() * H : -40;
-    buf[b+2] = Math.floor(Math.random() * SIZES.length);
-    buf[b+3] = Math.floor(Math.random() * COLORS_N);
-    buf[b+4] = (Math.random() - .5) * .6;          // vx
-    buf[b+5] = .18 + Math.random() * .35;           // vy — медленнее
-    buf[b+6] = Math.random() * Math.PI * 2;         // angle
-    buf[b+7] = (Math.random() - .5) * .012;         // va — плавное вращение
-    buf[b+8] = Math.random() * Math.PI * 2;         // sw качание
-    buf[b+9] = .003 + Math.random() * .006;         // ss скорость качания
-    buf[b+10]= .5  + Math.random() * .9;            // sa амплитуда
-    buf[b+11]= .60 + Math.random() * .40;           // al — ярче, чётче
-    buf[b+12]= 0; // blur отключён — все лепестки чёткие
-  }
-
-  function resize(){
-    W = cvs.width  = window.innerWidth;
-    H = cvs.height = window.innerHeight;
-  }
-  new ResizeObserver(resize).observe(document.documentElement);
-  resize();
-  for(let i=0; i<count; i++) initPetal(i, true);
-
-  let active = true;
-  document.addEventListener('visibilitychange', ()=>{
-    active = !document.hidden;
-    if(active) requestAnimationFrame(frame);
-  }, { passive:true });
-
-  function frame(){
-    if(!active) return;
-    _frame++;
-    if(_frame % FPS_SKIP !== 0){ requestAnimationFrame(frame); return; }
-
-    ctx.clearRect(0, 0, W, H);
-
-    for(let i=0; i<count; i++){
-      const b = i * STRIDE;
-
-      // Обновляем позицию
-      buf[b+8] += buf[b+9];
-      buf[b]   += buf[b+4] + Math.sin(buf[b+8]) * buf[b+10] * .3;
-      buf[b+1] += buf[b+5];
-      buf[b+6] += buf[b+7];
-
-      if(buf[b+1] > H+60 || buf[b] < -80 || buf[b] > W+80){ initPetal(i,false); continue; }
-
-      const key = `${SIZES[buf[b+2]]}_${Math.floor(buf[b+3])}`;
-      const cc  = cache.get(key);
-      if(!cc) continue;
-      const pad = cc.width / 2;
-
-      const a = buf[b+11] * alpha;
-
-      // На мобиле не используем filter — экономит GPU
-      if(buf[b+12] && !_isMobile){
-        ctx.filter = 'blur(0.7px)';
-        ctx.globalAlpha = a * .55;
-      } else {
-        ctx.filter = 'none';
-        ctx.globalAlpha = a * (buf[b+12] ? .6 : 1);
-      }
-
-      ctx.setTransform(
-        Math.cos(buf[b+6]), Math.sin(buf[b+6]),
-       -Math.sin(buf[b+6]), Math.cos(buf[b+6]),
-        buf[b], buf[b+1]
-      );
-      ctx.drawImage(cc, -pad, -pad);
-    }
-
-    ctx.filter = 'none';
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
+/* ── Рендер лепестка ── */
+function _rPetal(cx,r,ci){
+  const c=_PC[ci],w=r,h=r*1.6;
+  cx.beginPath();cx.moveTo(0,-h);
+  cx.bezierCurveTo(w*.8,-h*.5,w,h*.2,0,h);
+  cx.bezierCurveTo(-w,h*.2,-w*.8,-h*.5,0,-h);
+  cx.closePath();
+  const g=cx.createRadialGradient(0,-h*.15,r*.1,0,0,h);
+  g.addColorStop(0,c[0]);g.addColorStop(.4,c[1]);g.addColorStop(1,c[2]);
+  cx.fillStyle=g;cx.fill();
+  cx.beginPath();cx.moveTo(0,-h*.9);cx.quadraticCurveTo(w*.15,0,0,h*.85);
+  cx.strokeStyle='rgba(200,80,120,.25)';cx.lineWidth=r*.055;cx.stroke();
 }
 
-/* На мобиле меньше лепестков для 60fps */
-const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-const isAndroid = /Android/i.test(navigator.userAgent);
-initSakura('cvs-sakura', isMobile ? (isAndroid ? 17 : 23) : 45, .72);
-initSakura('cvs-loader',  isMobile ? (isAndroid ? 17 : 23) : 45, .72);
+/* ── Кэш canvas + async ImageBitmap ── */
+const _cvs=new Map(),_bmp=new Map();
+let _bmpOk=false;
+(async()=>{
+  const ps=[];
+  _SZ.forEach(r=>{
+    for(let c=0;c<_CN;c++){
+      const p=r*2.2,s=Math.ceil(p*2),k=r+'_'+c;
+      const cc=document.createElement('canvas');
+      cc.width=cc.height=s;
+      const cx=cc.getContext('2d');cx.translate(p,p);_rPetal(cx,r,c);
+      _cvs.set(k,cc);
+      if(typeof createImageBitmap==='function')
+        ps.push(createImageBitmap(cc).then(b=>_bmp.set(k,b)));
+    }
+  });
+  if(ps.length){await Promise.all(ps);_bmpOk=true;}
+})();
+
+/* ── Основная функция ── */
+function initSakura(id,count,alpha){
+  const cvs=document.getElementById(id);if(!cvs)return;
+  const ctx=cvs.getContext('2d',{alpha:true,desynchronized:true});
+  let W=0,H=0;
+
+  /* STRIDE 9: x,y,si,ci,vx,vy,ai,vai,ali */
+  const S=9,buf=new Float32Array(count*S);
+  const sw=new Uint16Array(count); /* swing speed */
+
+  function spawn(i,top){
+    const b=i*S;
+    buf[b]  =Math.random()*W;
+    buf[b+1]=top?Math.random()*H:-50;
+    buf[b+2]=(Math.random()*_SZ.length)|0;
+    buf[b+3]=(Math.random()*_CN)|0;
+    buf[b+4]=(Math.random()-.5)*.55;
+    buf[b+5]=.16+Math.random()*.32;
+    buf[b+6]=(Math.random()*LUT)|0;
+    buf[b+7]=((Math.random()<.5?1:-1)*(1+(Math.random()*2)|0));
+    buf[b+8]=.58+Math.random()*.42;
+    sw[i]=1+(Math.random()*3)|0;
+  }
+
+  function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight;}
+  new ResizeObserver(resize).observe(document.documentElement);
+  resize();
+  for(let i=0;i<count;i++)spawn(i,true);
+
+  let alive=true,lastT=0,swi=0;
+  const CAP=1000/63; /* ~60fps cap — работает и на 120hz */
+
+  document.addEventListener('visibilitychange',()=>{
+    alive=!document.hidden;if(alive)requestAnimationFrame(fr);
+  },{passive:true});
+
+  function fr(now){
+    if(!alive)return;
+    if(now-lastT<CAP){requestAnimationFrame(fr);return;}
+    lastT=now;
+
+    ctx.clearRect(0,0,W,H);
+    const useB=_bmpOk;
+
+    for(let i=0;i<count;i++){
+      const b=i*S;
+      swi=(swi+sw[i])&LM;
+      buf[b]  +=buf[b+4]+SINT[swi]*(.4+buf[b+8]*.3)*.28;
+      buf[b+1]+=buf[b+5];
+      buf[b+6] =(buf[b+6]+buf[b+7]+LUT)&LM;
+
+      if(buf[b+1]>H+60||buf[b]<-80||buf[b]>W+80){spawn(i,false);continue;}
+
+      const k=_SZ[buf[b+2]]+'_'+buf[b+3];
+      const img=(useB?_bmp:_cvs).get(k);
+      if(!img)continue;
+
+      const ai=buf[b+6]|0;
+      ctx.globalAlpha=buf[b+8]*alpha;
+      ctx.setTransform(COST[ai],SINT[ai],-SINT[ai],COST[ai],buf[b],buf[b+1]);
+      ctx.drawImage(img,-(img.width>>1),-(img.width>>1));
+    }
+    ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;
+    requestAnimationFrame(fr);
+  }
+  requestAnimationFrame(fr);
+}
+
+/* iPhone 15 Pro Max уровень — одинаково везде */
+const _N = _MOB ? 20 : 36;
+initSakura('cvs-sakura', _N, .72);
+initSakura('cvs-loader',  _N, .72);
 
 /* ══════════════════════════════════════
    LOADER — плавный прогресс с статусами
