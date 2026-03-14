@@ -267,13 +267,17 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .hdr-profile{display:flex;align-items:center;gap:8px}
 .hdr-profile{display:flex;align-items:center;gap:8px;position:relative}
 
-/* обёртка для колец */
-.hdr-avatar-wrap{position:relative;flex-shrink:0}
+/* обёртка для колец — overflow:hidden чтобы кольца не выходили за пределы хедера */
+.hdr-avatar-wrap{
+  position:relative;flex-shrink:0;
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+}
 
 /* Кольцо 1 — внутреннее, крутится по часовой */
 .hdr-avatar-wrap::before{
   content:'';
-  position:absolute;inset:-3px;
+  position:absolute;inset:0;
   border-radius:50%;
   border:1.5px solid transparent;
   border-top-color:var(--ac);
@@ -282,10 +286,10 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   pointer-events:none;
   z-index:2;
 }
-/* Кольцо 2 — внешнее, крутится против часовой */
+/* Кольцо 2 — внешнее, крутится против часовой, чуть больше */
 .hdr-avatar-wrap::after{
   content:'';
-  position:absolute;inset:-7px;
+  position:absolute;inset:-4px;
   border-radius:50%;
   border:1px solid transparent;
   border-bottom-color:var(--ac-soft);
@@ -303,6 +307,13 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   background:var(--ac-dim);
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;color:var(--txt-muted);
+  /* пульсирующее свечение */
+  animation:avatarGlow 2.8s ease-in-out infinite;
+  position:relative;z-index:3;
+}
+@keyframes avatarGlow{
+  0%,100%{ box-shadow:0 0 0 0 transparent; }
+  50%    { box-shadow:0 0 10px 3px rgba(255,255,255,.10); }
 }
 .hdr-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .hdr-name{font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--txt-dim);max-width:86px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
