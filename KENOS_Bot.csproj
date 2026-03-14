@@ -10,23 +10,16 @@
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
-    <!-- AOT — мгновенный старт, нет JIT-прогрева -->
-    <PublishAot>true</PublishAot>
+    <!-- AOT и TrimMode=full требуют clang/gcc — отключены для Railway -->
+    <!-- Включить локально: dotnet publish -p:PublishAot=true -->
 
-    <!-- Trimming — full: срезаем ~40% веса бинарника -->
-    <PublishTrimmed>true</PublishTrimmed>
-    <TrimMode>full</TrimMode>
-    <StackTraceSupport>false</StackTraceSupport>
-    <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-
-    <!-- InvariantGlobalization — ещё -10-15% (нет ICU данных) -->
-    <InvariantGlobalization>true</InvariantGlobalization>
-
-    <!-- Release flags -->
+    <!-- Release оптимизации — работают без нативного линкера -->
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
-    <PublishReadyToRun>true</PublishReadyToRun>
+
+    <!-- Убираем лишние метаданные — уменьшает размер без trim -->
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,10 +30,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory"      Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool"          Version="10.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TrimmerRootDescriptor Include="TrimmerRoots.xml" />
   </ItemGroup>
 
 </Project>
