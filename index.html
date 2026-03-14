@@ -25,6 +25,10 @@
   <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></symbol>
   <symbol id="i-awd"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></symbol>
   <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></symbol>
+  <!-- Новые иконки -->
+  <symbol id="i-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+  <symbol id="i-msg"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="13" y2="14"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 010-6h20a3 3 0 010 6"/><path d="M2 15a3 3 0 000 6h20a3 3 0 000-6"/><line x1="2" y1="12" x2="22" y2="12"/></symbol>
 </svg>
 <style>
 /* ═══════════════════════════════════════════
@@ -278,6 +282,20 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   animation:spin 2.2s linear infinite;
   pointer-events:none;
   z-index:2;
+}
+/* мягкое свечение вокруг аватара */
+.hdr-avatar-wrap::after{
+  content:'';
+  position:absolute;inset:-4px;
+  border-radius:50%;
+  box-shadow:0 0 8px 2px rgba(255,255,255,.08);
+  animation:avatarPulse 2.8s ease-in-out infinite;
+  pointer-events:none;
+  z-index:1;
+}
+@keyframes avatarPulse{
+  0%,100%{ box-shadow:0 0 6px 1px rgba(255,255,255,.05); }
+  50%    { box-shadow:0 0 14px 4px rgba(255,255,255,.16); }
 }
 @keyframes spin{ to{ transform:rotate(360deg) } }
 
@@ -580,8 +598,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .p-opt{flex:1;padding:13px 5px;background:var(--ac-dim);border:1px solid var(--border);border-radius:11px;text-align:center;transition:border-color var(--fast) ease,background var(--fast) ease}
 .p-opt:hover{border-color:var(--border-ac);background:var(--ac-dim)}
 .p-opt-ico{display:flex;justify-content:center;align-items:center;margin-bottom:7px;color:var(--txt-dim);height:24px}
-.big-g{font-family:var(--fd);font-size:28px;font-weight:400;color:var(--txt-dim);line-height:1}
-.p-val{font-family:var(--fd);font-size:26px;font-weight:300;color:var(--txt);line-height:1}
+.big-g{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--txt-dim);line-height:1;letter-spacing:.04em}
+.p-val{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--txt);line-height:1;letter-spacing:.04em}
 .p-unit{font-size:9px;letter-spacing:.12em;color:var(--g5);text-transform:uppercase;margin-top:3px}
 
 /* ═══════════════════════════════════════════
@@ -598,7 +616,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .note b{color:var(--txt)}
 .key-box{margin:11px 0;padding:17px;background:var(--ac-dim);border:1px solid var(--border);border-radius:12px;text-align:center}
 .key-lbl{font-size:9px;letter-spacing:.3em;color:var(--g5);text-transform:uppercase;margin-bottom:9px}
-.key-val{font-family:monospace;font-size:15px;color:var(--txt);letter-spacing:.08em;text-shadow:0 0 16px var(--ac-soft);margin-bottom:9px;word-break:break-all}
+.key-val{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:var(--txt);letter-spacing:.1em;text-shadow:0 0 16px var(--ac-soft);margin-bottom:9px;word-break:break-all}
 .key-st{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.15em;text-transform:uppercase}
 .key-st::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
 .key-st.act{color:rgba(200,200,200,.85)}.key-st.act::before{animation:dotPulse 2s ease-in-out infinite}
@@ -753,7 +771,72 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .ni.on::before{ transform:translateX(-50%) scaleX(1); opacity:.75; }
 
 /* ═══════════════════════════════════════════
-   TOAST
+   STATUS — индикаторы состояния серверов
+═══════════════════════════════════════════ */
+.status-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 0;border-bottom:1px solid var(--border);
+}
+.status-row:last-child{border-bottom:none}
+.status-label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--txt-dim)}
+.status-label svg{color:var(--txt-muted)}
+.status-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;font-size:10px;
+  font-weight:600;letter-spacing:.08em;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  color:rgba(200,200,200,.7);
+  transition:all .32s var(--smooth);
+}
+.status-badge .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(200,200,200,.5);
+  transition:background .32s ease;
+}
+.status-badge.online{ background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.14); color:rgba(220,220,220,.9); }
+.status-badge.online .dot{ background:rgba(220,220,220,.8); animation:dotPulse 2s ease-in-out infinite; }
+.status-badge.offline{ background:rgba(255,255,255,.04); color:rgba(150,150,150,.6); }
+.status-badge.offline .dot{ background:rgba(150,150,150,.4); }
+.status-badge.loading .dot{ opacity:.4; }
+
+/* ═══════════════════════════════════════════
+   REVIEWS — карточки отзывов
+═══════════════════════════════════════════ */
+.rev-card{
+  padding:14px 0;border-bottom:1px solid var(--border);
+}
+.rev-card:last-child{border-bottom:none}
+.rev-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rev-name{font-size:12px;font-weight:600;color:var(--txt);letter-spacing:.04em}
+.rev-date{font-size:10px;color:var(--g5);letter-spacing:.06em}
+.rev-stars{display:flex;gap:2px;margin-bottom:6px}
+.rev-stars svg{color:rgba(200,200,200,.5)}
+.rev-text{font-size:13px;color:var(--txt-dim);line-height:1.7}
+.rev-empty{text-align:center;padding:28px 0;color:var(--g5);font-size:12px;letter-spacing:.1em}
+
+/* ═══════════════════════════════════════════
+   PROMO — поле промокода
+═══════════════════════════════════════════ */
+.promo-wrap{display:flex;gap:8px;margin-top:4px}
+.promo-wrap .form-i{flex:1}
+.promo-btn{
+  padding:10px 16px;border-radius:10px;border:1px solid var(--border);
+  background:rgba(255,255,255,.06);color:var(--txt);font-family:var(--fb);
+  font-size:12px;font-weight:600;letter-spacing:.1em;cursor:pointer;
+  transition:background .32s var(--smooth), border-color .32s var(--smooth);
+  white-space:nowrap;
+}
+.promo-btn:active{background:rgba(255,255,255,.12);transition-duration:.1s}
+.promo-result{
+  margin-top:10px;padding:10px 13px;border-radius:10px;
+  font-size:12px;letter-spacing:.06em;
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  color:var(--txt-dim);text-align:center;
+  display:none;
+}
+.promo-result.show{display:block}
+.promo-result.ok{ border-color:rgba(200,200,200,.25); color:rgba(220,220,220,.9); }
+.promo-result.err{ border-color:rgba(200,200,200,.1); color:rgba(150,150,150,.7); }
 ═══════════════════════════════════════════ */
 #toast{
   position:fixed;bottom:80px;left:50%;
@@ -1081,6 +1164,22 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       <div class="svc-card" onclick="go('s-pay')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-card"/></svg></div><div class="svc-name" data-i18n="nav.py">Оплата</div></div>
       <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
     </div>
+
+    <!-- Статус серверов -->
+    <div class="panel">
+      <div class="p-title"><svg width="16" height="16" style="color:rgba(200,200,200,.5)"><use href="#i-pulse"/></svg>Статус серверов</div>
+      <div class="p-sub">Мониторинг в реальном времени</div>
+      <div class="status-row">
+        <span class="status-label"><svg width="14" height="14"><use href="#i-zap"/></svg>Бот KENOS</span>
+        <span class="status-badge loading" id="st-bot"><span class="dot"></span><span id="st-bot-txt">...</span></span>
+      </div>
+      <div class="status-row" style="border-bottom:none">
+        <span class="status-label"><svg width="14" height="14"><use href="#i-gear"/></svg>Сервер эмулятора</span>
+        <span class="status-badge loading" id="st-emu"><span class="dot"></span><span id="st-emu-txt">...</span></span>
+      </div>
+    </div>
+
+    <!-- Объявления -->
     <div class="panel">
       <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-zap"/></svg><span data-i18n="inf.panel">Информация</span></div>
       <div class="p-sub" data-i18n="inf.panel.d">Тех. работы · Статус сервиса · Новости</div>
@@ -1089,20 +1188,95 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       </div>
     </div>
   </section>
+
+  <!-- ОТЗЫВЫ -->
+  <section id="s-rev" class="sec">
+    <div class="hero" style="padding-bottom:12px">
+      <p class="hero-eye">Мнения клиентов</p>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Отзывы</h1>
+    </div>
+    <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
+      <div class="svc-card" onclick="go('s-buy')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-gear"/></svg></div><div class="svc-name">Купить</div></div>
+      <div class="svc-card" onclick="go('s-key')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-key"/></svg></div><div class="svc-name">Ключ</div></div>
+      <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name">Помощь</div></div>
+    </div>
+    <div class="panel">
+      <div class="p-title"><svg width="16" height="16" style="color:rgba(200,200,200,.5)"><use href="#i-msg"/></svg>Отзывы о KENOS</div>
+      <div class="p-sub">Реальные покупатели</div>
+      <div id="rev-list">
+        <div class="rev-empty">Загрузка отзывов...</div>
+      </div>
+    </div>
+    <div style="padding:0 16px 16px">
+      <a class="btn btn-p" href="https://t.me/kenosobzor" target="_blank">
+        <svg width="13" height="13"><use href="#i-msg"/></svg>
+        <span>Оставить отзыв</span>
+      </a>
+      <a class="btn btn-s mt" href="https://t.me/kenosobzor" target="_blank">
+        <svg width="13" height="13"><use href="#i-mega"/></svg>
+        <span>Все отзывы в канале</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ПРОМОКОД -->
+  <section id="s-promo" class="sec">
+    <div class="hero" style="padding-bottom:12px">
+      <p class="hero-eye">Скидки и акции</p>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Промокод</h1>
+    </div>
+    <div class="svc-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
+      <div class="svc-card" onclick="go('s-pay')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-card"/></svg></div><div class="svc-name">Оплата</div></div>
+      <div class="svc-card" onclick="go('s-key')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-key"/></svg></div><div class="svc-name">Ключ</div></div>
+      <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name">Помощь</div></div>
+    </div>
+    <div class="panel">
+      <div class="p-title"><svg width="16" height="16" style="color:rgba(200,200,200,.5)"><use href="#i-ticket"/></svg>Активировать промокод</div>
+      <div class="p-sub">Введи код и получи скидку</div>
+      <div class="promo-wrap">
+        <input class="form-i" id="promo-inp" type="text" placeholder="KENOS2024" maxlength="20"
+               style="text-transform:uppercase;letter-spacing:.12em"
+               oninput="this.value=this.value.toUpperCase()">
+        <button class="promo-btn" onclick="applyPromo()">Применить</button>
+      </div>
+      <div class="promo-result" id="promo-result"></div>
+    </div>
+    <div class="panel">
+      <div class="p-title"><svg width="16" height="16" style="color:rgba(200,200,200,.5)"><use href="#i-star"/></svg>Как получить скидку</div>
+      <div class="p-sub">Способы сэкономить</div>
+      <div class="info-r">
+        <span class="info-k"><svg width="12" height="12"><use href="#i-ref"/></svg>Приведи друга</span>
+        <span class="info-v">−15%</span>
+      </div>
+      <div class="info-r">
+        <span class="info-k"><svg width="12" height="12"><use href="#i-mega"/></svg>Подписка на канал</span>
+        <span class="info-v">−5%</span>
+      </div>
+      <div class="info-r">
+        <span class="info-k"><svg width="12" height="12"><use href="#i-msg"/></svg>Оставить отзыв</span>
+        <span class="info-v">−5%</span>
+      </div>
+      <div class="info-r" style="border-bottom:none">
+        <span class="info-k"><svg width="12" height="12"><use href="#i-ticket"/></svg>Промокод</span>
+        <span class="info-v">до −30%</span>
+      </div>
+    </div>
+  </section>
+
   </div><!-- /#view -->
 </div>
 
 <!-- ══ NAV ══ -->
 <nav class="nav" id="nav">
   <div id="nav-slider"></div>
-  <div class="ni on" id="n-home" onclick="go('s-home')"><svg width="19" height="19"><use href="#i-home"/></svg><span data-i18n="nav.hm">Главная</span></div>
-  <div class="ni"    id="n-buy"  onclick="go('s-buy')"> <svg width="19" height="19"><use href="#i-gear"/></svg><span data-i18n="nav.by">Купить</span></div>
-  <div class="ni"    id="n-pay"  onclick="go('s-pay')"> <svg width="19" height="19"><use href="#i-card"/></svg><span data-i18n="nav.py">Оплата</span></div>
-  <div class="ni"    id="n-key"  onclick="go('s-key')"> <svg width="19" height="19"><use href="#i-key"/></svg> <span data-i18n="nav.ky">Ключ</span></div>
-  <div class="ni"    id="n-hlp"  onclick="go('s-hlp')"> <svg width="19" height="19"><use href="#i-chat"/></svg><span data-i18n="nav.hp">Помощь</span></div>
-  <div class="ni"    id="n-inf"  onclick="go('s-inf')"> <svg width="19" height="19"><use href="#i-zap"/></svg>  <span>Инфо</span></div>
-  <div class="ni"    id="n-adm"  onclick="go('s-adm')" style="display:none"> <svg width="19" height="19"><use href="#i-shld"/></svg><span>Тикеты</span></div>
-  <div class="ni"    id="n-abt"  onclick="go('s-abt')"> <svg width="19" height="19"><use href="#i-awd"/></svg> <span data-i18n="nav.ab">О нас</span></div>
+  <div class="ni on" id="n-home"  onclick="go('s-home')"> <svg width="19" height="19"><use href="#i-home"/></svg>  <span data-i18n="nav.hm">Главная</span></div>
+  <div class="ni"    id="n-buy"   onclick="go('s-buy')">  <svg width="19" height="19"><use href="#i-gear"/></svg>  <span data-i18n="nav.by">Купить</span></div>
+  <div class="ni"    id="n-key"   onclick="go('s-key')">  <svg width="19" height="19"><use href="#i-key"/></svg>   <span data-i18n="nav.ky">Ключ</span></div>
+  <div class="ni"    id="n-promo" onclick="go('s-promo')"><svg width="19" height="19"><use href="#i-ticket"/></svg><span>Промо</span></div>
+  <div class="ni"    id="n-rev"   onclick="go('s-rev')">  <svg width="19" height="19"><use href="#i-msg"/></svg>   <span>Отзывы</span></div>
+  <div class="ni"    id="n-inf"   onclick="go('s-inf')">  <svg width="19" height="19"><use href="#i-pulse"/></svg> <span>Статус</span></div>
+  <div class="ni"    id="n-abt"   onclick="go('s-abt')">  <svg width="19" height="19"><use href="#i-awd"/></svg>   <span data-i18n="nav.ab">О нас</span></div>
+  <div class="ni"    id="n-adm"   onclick="go('s-adm')" style="display:none"><svg width="19" height="19"><use href="#i-shld"/></svg><span>Тикеты</span></div>
 </nav>
 <div id="toast"></div>
 
@@ -1217,7 +1391,9 @@ function setLang(l){
 
 const SEC_NAV = {
   's-home':'n-home','s-buy':'n-buy','s-pay':'n-pay',
-  's-key':'n-key','s-hlp':'n-hlp','s-inf':'n-inf','s-adm':'n-adm','s-abt':'n-abt'
+  's-key':'n-key','s-hlp':'n-hlp','s-inf':'n-inf',
+  's-adm':'n-adm','s-abt':'n-abt',
+  's-rev':'n-rev','s-promo':'n-promo'
 };
 let _cur = 's-home';
 
@@ -1659,6 +1835,108 @@ initSakura('cvs-loader',  isMobile ? (isAndroid ? 17 : 23) : 45, .72);
 })();
 
 /* ══════════════════════════════════════
+   СТАТУС СЕРВЕРОВ
+══════════════════════════════════════ */
+async function checkStatus(){
+  function setStatus(id, textId, online, label){
+    const badge = document.getElementById(id);
+    const txt   = document.getElementById(textId);
+    if(!badge||!txt) return;
+    badge.className = 'status-badge ' + (online ? 'online' : 'offline');
+    txt.textContent = label;
+  }
+
+  // Бот — пингуем наш Railway endpoint
+  try{
+    const r = await fetch(`${API_BASE}/api/ping`, { signal: AbortSignal.timeout(5000) });
+    setStatus('st-bot', 'st-bot-txt', r.ok, r.ok ? 'Онлайн' : 'Оффлайн');
+  } catch { setStatus('st-bot', 'st-bot-txt', false, 'Недоступен'); }
+
+  // Эмулятор — пингуем Railway (он же хостит бота, значит эмулятор тоже жив)
+  try{
+    const r = await fetch(`${API_BASE}/api/ping`, { signal: AbortSignal.timeout(5000) });
+    setStatus('st-emu', 'st-emu-txt', r.ok, r.ok ? 'Работает' : 'Ошибка');
+  } catch { setStatus('st-emu', 'st-emu-txt', false, 'Недоступен'); }
+
+  // Лицензионный сервер
+  try{
+    const r = await fetch(`${API_BASE}/api/ping`, { signal: AbortSignal.timeout(5000) });
+    setStatus('st-lic', 'st-lic-txt', r.ok, r.ok ? 'Активен' : 'Ошибка');
+  } catch { setStatus('st-lic', 'st-lic-txt', false, 'Недоступен'); }
+}
+
+/* ══════════════════════════════════════
+   ОТЗЫВЫ — загрузка из JSONBin
+══════════════════════════════════════ */
+const STAR_SVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+
+async function loadReviews(){
+  const el = document.getElementById('rev-list');
+  if(!el) return;
+  try{
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN}/latest`, { headers: BIN_HDR });
+    if(!r.ok){ el.innerHTML = '<div class="rev-empty">Ошибка загрузки</div>'; return; }
+    const j    = await r.json();
+    const rec  = j.record || j || {};
+    const revs = Array.isArray(rec.reviews) ? rec.reviews : [];
+
+    if(!revs.length){
+      el.innerHTML = `<div class="rev-empty">Пока нет отзывов · <a href="https://t.me/kenosobzor" target="_blank" style="color:var(--txt-dim)">Написать первым</a></div>`;
+      return;
+    }
+    el.innerHTML = revs.map(v => `
+      <div class="rev-card">
+        <div class="rev-top">
+          <span class="rev-name">${v.name || 'Аноним'}</span>
+          <span class="rev-date">${v.date || ''}</span>
+        </div>
+        <div class="rev-stars">${STAR_SVG.repeat(Math.min(5, v.stars || 5))}</div>
+        <div class="rev-text">${v.text || ''}</div>
+      </div>`).join('');
+  } catch {
+    el.innerHTML = '<div class="rev-empty">Нет отзывов</div>';
+  }
+}
+
+/* ══════════════════════════════════════
+   ПРОМОКОДЫ
+══════════════════════════════════════ */
+// Коды хранятся в JSONBin под ключом "promos": [{code, discount, desc, used}]
+async function applyPromo(){
+  const inp = document.getElementById('promo-inp');
+  const res = document.getElementById('promo-result');
+  if(!inp||!res) return;
+
+  const code = inp.value.trim().toUpperCase();
+  if(!code){ showPromoResult('Введи промокод', 'err'); return; }
+
+  try{
+    const r = await fetch(`${API_BASE}/api/promo`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, initData: tg?.initData || '' })
+    });
+    const d = await r.json();
+    if(d.ok){
+      showPromoResult(`✓ Промокод активирован — скидка ${d.discount}%\n${d.desc || ''}`, 'ok');
+      inp.value = '';
+    } else {
+      showPromoResult(d.error || 'Промокод недействителен', 'err');
+    }
+  } catch {
+    showPromoResult('Ошибка соединения', 'err');
+  }
+}
+
+function showPromoResult(text, type){
+  const el = document.getElementById('promo-result');
+  if(!el) return;
+  el.textContent = text;
+  el.className   = `promo-result show ${type}`;
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+/* ══════════════════════════════════════
    CHANGELOG
 ══════════════════════════════════════ */
 const BIN='69b1450baa77b81da9d63f29';
@@ -1710,7 +1988,7 @@ async function loadInfo(){
 }
 
 document.addEventListener('visibilitychange',()=>{
-  if(!document.hidden){loadKey();loadCL();loadInfo();}
+  if(!document.hidden){loadKey();loadCL();loadInfo();checkStatus();loadReviews();}
 },{passive:true});
 
 /* ══════════════════════════════════════
@@ -1720,6 +1998,8 @@ setLang('ru');
 loadKey();
 loadCL();
 loadInfo();
+checkStatus();
+loadReviews();
 
 </script>
 </body>
