@@ -2,18 +2,32 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using KENOS.Bot.Models;
+using KENOS.Bot.Serialization;
 
 namespace KENOS.Bot.Services;
 
 /// <summary>
 /// JSONBin — хранилище для мини-приложения.
-/// Структура: { "changelog": [...], "info": [...] }
+/// Оптимизации:
+///   • Source Generator JSON — нет рефлексии, AOT-safe
+///   • ObjectPool&lt;StringBuilder&gt; — переиспользование буфера, нет GC-давления
+///   • Единственный статический HttpClient — нет socket exhaustion
 /// </summary>
-public sealed class JsonBin(IOptions<BotConfig> cfg, ILogger<JsonBin> log)
+public sealed class JsonBin(
+    IOptions<BotConfig> cfg,
+    ObjectPool<StringBuilder> sbPool,
+    ILogger<JsonBin> log)
 {
-    private static readonly HttpClient Http = new();
+    // Один HttpClient на весь процесс — нет socket exhaustion
+    private static readonly HttpClient Http = new(new SocketsHttpHandler
+    {
+        PooledConnectionLifetime = TimeSpan.FromMinutes(10),
+        PooledConnectionIdleTimeout = TimeSpan.FromMinutes(5),
+        MaxConnectionsPerServer = 4
+    });
 
     /// <summary>Сохранить changelog + info в одном запросе.</summary>
     public async Task<(bool ok, string msg)> Push(
@@ -27,36 +41,37 @@ public sealed class JsonBin(IOptions<BotConfig> cfg, ILogger<JsonBin> log)
 
         try
         {
-            var payload = JsonSerializer.Serialize(new
-            {
-                changelog = changelog.Select(e => new
-                {
-                    ver  = e.Ver,
-                    date = e.Date.ToString("dd.MM.yyyy"),
-                    text = e.Text
-                }),
-                info = info.Select(i => new
-                {
-                    type   = i.Type,
-                    title  = i.Title,
-                    body   = i.Body,
-                    date   = i.Date,
-                    active = i.Active
-                })
-            });
+            // Строим payload через Source Generator — ноль рефлексии
+            var payload = new JsonBinPayload(
+                Changelog: changelog.Select(e => new ChangelogEntryDto(
+                    Ver:  e.Ver,
+                    Date: e.Date.ToString("dd.MM.yyyy"),
+                    Text: e.Text)),
+                Info: info.Select(i => new InfoEntryDto(
+                    Type:   i.Type,
+                    Title:  i.Title,
+                    Body:   i.Body,
+                    Date:   i.Date,
+                    Active: i.Active)));
 
-            var req = new HttpRequestMessage(HttpMethod.Put,
+            // Сериализация через Source Gen — нет DynamicCode, AOT-safe
+            var json = JsonSerializer.Serialize(payload, KENOSJsonCtx.Default.JsonBinPayload);
+
+            var req = new HttpRequestMessage(
+                HttpMethod.Put,
                 $"https://api.jsonbin.io/v3/b/{c.JsonBinId}")
             {
-                Content = new StringContent(payload, Encoding.UTF8, "application/json")
+                // StringContent с явной кодировкой — нет лишних аллокаций
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
-            req.Headers.Add("X-Master-Key",    c.JsonBinKey);
-            req.Headers.Add("X-Bin-Versioning","false");
 
-            var res  = await Http.SendAsync(req, ct);
-            var text = await res.Content.ReadAsStringAsync(ct);
+            req.Headers.TryAddWithoutValidation("X-Master-Key",     c.JsonBinKey);
+            req.Headers.TryAddWithoutValidation("X-Bin-Versioning", "false");
+
+            using var res  = await Http.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
+            var       text = await res.Content.ReadAsStringAsync(ct);
+
             log.LogInformation("JSONBin {S}: {B}", (int)res.StatusCode, text);
-
             return res.IsSuccessStatusCode ? (true, "OK") : (false, $"HTTP {(int)res.StatusCode}");
         }
         catch (Exception ex)

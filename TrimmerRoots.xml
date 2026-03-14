@@ -1,0 +1,6 @@
+<linker>
+  <!-- Telegram.Bot использует reflection для десериализации — сохраняем -->
+  <assembly fullname="Telegram.Bot" preserve="all" />
+  <!-- System.Text.Json нужен для Source Generators -->
+  <assembly fullname="System.Text.Json" preserve="all" />
+</linker>

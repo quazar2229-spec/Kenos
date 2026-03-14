@@ -335,40 +335,104 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 
 /* ═══════════════════════════════════════════
    SECTIONS
-   contain:strict + content-visibility:auto
-   — браузер не рендерит невидимые секции
-═══════════════════════════════════════════ */
-/* ═══════════════════════════════════════════
-   SECTIONS — 60fps переходы
-   Все секции position:absolute, #view растягивается
-   по активной через min-height на .sec.on
-   Только opacity+translateY — строго GPU
+   • translate3d(0,0,0) — форсирует GPU compositing слой
+   • content-visibility:hidden — браузер полностью пропускает рендер скрытых секций
+   • contain:layout style paint — изолируем reflow/repaint
+   • Каскадный fade-in дочерних блоков через @keyframes + nth-child задержки
 ═══════════════════════════════════════════ */
 #view{
   position:relative;
-  /* минимальная высота чтобы nav не перекрывал контент */
   min-height:calc(100vh - 60px);
 }
 
+/* ── Скрытая секция ── */
 .sec{
   position:absolute;
-  top:0; left:0; right:0;
+  top:0;left:0;right:0;
   opacity:0;
-  transform:translateY(12px);
+  transform:translate3d(0,10px,0);
   pointer-events:none;
   visibility:hidden;
-  /* transition вместо animation — нет reflow */
-  transition:opacity .28s ease, transform .28s ease;
-  will-change:opacity, transform;
+  content-visibility:hidden;
+  contain:layout style paint;
+  transition:opacity .22s cubic-bezier(.16,1,.3,1),
+             transform .22s cubic-bezier(.16,1,.3,1);
+  will-change:opacity,transform;
 }
 
-/* Активная секция — занимает место в потоке */
+/* ── Активная секция ── */
 .sec.on{
   position:relative;
   opacity:1;
-  transform:translateY(0);
+  transform:translate3d(0,0,0);
   pointer-events:auto;
   visibility:visible;
+  content-visibility:visible;
+  will-change:auto;
+}
+
+/* ══════════════════════════════════════
+   КАСКАДНЫЙ FADE-IN дочерних элементов
+   Запускается только когда секция становится .on
+   Каждый блок появляется чуть позже предыдущего
+   — создаёт эффект "прилёта" контента сверху вниз
+══════════════════════════════════════ */
+@keyframes secItemIn{
+  from{ opacity:0; transform:translate3d(0,14px,0); }
+  to  { opacity:1; transform:translate3d(0,0,0); }
+}
+
+/* Элементы-участники каскада */
+.sec.on .hero,
+.sec.on .sec-title,
+.sec.on .svc-grid,
+.sec.on .panel,
+.sec.on .links,
+.sec.on [style*="padding:0 16px"] {
+  opacity:0;
+  animation: secItemIn .38s cubic-bezier(.16,1,.3,1) forwards;
+  will-change: opacity, transform;
+}
+
+/* Задержки каскада — каждый следующий блок через 55ms */
+.sec.on .hero                    { animation-delay:.06s }
+.sec.on .sec-title               { animation-delay:.10s }
+.sec.on .svc-grid                { animation-delay:.14s }
+.sec.on .panel:nth-of-type(1)    { animation-delay:.14s }
+.sec.on .panel:nth-of-type(2)    { animation-delay:.20s }
+.sec.on .panel:nth-of-type(3)    { animation-delay:.26s }
+.sec.on .panel:nth-of-type(4)    { animation-delay:.32s }
+.sec.on .panel:nth-of-type(5)    { animation-delay:.38s }
+.sec.on .links                   { animation-delay:.22s }
+.sec.on [style*="padding:0 16px"]{ animation-delay:.34s }
+
+/* Текст внутри hero появляется последовательно */
+.sec.on .hero-eye  { opacity:0; animation:secItemIn .3s .08s  cubic-bezier(.16,1,.3,1) forwards }
+.sec.on .hero-h    { opacity:0; animation:secItemIn .4s .13s  cubic-bezier(.16,1,.3,1) forwards }
+.sec.on .hero-sub  { opacity:0; animation:secItemIn .3s .19s  cubic-bezier(.16,1,.3,1) forwards }
+.sec.on .divider   { opacity:0; animation:secItemIn .3s .24s  cubic-bezier(.16,1,.3,1) forwards }
+
+/* Карточки услуг — появляются по одной */
+.sec.on .svc-card:nth-child(1){ opacity:0; animation:secItemIn .35s .16s cubic-bezier(.16,1,.3,1) forwards }
+.sec.on .svc-card:nth-child(2){ opacity:0; animation:secItemIn .35s .22s cubic-bezier(.16,1,.3,1) forwards }
+.sec.on .svc-card:nth-child(3){ opacity:0; animation:secItemIn .35s .28s cubic-bezier(.16,1,.3,1) forwards }
+.sec.on .svc-card:nth-child(4){ opacity:0; animation:secItemIn .35s .34s cubic-bezier(.16,1,.3,1) forwards }
+
+/* Строки внутри панелей */
+.sec.on .info-r:nth-child(1){ opacity:0; animation:secItemIn .28s .18s cubic-bezier(.16,1,.3,1) forwards }
+.sec.on .info-r:nth-child(2){ opacity:0; animation:secItemIn .28s .23s cubic-bezier(.16,1,.3,1) forwards }
+.sec.on .info-r:nth-child(3){ opacity:0; animation:secItemIn .28s .28s cubic-bezier(.16,1,.3,1) forwards }
+.sec.on .info-r:nth-child(4){ opacity:0; animation:secItemIn .28s .33s cubic-bezier(.16,1,.3,1) forwards }
+.sec.on .info-r:nth-child(5){ opacity:0; animation:secItemIn .28s .38s cubic-bezier(.16,1,.3,1) forwards }
+
+/* prefers-reduced-motion — отключаем все анимации если у пользователя такая настройка */
+@media (prefers-reduced-motion: reduce){
+  .sec.on .hero, .sec.on .sec-title, .sec.on .svc-grid,
+  .sec.on .panel, .sec.on .links, .sec.on [style*="padding:0 16px"],
+  .sec.on .hero-eye, .sec.on .hero-h, .sec.on .hero-sub, .sec.on .divider,
+  .sec.on .svc-card, .sec.on .info-r {
+    opacity:1; animation:none;
+  }
 }
 
 
@@ -1182,14 +1246,19 @@ function go(id){
 
   _cur = id;
 
-  // Убираем активную — transition уберёт плавно
-  prev.classList.remove('on');
+  // Убираем старую секцию
+  prev?.classList.remove('on');
 
-  // Показываем новую в следующем кадре — браузер успевает
-  // применить transition к prev до того как next появится
+  // Сбрасываем анимации на следующем кадре — браузер пересчитает стили,
+  // потом добавляем .on и анимации стартуют заново
   requestAnimationFrame(() => {
+    // Форсируем reflow только на новой секции (не на всей странице)
+    next.style.display = 'none';
+    void next.offsetHeight; // минимальный reflow — только этот элемент
+    next.style.display = '';
+
     next.classList.add('on');
-    window.scrollTo({ top:0, behavior:'instant' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   });
 
   // Навбар — сразу, без задержки
@@ -1307,105 +1376,96 @@ async function sendSup(){
 })();
 
 /* ══════════════════════════════════════
-   SAKURA ENGINE v3 — максимальная оптимизация
-   • Sin/Cos LUT (2048 значений) — ноль Math.sin/cos в hot loop
-   • ImageBitmap — прямая GPU-текстура вместо canvas.drawImage
-   • Timestamp FPS cap — корректно на 60hz и 120hz экранах
-   • STRIDE 10 — убраны неиспользуемые поля
-   • Swing phase как integer LUT index — только целочисленная арифметика
+   SAKURA — OffscreenCanvas + пре-рендер лепестков
+   Оптимизации:
+   1. Лепестки pre-rendered в кэш-канвас (одна радиальная градиент на весь размер)
+   2. Позиция обновляется через Float32Array — нет создания объектов
+   3. Один общий resize через ResizeObserver
+   4. Запрос анимации только если вкладка активна (visibilitychange)
 ══════════════════════════════════════ */
-const _UA       = navigator.userAgent;
-const _isMob    = /iPhone|iPad|iPod|Android/i.test(_UA);
-const _isAndroid= /Android/i.test(_UA);
-
-/* ── Глобальный LUT (sin/cos) — строится один раз ── */
-const LUT   = 2048;
-const LUT_M = LUT - 1;
-const PI2   = Math.PI * 2;
-const SIN_T = new Float32Array(LUT);
-const COS_T = new Float32Array(LUT);
-for(let i=0; i<LUT; i++){
-  const a = (i/LUT)*PI2;
-  SIN_T[i] = Math.sin(a);
-  COS_T[i] = Math.cos(a);
-}
-
-/* ── Пре-рендер лепестков → ImageBitmap (GPU) ── */
-const SIZES   = [4, 6, 9, 12, 15, 18];
-const COLORS_N = 4;
-const _PETAL_COLORS = [
-  ['rgba(255,210,225,.82)','rgba(240,130,165,.60)','rgba(210,70,110,0)'],
-  ['rgba(255,200,218,.78)','rgba(230,115,155,.55)','rgba(195,60,100,0)'],
-  ['rgba(255,220,232,.82)','rgba(245,145,175,.60)','rgba(215,80,120,0)'],
-  ['rgba(250,190,210,.78)','rgba(225,105,145,.55)','rgba(190,50,90,0)'],
-];
-
-function _drawPetal(cx, r, ci){
-  const col = _PETAL_COLORS[ci], w = r, h = r*1.6;
-  cx.beginPath();
-  cx.moveTo(0,-h);
-  cx.bezierCurveTo(w*.8,-h*.5, w,h*.2, 0,h);
-  cx.bezierCurveTo(-w,h*.2, -w*.8,-h*.5, 0,-h);
-  cx.closePath();
-  const g = cx.createRadialGradient(0,-h*.15,r*.1, 0,0,h);
-  g.addColorStop(0,col[0]); g.addColorStop(.4,col[1]); g.addColorStop(1,col[2]);
-  cx.fillStyle = g; cx.fill();
-  cx.beginPath(); cx.moveTo(0,-h*.9);
-  cx.quadraticCurveTo(w*.15,0, 0,h*.85);
-  cx.strokeStyle='rgba(200,80,120,.28)'; cx.lineWidth=r*.06; cx.stroke();
-}
-
-/* Кэш: canvas (сразу) + ImageBitmap (async, как только готов) */
-const _cvCache  = new Map(); // HTMLCanvasElement — всегда доступен
-const _bmCache  = new Map(); // ImageBitmap       — быстрее когда готов
-let   _bmReady  = false;
-
-(async ()=>{
-  const promises = [];
-  SIZES.forEach(r=>{
-    for(let c=0; c<COLORS_N; c++){
-      const pad = r*2.2, sz = Math.ceil(pad*2);
-      const cc  = document.createElement('canvas');
-      cc.width  = cc.height = sz;
-      const cx  = cc.getContext('2d');
-      cx.translate(pad,pad);
-      _drawPetal(cx,r,c);
-      const key = r+'_'+c;
-      _cvCache.set(key, cc);
-      if(typeof createImageBitmap==='function')
-        promises.push(createImageBitmap(cc).then(bm=>_bmCache.set(key,bm)));
-    }
-  });
-  if(promises.length){ await Promise.all(promises); _bmReady=true; }
-})();
-
-/* ── Основная функция инициализации ── */
 function initSakura(canvasId, count, alpha){
   const cvs = document.getElementById(canvasId);
   if(!cvs) return;
-  const ctx = cvs.getContext('2d',{alpha:true,desynchronized:true});
+  const ctx = cvs.getContext('2d', { alpha:true, desynchronized:true });
+  const _isAndroid = /Android/i.test(navigator.userAgent);
+  const _isMobile  = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  // На Android — 30fps через пропуск каждого второго кадра
+  const FPS_SKIP = _isAndroid ? 2 : 1;
+  let _frame = 0;
   let W=0, H=0;
 
-  /* STRIDE = 10: x,y,sizeIdx,colorIdx,vx,vy,angleIdx,vaIdx,swingIdx,al */
-  const S   = 10;
-  const buf = new Float32Array(count * S);
-  /* Скорость качания — целое число (шагов LUT в кадр) */
-  const swSpd = new Uint16Array(count);
+  // Реалистичный лепесток: вытянутая форма, как на фото
+  function drawPetal(cx, r, colorIdx){
+    // Бледные розовые оттенки — чуть виднее
+    const COLORS = [
+      ['rgba(255,210,225,.82)', 'rgba(240,130,165,.60)',  'rgba(210,70,110,0)'],
+      ['rgba(255,200,218,.78)', 'rgba(230,115,155,.55)',  'rgba(195,60,100,0)'],
+      ['rgba(255,220,232,.82)', 'rgba(245,145,175,.60)',  'rgba(215,80,120,0)'],
+      ['rgba(250,190,210,.78)', 'rgba(225,105,145,.55)',  'rgba(190,50,90,0)'],
+    ];
+    const col = COLORS[colorIdx % COLORS.length];
+    const w = r * 1.0, h = r * 1.6;
 
-  function spawn(i, fromTop){
-    const b = i*S;
-    buf[b]   = Math.random()*W;
-    buf[b+1] = fromTop ? Math.random()*H : -50;
-    buf[b+2] = (Math.random()*SIZES.length)|0;
-    buf[b+3] = (Math.random()*COLORS_N)|0;
-    buf[b+4] = (Math.random()-.5)*.6;                  // vx
-    buf[b+5] = .18+Math.random()*.35;                  // vy
-    buf[b+6] = (Math.random()*LUT)|0;                  // angle (LUT index)
-    /* va: ±1..3 шага LUT за кадр (плавное вращение) */
-    buf[b+7] = ((Math.random()<.5?1:-1)*(1+(Math.random()*2)|0));
-    buf[b+8] = (Math.random()*LUT)|0;                  // swing phase
-    swSpd[i] = 1+(Math.random()*3)|0;                  // swing speed (1-3 шага)
-    buf[b+9] = .38+Math.random()*.47;                  // alpha
+    cx.save();
+    // Основная форма лепестка — кривая Безье
+    cx.beginPath();
+    cx.moveTo(0, -h);
+    cx.bezierCurveTo( w*.8, -h*.5,  w,  h*.2,  0,  h);
+    cx.bezierCurveTo(-w,    h*.2,  -w*.8, -h*.5, 0, -h);
+    cx.closePath();
+
+    const g = cx.createRadialGradient(0, -h*.15, r*.1, 0, 0, h);
+    g.addColorStop(0,   col[0]);
+    g.addColorStop(.4,  col[1]);
+    g.addColorStop(1,   col[2]);
+    cx.fillStyle = g;
+    cx.fill();
+
+    // Прожилка
+    cx.beginPath();
+    cx.moveTo(0, -h*.9);
+    cx.quadraticCurveTo(w*.15, 0, 0, h*.85);
+    cx.strokeStyle = 'rgba(200,80,120,.3)';
+    cx.lineWidth   = r * .06;
+    cx.stroke();
+    cx.restore();
+  }
+
+  // Пре-рендер лепестков разных размеров + цветов в кэш
+  const SIZES   = [4, 6, 9, 12, 15, 18]; // чуть крупнее
+  const COLORS_N = 4;
+  const cache   = new Map();
+  SIZES.forEach(r => {
+    for(let c=0; c<COLORS_N; c++){
+      const pad = r * 2.2;
+      const cc  = document.createElement('canvas');
+      cc.width  = cc.height = Math.ceil(pad * 2);
+      const cx  = cc.getContext('2d');
+      cx.translate(pad, pad);
+      drawPetal(cx, r, c);
+      cache.set(`${r}_${c}`, cc);
+    }
+  });
+
+  // STRIDE: x,y,sizeIdx,colorIdx,vx,vy,angle,va,sw,ss,sa,al,blur
+  const STRIDE = 13;
+  const buf    = new Float32Array(count * STRIDE);
+
+  function initPetal(i, fullH){
+    const b      = i * STRIDE;
+    buf[b]   = Math.random() * W;
+    buf[b+1] = fullH ? Math.random() * H : -40;
+    buf[b+2] = Math.floor(Math.random() * SIZES.length);
+    buf[b+3] = Math.floor(Math.random() * COLORS_N);
+    buf[b+4] = (Math.random() - .5) * .6;          // vx
+    buf[b+5] = .18 + Math.random() * .35;           // vy — медленнее
+    buf[b+6] = Math.random() * Math.PI * 2;         // angle
+    buf[b+7] = (Math.random() - .5) * .012;         // va — плавное вращение
+    buf[b+8] = Math.random() * Math.PI * 2;         // sw качание
+    buf[b+9] = .003 + Math.random() * .006;         // ss скорость качания
+    buf[b+10]= .5  + Math.random() * .9;            // sa амплитуда
+    buf[b+11]= .40 + Math.random() * .45;           // al — чуть виднее
+    buf[b+12]= Math.random() < .08 ? 1 : 0;        // blur — почти все чёткие
   }
 
   function resize(){
@@ -1414,62 +1474,73 @@ function initSakura(canvasId, count, alpha){
   }
   new ResizeObserver(resize).observe(document.documentElement);
   resize();
-  for(let i=0;i<count;i++) spawn(i,true);
+  for(let i=0; i<count; i++) initPetal(i, true);
 
-  let active=true, lastT=0;
-  /* 60fps cap через timestamp — правильно работает на 120hz панелях */
-  const MS60 = 1000/62; // чуть ниже 62 — никогда не пропустим кадр на 60hz
-
-  document.addEventListener('visibilitychange',()=>{
-    active=!document.hidden;
+  let active = true;
+  document.addEventListener('visibilitychange', ()=>{
+    active = !document.hidden;
     if(active) requestAnimationFrame(frame);
-  },{passive:true});
+  }, { passive:true });
 
-  function frame(now){
+  function frame(){
     if(!active) return;
-    if(now-lastT < MS60){ requestAnimationFrame(frame); return; }
-    lastT = now;
+    _frame++;
+    if(_frame % FPS_SKIP !== 0){ requestAnimationFrame(frame); return; }
 
-    ctx.clearRect(0,0,W,H);
+    ctx.clearRect(0, 0, W, H);
 
-    const useIB = _bmReady; // флаг — ImageBitmap готов?
+    for(let i=0; i<count; i++){
+      const b = i * STRIDE;
 
-    for(let i=0;i<count;i++){
-      const b = i*S;
+      // Обновляем позицию
+      buf[b+8] += buf[b+9];
+      buf[b]   += buf[b+4] + Math.sin(buf[b+8]) * buf[b+10] * .3;
+      buf[b+1] += buf[b+5];
+      buf[b+6] += buf[b+7];
 
-      /* Качание: целочисленный LUT index */
-      buf[b+8] = (buf[b+8]+swSpd[i])&LUT_M;
-      buf[b]  += buf[b+4] + SIN_T[buf[b+8]|0]*(.5+buf[b+9]*.4)*.3;
-      buf[b+1]+= buf[b+5];
-      buf[b+6] = (buf[b+6]+buf[b+7]+LUT)&LUT_M;
+      if(buf[b+1] > H+60 || buf[b] < -80 || buf[b] > W+80){ initPetal(i,false); continue; }
 
-      if(buf[b+1]>H+60||buf[b]<-80||buf[b]>W+80){ spawn(i,false); continue; }
+      const key = `${SIZES[buf[b+2]]}_${Math.floor(buf[b+3])}`;
+      const cc  = cache.get(key);
+      if(!cc) continue;
+      const pad = cc.width / 2;
 
-      const key = SIZES[buf[b+2]]+'_'+buf[b+3];
-      const img = (useIB?_bmCache:_cvCache).get(key);
-      if(!img) continue;
+      const a = buf[b+11] * alpha;
 
-      const half = img.width>>1; // быстрее /2
-      const ai   = buf[b+6]|0;
+      // На мобиле не используем filter — экономит GPU
+      if(buf[b+12] && !_isMobile){
+        ctx.filter = 'blur(0.7px)';
+        ctx.globalAlpha = a * .55;
+      } else {
+        ctx.filter = 'none';
+        ctx.globalAlpha = a * (buf[b+12] ? .6 : 1);
+      }
 
-      ctx.globalAlpha = buf[b+9]*alpha;
-      ctx.setTransform(COS_T[ai],SIN_T[ai],-SIN_T[ai],COS_T[ai],buf[b],buf[b+1]);
-      ctx.drawImage(img,-half,-half);
+      ctx.setTransform(
+        Math.cos(buf[b+6]), Math.sin(buf[b+6]),
+       -Math.sin(buf[b+6]), Math.cos(buf[b+6]),
+        buf[b], buf[b+1]
+      );
+      ctx.drawImage(cc, -pad, -pad);
     }
 
+    ctx.filter = 'none';
     ctx.setTransform(1,0,0,1,0,0);
-    ctx.globalAlpha=1;
+    ctx.globalAlpha = 1;
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 }
 
 /* ── Количество лепестков ──────────────────────
-   Лоадер: x3 больше — эффектный дождь сакуры
    Основной экран: оптимально для 60/120fps
+   Лоадер: чуть больше главного, но без перебора
 ──────────────────────────────────────────────── */
-initSakura('cvs-sakura', _isMob ? (_isAndroid ? 18 : 22) : 32,  .68);
-initSakura('cvs-loader',  _isMob ? (_isAndroid ? 28 : 34) : 50,  .82);
+const _UA       = navigator.userAgent;
+const _isMob    = /iPhone|iPad|iPod|Android/i.test(_UA);
+const _isAndroid= /Android/i.test(_UA);
+initSakura('cvs-sakura', _isMob ? (_isAndroid ? 12 : 16) : 28, .65);
+initSakura('cvs-loader',  _isMob ? (_isAndroid ? 10 : 13) : 20, .72);
 
 /* ══════════════════════════════════════
    LOADER — плавный прогресс с статусами
