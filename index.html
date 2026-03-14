@@ -37,8 +37,9 @@
   --panel:rgba(14,14,14,.97);
   --card:rgba(14,14,14,.97);
   --g5:#555;--g4:#999;
-  --ease:cubic-bezier(.16,1,.3,1);
-  --fast:.22s;--mid:.38s;
+  --ease:cubic-bezier(.25,.46,.45,.94);
+  --fast:.32s;--mid:.42s;
+  --smooth:cubic-bezier(.25,.46,.45,.94);
   --ac:rgba(255,255,255,1);
   --ac-dim:rgba(255,255,255,.08);
   --ac-glow:rgba(255,255,255,.5);
@@ -362,10 +363,11 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 }
 
 /* ══════════════════════════════════════
-   КАСКАДНЫЙ FADE-IN — мягко, неспешно
+   FADE-IN элементов — единый transition
+   Та же кривая что и nav, без keyframes
 ══════════════════════════════════════ */
 @keyframes secItemIn{
-  from{ opacity:0; transform:translate3d(0,10px,0); }
+  from{ opacity:0; transform:translate3d(0,8px,0); }
   to  { opacity:1; transform:translate3d(0,0,0); }
 }
 
@@ -377,39 +379,39 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .sec.on .links,
 .sec.on [style*="padding:0 16px"]{
   opacity:0;
-  animation:secItemIn .55s cubic-bezier(.25,.46,.45,.94) forwards;
+  animation:secItemIn .42s var(--smooth) forwards;
 }
 
-/* Шаг 80ms — неторопливо */
-.sec.on .hero                    { animation-delay:.10s }
-.sec.on .sec-title               { animation-delay:.16s }
-.sec.on .svc-grid                { animation-delay:.20s }
-.sec.on .panel:nth-of-type(1)    { animation-delay:.20s }
-.sec.on .panel:nth-of-type(2)    { animation-delay:.30s }
-.sec.on .panel:nth-of-type(3)    { animation-delay:.40s }
-.sec.on .panel:nth-of-type(4)    { animation-delay:.50s }
-.sec.on .panel:nth-of-type(5)    { animation-delay:.60s }
-.sec.on .links                   { animation-delay:.32s }
-.sec.on [style*="padding:0 16px"]{ animation-delay:.50s }
+/* Шаги — меньше задержки, ощущается живее */
+.sec.on .hero                    { animation-delay:.06s }
+.sec.on .sec-title               { animation-delay:.09s }
+.sec.on .svc-grid                { animation-delay:.09s }
+.sec.on .panel:nth-of-type(1)    { animation-delay:.09s }
+.sec.on .panel:nth-of-type(2)    { animation-delay:.16s }
+.sec.on .panel:nth-of-type(3)    { animation-delay:.23s }
+.sec.on .panel:nth-of-type(4)    { animation-delay:.30s }
+.sec.on .panel:nth-of-type(5)    { animation-delay:.37s }
+.sec.on .links                   { animation-delay:.18s }
+.sec.on [style*="padding:0 16px"]{ animation-delay:.28s }
 
-/* Hero — строки одна за одной */
-.sec.on .hero-eye { opacity:0; animation:secItemIn .5s  .12s cubic-bezier(.25,.46,.45,.94) forwards }
-.sec.on .hero-h   { opacity:0; animation:secItemIn .6s  .20s cubic-bezier(.25,.46,.45,.94) forwards }
-.sec.on .hero-sub { opacity:0; animation:secItemIn .5s  .30s cubic-bezier(.25,.46,.45,.94) forwards }
-.sec.on .divider  { opacity:0; animation:secItemIn .45s .38s cubic-bezier(.25,.46,.45,.94) forwards }
+/* Hero */
+.sec.on .hero-eye { opacity:0; animation:secItemIn .38s .08s var(--smooth) forwards }
+.sec.on .hero-h   { opacity:0; animation:secItemIn .45s .14s var(--smooth) forwards }
+.sec.on .hero-sub { opacity:0; animation:secItemIn .38s .20s var(--smooth) forwards }
+.sec.on .divider  { opacity:0; animation:secItemIn .35s .26s var(--smooth) forwards }
 
-/* Карточки услуг — шаг 90ms */
-.sec.on .svc-card:nth-child(1){ opacity:0; animation:secItemIn .5s .22s cubic-bezier(.25,.46,.45,.94) forwards }
-.sec.on .svc-card:nth-child(2){ opacity:0; animation:secItemIn .5s .31s cubic-bezier(.25,.46,.45,.94) forwards }
-.sec.on .svc-card:nth-child(3){ opacity:0; animation:secItemIn .5s .40s cubic-bezier(.25,.46,.45,.94) forwards }
-.sec.on .svc-card:nth-child(4){ opacity:0; animation:secItemIn .5s .49s cubic-bezier(.25,.46,.45,.94) forwards }
+/* Карточки */
+.sec.on .svc-card:nth-child(1){ opacity:0; animation:secItemIn .4s .11s var(--smooth) forwards }
+.sec.on .svc-card:nth-child(2){ opacity:0; animation:secItemIn .4s .18s var(--smooth) forwards }
+.sec.on .svc-card:nth-child(3){ opacity:0; animation:secItemIn .4s .25s var(--smooth) forwards }
+.sec.on .svc-card:nth-child(4){ opacity:0; animation:secItemIn .4s .32s var(--smooth) forwards }
 
-/* Строки info-r — шаг 70ms */
-.sec.on .info-r:nth-child(1){ opacity:0; animation:secItemIn .45s .25s cubic-bezier(.25,.46,.45,.94) forwards }
-.sec.on .info-r:nth-child(2){ opacity:0; animation:secItemIn .45s .33s cubic-bezier(.25,.46,.45,.94) forwards }
-.sec.on .info-r:nth-child(3){ opacity:0; animation:secItemIn .45s .41s cubic-bezier(.25,.46,.45,.94) forwards }
-.sec.on .info-r:nth-child(4){ opacity:0; animation:secItemIn .45s .49s cubic-bezier(.25,.46,.45,.94) forwards }
-.sec.on .info-r:nth-child(5){ opacity:0; animation:secItemIn .45s .57s cubic-bezier(.25,.46,.45,.94) forwards }
+/* Строки info-r */
+.sec.on .info-r:nth-child(1){ opacity:0; animation:secItemIn .38s .14s var(--smooth) forwards }
+.sec.on .info-r:nth-child(2){ opacity:0; animation:secItemIn .38s .21s var(--smooth) forwards }
+.sec.on .info-r:nth-child(3){ opacity:0; animation:secItemIn .38s .28s var(--smooth) forwards }
+.sec.on .info-r:nth-child(4){ opacity:0; animation:secItemIn .38s .35s var(--smooth) forwards }
+.sec.on .info-r:nth-child(5){ opacity:0; animation:secItemIn .38s .42s var(--smooth) forwards }
 
 /* prefers-reduced-motion */
 @media(prefers-reduced-motion:reduce){
@@ -461,11 +463,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   border-radius:16px;
   position:relative;overflow:hidden;
   contain:layout style paint;
-  animation:panelShine 5s ease-in-out infinite;
 }
-.panel:nth-child(2){animation-delay:.9s}
-.panel:nth-child(3){animation-delay:1.8s}
-.panel:nth-child(4){animation-delay:2.7s}
+
 /* блик */
 .panel::before{
   content:'';position:absolute;
@@ -485,9 +484,10 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   background:rgba(14,14,14,.97);border:1px solid var(--border);
   border-radius:16px;padding:18px 14px 14px;
   cursor:pointer;position:relative;overflow:hidden;
-  transition:transform var(--fast) var(--ease), border-color var(--fast) ease, box-shadow var(--fast) ease;
+  transition:transform .32s var(--smooth),
+             border-color .32s var(--smooth),
+             box-shadow .32s var(--smooth);
   box-shadow:0 4px 20px rgba(0,0,0,.45);
-  will-change:transform;
 }
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent);pointer-events:none}
 .svc-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none}
@@ -496,8 +496,6 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   display:flex;justify-content:center;align-items:center;
   margin-bottom:12px;color:var(--txt-dim);
   position:relative;z-index:1;
-  animation:float 4s ease-in-out infinite;
-  will-change:transform;
 }
 .svc-card:nth-child(1) .svc-ico{animation-delay:0s}
 .svc-card:nth-child(2) .svc-ico{animation-delay:-1s}
@@ -519,7 +517,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   margin-bottom:8px;
 }
 .info-badge.tech{background:rgba(255,180,0,.12);border:1px solid rgba(255,180,0,.25);color:rgba(255,200,50,.9)}
-.info-badge.info{background:rgba(100,180,255,.1);border:1px solid rgba(100,180,255,.22);color:rgba(140,200,255,.9)}
+.info-badge.info{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(200,200,200,.8)}
 .info-badge.ok  {background:rgba(100,255,150,.1);border:1px solid rgba(100,255,150,.22);color:rgba(130,255,160,.9)}
 .info-badge.warn{background:rgba(255,100,100,.1);border:1px solid rgba(255,100,100,.22);color:rgba(255,140,140,.9)}
 .info-badge svg{opacity:.8}
@@ -569,9 +567,11 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   border-radius:20px;text-decoration:none;
   white-space:nowrap;
   color:var(--txt-muted);font-size:11px;letter-spacing:.08em;font-weight:500;
-  transition:border-color var(--fast) ease,color var(--fast) ease;
+  transition:border-color .32s var(--smooth),
+             color .32s var(--smooth),
+             opacity .32s var(--smooth);
 }
-.lpill:hover,.lpill:active{border-color:var(--border-ac);color:var(--txt)}
+.lpill:active{opacity:.6}
 
 /* ═══════════════════════════════════════════
    PRICE ROW
@@ -633,28 +633,27 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   width:100%;padding:13px 22px;border-radius:12px;
   font-family:var(--fb);font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
   cursor:pointer;border:none;text-decoration:none;
-  transition:transform var(--fast) var(--ease),
-             box-shadow var(--fast) ease,
-             background var(--fast) ease;
-  will-change:transform;
+  transition:transform .32s var(--smooth),
+             box-shadow .32s var(--smooth),
+             background .32s var(--smooth),
+             opacity .32s var(--smooth);
 }
-.btn:active{transform:scale(.96)!important}
+.btn:active{transform:scale(.95)!important;transition-duration:.12s!important}
 .btn-p{
   background:rgba(228,228,228,.92);
   color:rgba(0,0,0,.72);
   font-weight:600;letter-spacing:.2em;
-  animation:btnGlow 3.5s ease-in-out infinite;
 }
-.btn-p:hover,.btn-p:active{animation:none;background:rgba(240,240,240,.97);color:#000;transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,255,255,.18),0 0 16px rgba(255,255,255,.06)}
+.btn-p:active{background:rgba(255,255,255,.97);transform:scale(.95)!important}
 .btn-s{background:rgba(255,255,255,.04);color:var(--txt);border:1px solid var(--border)}
-.btn-s:hover,.btn-s:active{border-color:var(--border-ac);transform:translateY(-1px)}
+.btn-s:active{background:rgba(255,255,255,.08)}
 .mt{margin-top:11px}
 
 /* ═══════════════════════════════════════════
    DOC LINKS / CHANGELOG
 ═══════════════════════════════════════════ */
-.dlink{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--txt-muted);font-size:13px;transition:color var(--fast) ease}
-.dlink:last-child{border-bottom:none}.dlink:hover{color:var(--txt)}
+.dlink{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--txt-muted);font-size:13px;transition:color .32s var(--smooth),opacity .32s var(--smooth)}
+.dlink:last-child{border-bottom:none}.dlink:active{opacity:.6}
 .dlink svg:first-child{flex-shrink:0;color:var(--txt-muted)}
 .cl-e{padding:10px 0;border-bottom:1px solid var(--border)}.cl-e:last-child{border-bottom:none}
 .cl-v{display:inline-block;font-family:monospace;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--txt);background:var(--ac-dim);border:1px solid var(--border-ac);border-radius:6px;padding:2px 8px;margin-bottom:4px}
@@ -716,6 +715,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .ni:hover svg { color:var(--ac-soft); }
 .ni:hover span{ color:var(--ac-soft); }
 .ni:active{ transform:scale(.88); transition:transform .1s ease; }
+.ni.on:active{ transform:none; } /* уже на этой вкладке — не нажимается */
 
 /* Активная иконка */
 .ni.on span{ color:var(--ac); }
