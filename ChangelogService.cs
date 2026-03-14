@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
+using KENOS.Bot.Serialization;
 using Microsoft.Extensions.Logging;
 
 namespace KENOS.Bot.Services;
@@ -49,13 +50,21 @@ public sealed class Changelog
         lock (_lk) { _entries.Clear(); Version++; }
     }
 
-    public IReadOnlyList<Entry> All() { lock (_lk) return _entries.ToList(); }
+    public IReadOnlyList<Entry> All()  { lock (_lk) return _entries.ToList(); }
     public IReadOnlyList<long>  Users() => _users.Keys.ToList();
     public int UserCount => _users.Count;
 
+    // ── Source Gen JSON — нет рефлексии, AOT/trim-safe ────────
+
     private void SaveUsers()
     {
-        try { lock (_lk) File.WriteAllText(_usersFile, JsonSerializer.Serialize(_users.Keys.ToList())); }
+        try
+        {
+            var ids  = _users.Keys.ToList();
+            // Используем Source Generator — KENOSJsonCtx зарегистрирован для List<long>
+            var json = JsonSerializer.Serialize(ids, KENOSJsonCtx.Default.ListInt64);
+            lock (_lk) File.WriteAllText(_usersFile, json);
+        }
         catch (Exception ex) { _log.LogError(ex, "Не удалось сохранить users.json"); }
     }
 
@@ -64,7 +73,9 @@ public sealed class Changelog
         try
         {
             if (!File.Exists(_usersFile)) return;
-            var ids = JsonSerializer.Deserialize<List<long>>(File.ReadAllText(_usersFile));
+            var json = File.ReadAllText(_usersFile);
+            // Source Gen десериализация — нет IL2026/IL3050
+            var ids  = JsonSerializer.Deserialize(json, KENOSJsonCtx.Default.ListInt64);
             foreach (var id in ids ?? []) _users.TryAdd(id, 0);
         }
         catch (Exception ex) { _log.LogError(ex, "Не удалось загрузить users.json"); }

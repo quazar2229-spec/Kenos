@@ -196,10 +196,10 @@ public sealed class MsgHandler(
             // /update v1.2 Что нового
             case "/update" when count >= 3:
             {
-                var ver  = span[ranges[1]].ToString();
-                var note = span[ranges[2]..count].ToString().Trim(); // всё после версии
-                // Fallback: собираем через StringBuilder из пула
-                var sb   = sbPool.Get();
+                var ver = span[ranges[1]].ToString();
+                // Собираем текст после версии через пул — нет Range/Index ошибки
+                var sb  = sbPool.Get();
+                string note;
                 try
                 {
                     for (int i = 2; i < count; i++)
