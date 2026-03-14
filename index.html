@@ -270,14 +270,14 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 /* обёртка для колец — overflow:hidden чтобы кольца не выходили за пределы хедера */
 .hdr-avatar-wrap{
   position:relative;flex-shrink:0;
-  width:44px;height:44px;
+  width:38px;height:38px;
   display:flex;align-items:center;justify-content:center;
 }
 
-/* Кольцо 1 — внутреннее, крутится по часовой */
+/* Кольцо 1 — вплотную к аватарке */
 .hdr-avatar-wrap::before{
   content:'';
-  position:absolute;inset:0;
+  position:absolute;inset:-2px;
   border-radius:50%;
   border:1.5px solid transparent;
   border-top-color:var(--ac);
@@ -286,10 +286,10 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   pointer-events:none;
   z-index:2;
 }
-/* Кольцо 2 — внешнее, крутится против часовой, чуть больше */
+/* Кольцо 2 — чуть дальше */
 .hdr-avatar-wrap::after{
   content:'';
-  position:absolute;inset:-4px;
+  position:absolute;inset:-5px;
   border-radius:50%;
   border:1px solid transparent;
   border-bottom-color:var(--ac-soft);
