@@ -206,10 +206,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   0%  {opacity:.2}
   100%{opacity:1}
 }
-@keyframes navGlow{
-  0%,100%{filter:drop-shadow(0 0 2px rgba(255,255,255,.15))}
-  50%    {filter:drop-shadow(0 0 8px rgba(255,255,255,.8)) drop-shadow(0 0 16px rgba(255,255,255,.22))}
-}
+/* navGlow удалён — filter:drop-shadow в keyframes = 30fps на iPhone */
 @keyframes pulse{
   0%,100%{opacity:1;transform:scale(1)}
   50%    {opacity:.28;transform:scale(.55)}
@@ -676,9 +673,10 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   border-top:1px solid var(--border);
   display:flex;justify-content:space-around;
   z-index:200;
+  overflow:hidden; /* слайдер не выходит за пределы */
 }
 
-/* Скользящая подложка активной вкладки */
+/* Скользящая подложка */
 #nav-slider{
   position:absolute;
   left:0;top:5px;
@@ -686,11 +684,13 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   width:44px;
   border-radius:11px;
   background:var(--slider-bg);
-  /* пружинный эффект — слайдер «догоняет» палец */
-  transition:left .48s cubic-bezier(.34,1.56,.64,1),
-             width .48s cubic-bezier(.34,1.56,.64,1);
+  /* transform вместо left — GPU composited, нет layout thrashing */
+  /* ease-out без пружины — не выходит за края */
+  transition:transform .38s cubic-bezier(.25,.46,.45,.94),
+             width .38s cubic-bezier(.25,.46,.45,.94);
   pointer-events:none;
   z-index:0;
+  will-change:transform,width;
 }
 
 .ni{
@@ -703,41 +703,41 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .ni svg{
   color:var(--txt-muted);
   display:block;
-  transition:color .38s cubic-bezier(.25,.46,.45,.94),
-             filter .38s cubic-bezier(.25,.46,.45,.94);
-  animation:float 4s ease-in-out infinite;
-  will-change:transform;
-  filter:none;
+  /* только color transition — никаких filter/transform анимаций */
+  transition:color .32s cubic-bezier(.25,.46,.45,.94);
+  /* will-change убран — 8 одновременных GPU слоёв убивали fps */
 }
-/* Задержки float */
-.ni:nth-child(1) svg{animation-delay:0s}
-.ni:nth-child(2) svg{animation-delay:-.5s}
-.ni:nth-child(3) svg{animation-delay:-1s}
-.ni:nth-child(4) svg{animation-delay:-1.5s}
-.ni:nth-child(5) svg{animation-delay:-2s}
-.ni:nth-child(6) svg{animation-delay:-2.5s}
-.ni:nth-child(7) svg{animation-delay:-3s}
-.ni:nth-child(8) svg{animation-delay:-3.5s}
 
-@keyframes float{
-  0%,100%{transform:translateY(0)}
-  50%    {transform:translateY(-5px)}
-}
 .ni span{
   font-size:8px;letter-spacing:.06em;text-transform:uppercase;
   color:var(--txt-muted);white-space:nowrap;
-  transition:color .38s cubic-bezier(.25,.46,.45,.94);
+  transition:color .32s cubic-bezier(.25,.46,.45,.94);
 }
 .ni:hover svg { color:var(--ac-soft); }
 .ni:hover span{ color:var(--ac-soft); }
-.ni:active{ transform:scale(.9); transition:transform .12s ease; }
+.ni:active{ transform:scale(.88); transition:transform .1s ease; }
 
-/* Активная — плавно светится */
+/* Активная иконка */
 .ni.on span{ color:var(--ac); }
-.ni.on svg{
-  color:var(--ac);
-  filter:drop-shadow(0 0 6px var(--ac-glow));
+.ni.on svg { color:var(--ac); }
+
+/* Свечение через ::after — дешевле чем filter:drop-shadow на SVG.
+   box-shadow на div не вызывает rasterization SVG-слоя */
+.ni::after{
+  content:'';
+  position:absolute;
+  top:6px;left:50%;
+  width:20px;height:20px;
+  margin-left:-10px;
+  border-radius:50%;
+  background:var(--ac);
+  opacity:0;
+  filter:blur(8px);
+  transition:opacity .32s ease;
+  pointer-events:none;
+  z-index:-1;
 }
+.ni.on::after{ opacity:.35; }
 
 /* Линия-индикатор снизу */
 .ni::before{
@@ -746,12 +746,11 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   transform:translateX(-50%) scaleX(0);
   width:16px;height:1.5px;border-radius:1px;
   background:linear-gradient(90deg,transparent,var(--ac),transparent);
-  box-shadow:0 0 5px var(--ac-soft);
-  transition:transform .42s cubic-bezier(.34,1.56,.64,1),
-             opacity .3s ease;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),
+             opacity .28s ease;
   opacity:0;
 }
-.ni.on::before{ transform:translateX(-50%) scaleX(1); opacity:.8; }
+.ni.on::before{ transform:translateX(-50%) scaleX(1); opacity:.75; }
 
 /* ═══════════════════════════════════════════
    TOAST
@@ -1225,8 +1224,8 @@ let _cur = 's-home';
 function moveSlider(navItemEl){
   const slider = document.getElementById('nav-slider');
   if(!slider || !navItemEl) return;
-  slider.style.left  = navItemEl.offsetLeft + 'px';
-  slider.style.width = navItemEl.offsetWidth + 'px';
+  slider.style.transform = `translateX(${navItemEl.offsetLeft}px)`;
+  slider.style.width     = navItemEl.offsetWidth + 'px';
 }
 
 function go(id){
