@@ -528,14 +528,14 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .info-dot{
   position:absolute;top:14px;right:0;
   width:7px;height:7px;border-radius:50%;
-  background:#ffb800;box-shadow:0 0 8px rgba(255,184,0,.6);
+  background:rgba(200,200,200,.5);
   animation:dotPulse 2s ease-in-out infinite;
 }
 /* badge на nav-иконке */
 .ni-badge{
   position:absolute;top:4px;right:3px;
   min-width:14px;height:14px;padding:0 3px;
-  background:#ff3b3b;border-radius:7px;
+  background:rgba(200,200,200,.3);border-radius:7px;
   font-size:8px;font-weight:700;color:#fff;
   display:flex;align-items:center;justify-content:center;
   animation:fadeIn .3s ease;
@@ -601,7 +601,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .key-val{font-family:monospace;font-size:15px;color:var(--txt);letter-spacing:.08em;text-shadow:0 0 16px var(--ac-soft);margin-bottom:9px;word-break:break-all}
 .key-st{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.15em;text-transform:uppercase}
 .key-st::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
-.key-st.act{color:#7fff7f}.key-st.act::before{box-shadow:0 0 7px currentColor;animation:dotPulse 2s ease-in-out infinite}
+.key-st.act{color:rgba(200,200,200,.85)}.key-st.act::before{animation:dotPulse 2s ease-in-out infinite}
 .key-st.off{color:var(--g5)}
 .info-r{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
 .info-r:last-child{border-bottom:none}
@@ -896,7 +896,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       <div class="price-row">
         <div class="p-opt"><div class="p-opt-ico"><svg width="17" height="17"><use href="#i-rub"/></svg></div><div class="p-val">800</div><div class="p-unit" data-i18n="pr.rub">Рублей</div></div>
         <div class="p-opt"><div class="p-opt-ico"><span class="big-g">G</span></div><div class="p-val">2000</div><div class="p-unit">G</div></div>
-        <div class="p-opt"><div class="p-opt-ico" style="color:rgba(255,255,255,.78)"><svg width="19" height="19"><use href="#i-star"/></svg></div><div class="p-val">400</div><div class="p-unit" data-i18n="pr.st">Stars</div></div>
+        <div class="p-opt"><div class="p-opt-ico" style="color:rgba(200,200,200,.5)"><svg width="19" height="19"><use href="#i-star"/></svg></div><div class="p-val">400</div><div class="p-unit" data-i18n="pr.st">Stars</div></div>
       </div>
       <div style="font-size:10px;letter-spacing:.1em;color:var(--g5);text-align:center;padding-bottom:2px" data-i18n="pr.per">/ месяц · выберите любой способ</div>
     </div>
@@ -930,7 +930,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       <a class="btn btn-p" href="https://t.me/WinInput32" target="_blank"><svg width="13" height="13"><use href="#i-arr"/></svg><span data-i18n="btn.buy">Купить</span></a>
     </div>
     <div class="panel">
-      <div class="p-title"><svg width="15" height="15" style="color:rgba(255,255,255,.78)"><use href="#i-star"/></svg>Telegram Stars</div>
+      <div class="p-title"><svg width="15" height="15" style="color:rgba(200,200,200,.5)"><use href="#i-star"/></svg>Telegram Stars</div>
       <div class="p-sub" data-i18n="pay.st.d">Прямо внутри Telegram · 400 Stars</div>
       <div class="note" data-i18n="pay.st.n">Оплата через <b>Telegram Stars</b> — только у нашего кодера.</div>
       <a class="btn btn-p" href="https://t.me/WinInput32" target="_blank"><svg width="13" height="13" style="color:rgba(0,0,0,.55)"><use href="#i-star"/></svg><span data-i18n="btn.st">Купить через Stars</span></a>
@@ -989,7 +989,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
     </div>
 
     <div class="panel" id="hlp-form-panel">
-      <div class="p-title"><svg width="17" height="17" style="color:rgba(255,255,255,.45)"><use href="#i-chat"/></svg><span data-i18n="hlp.op">Связаться с оператором</span></div>
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-chat"/></svg><span data-i18n="hlp.op">Связаться с оператором</span></div>
       <div class="p-sub" data-i18n="hlp.op.d">Ответим в течение 15 минут</div>
       <div class="form">
         <div class="form-g">
@@ -1043,7 +1043,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
     </div>
     <div class="panel">
-      <div class="p-title"><svg width="17" height="17" style="color:rgba(255,255,255,.48)"><use href="#i-zap"/></svg>KENOS</div>
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-zap"/></svg>KENOS</div>
       <div class="p-sub" data-i18n="abt.p.d">Standoff 2 · Premium Emulator</div>
       <div class="p-body" data-i18n="abt.p.t">KENOS — ваш идеал для игры в <b style="color:var(--txt)">Standoff 2</b>.<br>Лучшая производительность и сенса на рынке.</div>
     </div>
@@ -1082,7 +1082,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       <div class="svc-card" onclick="go('s-hlp')"><div class="svc-ico"><svg width="22" height="22"><use href="#i-chat"/></svg></div><div class="svc-name" data-i18n="nav.hp">Помощь</div></div>
     </div>
     <div class="panel">
-      <div class="p-title"><svg width="17" height="17" style="color:rgba(180,180,180,.55)"><use href="#i-zap"/></svg><span data-i18n="inf.panel">Информация</span></div>
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-zap"/></svg><span data-i18n="inf.panel">Информация</span></div>
       <div class="p-sub" data-i18n="inf.panel.d">Тех. работы · Статус сервиса · Новости</div>
       <div id="inf-list">
         <div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0" data-i18n="inf.empty">Нет активных объявлений</div></div>
@@ -1293,17 +1293,61 @@ document.addEventListener('contextmenu',e=>e.preventDefault(),{passive:false});
 /* ══════════════════════════════════════
    KEY
 ══════════════════════════════════════ */
-function loadKey(){
-  const kv=document.getElementById('key-val');
-  const ks=document.getElementById('key-st');
-  const ke=document.getElementById('key-exp');
-  const kh=document.getElementById('hwid-v');
-  // TODO: real API
-  kv.textContent='—';
-  ks.className='key-st off';ks.textContent=t('key.off');
-  ke.textContent=t('key.none');kh.textContent='—';
+const API_BASE = 'https://kenos-production.up.railway.app';
+
+async function loadKey(){
+  const kv = document.getElementById('key-val');
+  const ks = document.getElementById('key-st');
+  const ke = document.getElementById('key-exp');
+  const kh = document.getElementById('hwid-v');
+  if(!kv) return;
+
+  // Показываем заглушку пока грузим
+  kv.textContent = '...';
+  ks.className   = 'key-st off';
+
+  // Получаем initData из Telegram WebApp
+  const initData = tg?.initData || '';
+  if(!initData){
+    // В браузере вне Telegram — показываем демо
+    kv.textContent = '—'; ke.textContent = t('key.none'); kh.textContent = '—';
+    ks.textContent = t('key.off');
+    return;
+  }
+
+  try{
+    const r = await fetch(`${API_BASE}/api/key`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ initData })
+    });
+
+    if(!r.ok){ kv.textContent='—'; ks.textContent=t('key.off'); return; }
+
+    const d = await r.json();
+
+    if(d.active){
+      kv.textContent = d.key   || '—';
+      kh.textContent = d.hwid  || '—';
+      ke.textContent = d.expires ? new Date(d.expires).toLocaleDateString('ru-RU') : '—';
+      ks.className   = 'key-st act';
+      ks.textContent = t('key.on') || 'Активен';
+    } else {
+      kv.textContent = '—';
+      ke.textContent = t('key.none');
+      kh.textContent = d.hwid || '—';
+      ks.className   = 'key-st off';
+      ks.textContent = t('key.off');
+    }
+  } catch {
+    kv.textContent = '—';
+    ks.className   = 'key-st off';
+    ks.textContent = t('key.off');
+    ke.textContent = t('key.none');
+    kh.textContent = '—';
+  }
 }
-function refreshKey(){toast(t('toast.ref'));loadKey();}
+function refreshKey(){ toast(t('toast.ref')); loadKey(); }
 
 /* ══════════════════════════════════════
    SUPPORT — отправка через Bot API
@@ -1523,8 +1567,8 @@ function initSakura(canvasId, count, alpha){
 /* На мобиле меньше лепестков для 60fps */
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 const isAndroid = /Android/i.test(navigator.userAgent);
-initSakura('cvs-sakura', isMobile ? (isAndroid ? 22 : 28) : 50, .72);
-initSakura('cvs-loader',  isMobile ? (isAndroid ? 22 : 28) : 50, .72);
+initSakura('cvs-sakura', isMobile ? (isAndroid ? 17 : 23) : 45, .72);
+initSakura('cvs-loader',  isMobile ? (isAndroid ? 17 : 23) : 45, .72);
 
 /* ══════════════════════════════════════
    LOADER — плавный прогресс с статусами
@@ -1639,11 +1683,12 @@ async function loadCL(){
 async function loadInfo(){
   const el=document.getElementById('inf-list');
   if(!el)return;
+  const GRAY_ICO = 'stroke="rgba(200,200,200,.55)"';
   const icons={
-    tech:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,160,50,.8)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>',
-    warn:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,80,80,.8)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-    ok:  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>',
-    info:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(100,160,255,.8)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+    tech:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" ${GRAY_ICO} stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>`,
+    warn:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" ${GRAY_ICO} stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    ok:  `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" ${GRAY_ICO} stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+    info:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" ${GRAY_ICO} stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
   };
   try{
     const r=await fetch(`https://api.jsonbin.io/v3/b/${BIN}/latest`,{headers:BIN_HDR});
