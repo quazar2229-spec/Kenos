@@ -148,7 +148,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   letter-spacing:.35em;color:#fff;line-height:1;
   padding-left:.35em;text-align:center;
   opacity:0;
-  animation:riseIn 1.1s .3s var(--ease) forwards, glowPulse 4s 1.5s ease-in-out infinite;
+  animation:riseIn 1.1s .3s var(--ease) forwards;
 }
 .ld-prog{display:flex;flex-direction:column;align-items:center;gap:9px;opacity:0;animation:fadeIn .6s 1.0s ease forwards}
 .ld-pct{
@@ -278,7 +278,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   border:1.5px solid transparent;
   border-top-color:var(--ac);
   border-right-color:var(--ac-dim);
-  animation:spin1 2s linear infinite;
+  animation:spin1 6s linear infinite;
   pointer-events:none;
   z-index:2;
 }
@@ -290,7 +290,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   border:1px solid transparent;
   border-bottom-color:var(--ac-soft);
   border-left-color:var(--ac-dim);
-  animation:spin2 3.4s linear infinite;
+  animation:spin2 10s linear infinite;
   pointer-events:none;
   z-index:1;
 }
@@ -540,7 +540,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:absolute;top:14px;right:0;
   width:7px;height:7px;border-radius:50%;
   background:rgba(200,200,200,.5);
-  animation:dotPulse 2s ease-in-out infinite;
+  animation:dotPulse 3s ease-in-out infinite;
 }
 /* badge на nav-иконке */
 .ni-badge{
@@ -788,7 +788,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   transition:background .32s ease;
 }
 .status-badge.online{ background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.14); color:rgba(220,220,220,.9); }
-.status-badge.online .dot{ background:rgba(220,220,220,.8); animation:dotPulse 2s ease-in-out infinite; }
+.status-badge.online .dot{ background:rgba(220,220,220,.8); animation:dotPulse 3s ease-in-out infinite; }
 .status-badge.offline{ background:rgba(255,255,255,.04); color:rgba(150,150,150,.6); }
 .status-badge.offline .dot{ background:rgba(150,150,150,.4); }
 .status-badge.loading .dot{ opacity:.4; }
@@ -839,7 +839,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 #profile-overlay{
   position:fixed;inset:0;z-index:500;
   background:rgba(0,0,0,.65);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
   display:flex;align-items:flex-end;
   opacity:0;pointer-events:none;
   transition:opacity .32s var(--smooth);
@@ -871,7 +871,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   content:'';position:absolute;inset:-4px;border-radius:50%;
   border:1.5px solid transparent;
   border-top-color:var(--ac);border-right-color:var(--ac-dim);
-  animation:spin1 2s linear infinite;
+  animation:spin1 6s linear infinite;
   pointer-events:none;z-index:2;
 }
 /* Кольцо 2 */
@@ -879,7 +879,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   content:'';position:absolute;inset:-8px;border-radius:50%;
   border:1px solid transparent;
   border-bottom-color:var(--ac-soft);border-left-color:var(--ac-dim);
-  animation:spin2 3.4s linear infinite;
+  animation:spin2 10s linear infinite;
   pointer-events:none;z-index:1;
 }
 .profile-ava img{width:100%;height:100%;object-fit:cover;border-radius:50%}
@@ -941,6 +941,19 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 /* iOS Safari — фикс 100vh */
 @supports (-webkit-touch-callout:none){
   #loader,#app{ min-height:-webkit-fill-available; }
+
+  /* Safari WebKit — отключаем backdrop-filter (самый дорогой эффект на старых iOS) */
+  #profile-overlay{
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    background:rgba(0,0,0,.82) !important;
+  }
+
+  /* Убираем box-shadow анимацию — Safari перерисовывает каждый кадр */
+  .hdr-avatar{ animation:none !important; }
+
+  /* Второе кольцо на Safari тяжёлое — убираем */
+  .hdr-avatar-wrap::after{ animation-duration:14s !important; }
 }
 </style>
 </head>
@@ -1441,9 +1454,6 @@ function go(id){
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      // Сбрасываем анимации — снимаем/вешаем .on чтобы waveIn перезапустился
-      next.classList.remove('on');
-      void next.offsetWidth; // reflow только этого элемента
       next.classList.add('on');
       window.scrollTo({ top: 0, behavior: 'instant' });
     });
@@ -1739,7 +1749,7 @@ function initSakura(id,count,alpha){
   }
 
   function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight;}
-  new ResizeObserver(resize).observe(document.documentElement);
+  _resizeCbs.push(resize);
   resize();
   for(let i=0;i<count;i++)spawn(i,true);
 
@@ -1783,6 +1793,10 @@ function initSakura(id,count,alpha){
 }
 
 /* iPhone 15 Pro Max уровень — одинаково везде */
+/* Один ResizeObserver на все canvas — не дублируем reflow */
+const _resizeCbs = [];
+new ResizeObserver(() => _resizeCbs.forEach(fn => fn())).observe(document.documentElement);
+
 const _N = _MOB ? 14 : 20;
 initSakura('cvs-sakura', _N, .72);
 initSakura('cvs-loader',  _N, .72);
