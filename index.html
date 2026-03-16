@@ -268,12 +268,18 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .hdr-profile{display:flex;align-items:center;gap:8px;position:relative}
 
 /* обёртка для колец */
-.hdr-avatar-wrap{position:relative;flex-shrink:0}
+.hdr-avatar-wrap{
+  position:relative;flex-shrink:0;
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
 
-/* Кольцо 1 — внутреннее, крутится по часовой */
+/* Кольцо 1 — внутреннее */
 .hdr-avatar-wrap::before{
   content:'';
-  position:absolute;inset:-3px;
+  position:absolute;inset:2px;
   border-radius:50%;
   border:1.5px solid transparent;
   border-top-color:var(--ac);
@@ -282,10 +288,10 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   pointer-events:none;
   z-index:2;
 }
-/* Кольцо 2 — внешнее, крутится против часовой */
+/* Кольцо 2 — внешнее */
 .hdr-avatar-wrap::after{
   content:'';
-  position:absolute;inset:-7px;
+  position:absolute;inset:-1px;
   border-radius:50%;
   border:1px solid transparent;
   border-bottom-color:var(--ac-soft);
@@ -838,75 +844,109 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 ═══════════════════════════════════════════ */
 #profile-overlay{
   position:fixed;inset:0;z-index:500;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  background:rgba(0,0,0,.7);
   display:flex;align-items:flex-end;
-  opacity:0;pointer-events:none;
-  transition:opacity .32s var(--smooth);
+  opacity:0;pointer-events:none;visibility:hidden;
+  transition:opacity .32s var(--smooth), visibility .32s;
 }
-#profile-overlay.open{opacity:1;pointer-events:auto;}
+#profile-overlay.open{opacity:1;pointer-events:auto;visibility:visible;}
 .profile-sheet{
   width:100%;max-width:480px;margin:0 auto;
-  background:#111;
+  background:#0e0e0e;
   border-radius:24px 24px 0 0;
-  border-top:1px solid var(--border);
-  padding-bottom:calc(20px + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(255,255,255,.08);
+  padding-bottom:calc(24px + env(safe-area-inset-bottom));
   transform:translateY(100%);
-  transition:transform .38s cubic-bezier(.25,.46,.45,.94);
+  transition:transform .4s cubic-bezier(.25,.46,.45,.94);
 }
 #profile-overlay.open .profile-sheet{transform:translateY(0);}
-.profile-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);margin:12px auto 0;}
+.profile-handle{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin:14px auto 0;}
+
+/* Шапка профиля */
 .profile-head{
-  display:flex;align-items:center;gap:14px;
-  padding:18px 20px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:16px;
+  padding:20px 20px 18px;
 }
 .profile-ava{
-  width:52px;height:52px;border-radius:50%;flex-shrink:0;
-  background:var(--ac-dim);border:1.5px solid var(--border-ac);
+  width:60px;height:60px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.12);
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;color:var(--txt-muted);position:relative;
 }
-/* Кольцо 1 */
 .profile-ava::before{
-  content:'';position:absolute;inset:-4px;border-radius:50%;
+  content:'';position:absolute;inset:-3px;border-radius:50%;
   border:1.5px solid transparent;
-  border-top-color:var(--ac);border-right-color:var(--ac-dim);
-  animation:spin1 6s linear infinite;
-  pointer-events:none;z-index:2;
+  border-top-color:rgba(255,255,255,.5);border-right-color:rgba(255,255,255,.15);
+  animation:spin1 6s linear infinite;pointer-events:none;z-index:2;
 }
-/* Кольцо 2 */
 .profile-ava::after{
-  content:'';position:absolute;inset:-8px;border-radius:50%;
+  content:'';position:absolute;inset:-7px;border-radius:50%;
   border:1px solid transparent;
-  border-bottom-color:var(--ac-soft);border-left-color:var(--ac-dim);
-  animation:spin2 10s linear infinite;
-  pointer-events:none;z-index:1;
+  border-bottom-color:rgba(255,255,255,.2);border-left-color:rgba(255,255,255,.08);
+  animation:spin2 10s linear infinite;pointer-events:none;z-index:1;
 }
 .profile-ava img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.profile-name{font-size:17px;font-weight:600;letter-spacing:.03em;color:var(--txt)}
-.profile-uid{font-size:11px;color:var(--g5);letter-spacing:.05em;margin-top:2px}
-.profile-body{padding:0 20px}
+.profile-info{flex:1;min-width:0;}
+.profile-name{font-size:19px;font-weight:700;letter-spacing:.02em;color:#fff;line-height:1.2}
+.profile-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  margin-top:6px;padding:3px 10px;border-radius:20px;
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  color:rgba(200,200,200,.8);
+}
+
+/* Карточки статистики */
+.profile-stats{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;padding:0 16px 16px;
+}
+.profile-stat{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:16px;padding:14px 16px;
+}
+.profile-stat-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:300;color:#fff;
+  letter-spacing:.04em;line-height:1;margin-bottom:4px;
+}
+.profile-stat-lbl{
+  font-size:9px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(255,255,255,.35);
+}
+.profile-stat.active{
+  background:rgba(255,255,255,.07);
+  border-color:rgba(255,255,255,.15);
+}
+.profile-stat.active .profile-stat-val{color:#fff}
+
+/* Строки данных */
+.profile-rows{padding:0 16px;border-top:1px solid rgba(255,255,255,.06);}
 .profile-row{
   display:flex;align-items:center;justify-content:space-between;
-  padding:13px 0;border-bottom:1px solid var(--border);
+  padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);
 }
 .profile-row:last-of-type{border-bottom:none}
-.profile-lbl{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--g5);letter-spacing:.08em;text-transform:uppercase}
-.profile-lbl svg{color:var(--txt-muted);flex-shrink:0}
+.profile-lbl{display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase}
+.profile-lbl svg{color:rgba(255,255,255,.3);flex-shrink:0}
 .profile-val{
-  font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:300;
-  color:var(--txt);letter-spacing:.05em;max-width:58%;text-align:right;word-break:break-all;
+  font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:300;
+  color:rgba(255,255,255,.85);letter-spacing:.05em;max-width:60%;text-align:right;word-break:break-all;
 }
+
+/* Кнопка закрыть */
 .profile-close{
-  display:block;margin:14px 20px 0;
-  padding:13px;border-radius:14px;
-  background:rgba(255,255,255,.05);border:1px solid var(--border);
-  color:var(--txt-muted);font-family:var(--fb);font-size:12px;
-  font-weight:600;letter-spacing:.12em;cursor:pointer;width:calc(100% - 40px);
+  display:block;margin:12px 16px 0;
+  padding:14px;border-radius:14px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.5);font-family:var(--fb);font-size:12px;
+  font-weight:600;letter-spacing:.14em;cursor:pointer;width:calc(100% - 32px);
   transition:background .28s var(--smooth),color .28s var(--smooth);
   text-align:center;
 }
-.profile-close:active{background:rgba(255,255,255,.1);color:var(--txt)}
+.profile-close:active{background:rgba(255,255,255,.12);color:#fff}
 
 #toast{
   position:fixed;bottom:80px;left:50%;
@@ -983,8 +1023,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 <div id="app">
   <header class="hdr">
     <div class="hdr-profile">
-      <div class="hdr-avatar-wrap" onclick="openProfile()" style="cursor:pointer">
-        <div class="hdr-avatar" id="hdr-av"><svg width="15" height="15"><use href="#i-user"/></svg></div>
+      <div class="hdr-avatar-wrap" id="hdr-ava-wrap" onclick="openProfile()" style="cursor:pointer;z-index:10;position:relative;min-width:44px;min-height:44px;touch-action:manipulation">
+        <div class="hdr-avatar" id="hdr-av" style="pointer-events:none"><svg width="15" height="15"><use href="#i-user"/></svg></div>
       </div>
       <span class="hdr-name" id="hdr-nm">—</span>
     </div>
@@ -1217,7 +1257,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       <div class="p-title" data-i18n="abt.cl">Обновления</div>
       <div class="p-sub" data-i18n="abt.cl.d">История версий бота</div>
       <div id="cl-list">
-        <div class="cl-e"><div class="cl-v">v1.0</div><div class="cl-d">Запуск KENOS</div><div class="cl-t">Базовый функционал: покупка, ключи, поддержка, G-голда и Telegram Stars.</div></div>
+        <div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">Нет обновлений</div></div>
       </div>
     </div>
     <div class="panel">
@@ -1265,35 +1305,51 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 <div id="profile-overlay" onclick="closeProfile(event)">
   <div class="profile-sheet">
     <div class="profile-handle"></div>
+
+    <!-- Шапка: аватар + имя + тег -->
     <div class="profile-head">
-      <div class="profile-ava" id="prf-ava"><svg width="22" height="22"><use href="#i-user"/></svg></div>
-      <div>
+      <div class="profile-ava" id="prf-ava"><svg width="24" height="24"><use href="#i-user"/></svg></div>
+      <div class="profile-info">
         <div class="profile-name" id="prf-name">—</div>
-        <div class="profile-uid" id="prf-uid">ID: —</div>
+        <div class="profile-tag" id="prf-tag">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+          <span id="prf-plan">KENOS PLAYER</span>
+        </div>
       </div>
     </div>
-    <div class="profile-body">
+
+    <!-- Карточки: статус ключа + дней осталось -->
+    <div class="profile-stats">
+      <div class="profile-stat" id="prf-stat-key">
+        <div class="profile-stat-val" id="prf-key-short">—</div>
+        <div class="profile-stat-lbl">СТАТУС</div>
+      </div>
+      <div class="profile-stat active" id="prf-stat-days">
+        <div class="profile-stat-val" id="prf-days">—</div>
+        <div class="profile-stat-lbl">ДНЕЙ</div>
+      </div>
+    </div>
+
+    <!-- Строки данных -->
+    <div class="profile-rows">
       <div class="profile-row">
-        <span class="profile-lbl"><svg width="13" height="13"><use href="#i-key"/></svg>Ключ</span>
-        <span class="profile-val" id="prf-key">Не активен</span>
+        <span class="profile-lbl"><svg width="12" height="12"><use href="#i-key"/></svg>Ключ</span>
+        <span class="profile-val" id="prf-key" style="font-size:12px;letter-spacing:.08em">—</span>
       </div>
       <div class="profile-row">
-        <span class="profile-lbl"><svg width="13" height="13"><use href="#i-gear"/></svg>HWID</span>
+        <span class="profile-lbl"><svg width="12" height="12"><use href="#i-gear"/></svg>HWID</span>
         <span class="profile-val" id="prf-hwid">—</span>
       </div>
       <div class="profile-row">
-        <span class="profile-lbl"><svg width="13" height="13"><use href="#i-zap"/></svg>Истекает</span>
+        <span class="profile-lbl"><svg width="12" height="12"><use href="#i-zap"/></svg>Истекает</span>
         <span class="profile-val" id="prf-exp">—</span>
       </div>
       <div class="profile-row">
-        <span class="profile-lbl"><svg width="13" height="13"><use href="#i-ref"/></svg>Сброс HWID</span>
-        <span class="profile-val" id="prf-reset">Недоступно</span>
-      </div>
-      <div class="profile-row">
-        <span class="profile-lbl"><svg width="13" height="13"><use href="#i-shld"/></svg>Компилятор</span>
-        <span class="profile-val" id="prf-compiler">Стандартный</span>
+        <span class="profile-lbl"><svg width="12" height="12"><use href="#i-user"/></svg>ID</span>
+        <span class="profile-val" id="prf-uid">—</span>
       </div>
     </div>
+
     <button class="profile-close" onclick="closeProfile()">Закрыть</button>
   </div>
 </div>
@@ -1612,53 +1668,93 @@ async function sendSup(){
    PROFILE
 ══════════════════════════════════════ */
 (()=>{
-  const nm=tgU.username?'@'+tgU.username:tgU.first_name||'';
-  if(nm) document.getElementById('hdr-nm').textContent=nm;
-  const av = document.getElementById('hdr-av');
-  const pa = document.getElementById('prf-ava');
+  const nm = tgU.username ? '@'+tgU.username : (tgU.first_name || '');
+  const hnm = document.getElementById('hdr-nm');
+  if(nm && hnm) hnm.textContent = nm;
+
   if(tgU.photo_url){
-    const img=`<img src="${tgU.photo_url}" alt="">`;
-    av.innerHTML=img;
-    pa.innerHTML=img;
+    const av = document.getElementById('hdr-av');
+    if(av) av.innerHTML = `<img src="${tgU.photo_url}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
   }
 })();
 
 function openProfile(){
-  const ov = document.getElementById('profile-overlay');
-  if(!ov) return;
+  try{
+    const ov = document.getElementById('profile-overlay');
+    if(!ov){ return; }
 
-  // Заполняем данные
-  const nm = tgU.username?'@'+tgU.username:(tgU.first_name||'—');
-  const el = id => document.getElementById(id);
-  el('prf-name').textContent = nm;
-  el('prf-uid').textContent  = tgU.id ? 'ID: '+tgU.id : 'ID: —';
+    // Имя
+    const nm = tgU.username ? '@'+tgU.username : (tgU.first_name || '—');
+    const pn = document.getElementById('prf-name');
+    if(pn) pn.textContent = nm;
 
-  // Данные ключа из уже загруженных элементов
-  const kv  = el('key-val')?.textContent  || '—';
-  const kh  = el('hwid-v')?.textContent   || '—';
-  const ke  = el('key-exp')?.textContent  || '—';
-  const act = el('key-st')?.classList.contains('act');
+    // ID
+    const pu = document.getElementById('prf-uid');
+    if(pu) pu.textContent = tgU.id ? String(tgU.id) : '—';
 
-  el('prf-key').textContent      = kv;
-  el('prf-hwid').textContent     = kh;
-  el('prf-exp').textContent      = ke;
-  el('prf-reset').textContent    = act ? 'Обратитесь в поддержку' : 'Ключ не активен';
-  el('prf-compiler').textContent = act ? 'KENOS Custom' : 'Стандартный';
+    // Аватарка в профиле
+    if(tgU.photo_url){
+      const pa = document.getElementById('prf-ava');
+      if(pa) pa.innerHTML = `<img src="${tgU.photo_url}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+    }
 
-  ov.classList.add('open');
-  document.body.style.overflow='hidden';
+    // Данные ключа
+    const kvEl = document.getElementById('key-val');
+    const khEl = document.getElementById('hwid-v');
+    const keEl = document.getElementById('key-exp');
+    const ksEl = document.getElementById('key-st');
+
+    const kv  = kvEl ? kvEl.textContent.trim() : '—';
+    const kh  = khEl ? khEl.textContent.trim() : '—';
+    const ke  = keEl ? keEl.textContent.trim() : '—';
+    const act = ksEl ? ksEl.classList.contains('act') : false;
+
+    const pkEl  = document.getElementById('prf-key');
+    const phEl  = document.getElementById('prf-hwid');
+    const peEl  = document.getElementById('prf-exp');
+    const ppEl  = document.getElementById('prf-plan');
+    const pksEl = document.getElementById('prf-key-short');
+    const pskEl = document.getElementById('prf-stat-key');
+    const pdEl  = document.getElementById('prf-days');
+
+    if(pkEl)  pkEl.textContent  = (kv && kv !== '—') ? kv : 'Нет ключа';
+    if(phEl)  phEl.textContent  = kh || '—';
+    if(peEl)  peEl.textContent  = ke || '—';
+    if(ppEl)  ppEl.textContent  = act ? 'KENOS PLAYER' : 'НЕТ ЛИЦЕНЗИИ';
+    if(pksEl) pksEl.textContent = act ? 'Активен' : 'Не активен';
+    if(pskEl) pskEl.classList.toggle('active', act);
+
+    // Дней осталось
+    if(pdEl){
+      try{
+        if(act && ke && ke !== '—'){
+          const p = ke.split('.');
+          if(p.length === 3){
+            const d = new Date(+p[2], +p[1]-1, +p[0]);
+            const days = Math.max(0, Math.ceil((d - Date.now()) / 86400000));
+            pdEl.textContent = String(days);
+          } else pdEl.textContent = '—';
+        } else pdEl.textContent = '—';
+      }catch{ pdEl.textContent = '—'; }
+    }
+
+    // Открываем
+    ov.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }catch(err){
+    console.error('openProfile error:', err);
+  }
 }
 
 function closeProfile(e){
   if(e){
-    /* закрываем только если кликнули по тёмному фону или кнопке */
-    const t=e.target;
-    if(!t.classList.contains('profile-close') && t.id!=='profile-overlay') return;
+    const t = e.target;
+    // Закрываем только по фону или кнопке
+    if(t.id !== 'profile-overlay' && !t.classList.contains('profile-close')) return;
   }
-  const ov=document.getElementById('profile-overlay');
-  if(!ov) return;
-  ov.classList.remove('open');
-  document.body.style.overflow='';
+  const ov = document.getElementById('profile-overlay');
+  if(ov) ov.classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 /* ══════════════════════════════════════
@@ -2056,6 +2152,8 @@ loadCL();
 loadInfo();
 checkStatus();
 loadReviews();
+
+/* конец */
 
 </script>
 </body>
