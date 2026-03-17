@@ -37,7 +37,7 @@ public sealed class MsgHandler(
         var text = msg.Text ?? "";
 
         log.Track(uid);
-        if(msg.From?.FirstName is { } fn) _lastFirstName[uid] = fn;
+        if(msg.From?.FirstName is { } fn) _names[uid] = fn;
 
         if (_c.IsAdmin(uid))
         {
@@ -50,14 +50,16 @@ public sealed class MsgHandler(
         await Send(uid, ct);
     }
 
-    private Task Send(long id, CancellationToken ct)
+    private async Task Send(long id, CancellationToken ct)
     {
-        var name = _lastFirstName.GetValueOrDefault(id, "");
-        var greeting = string.IsNullOrWhiteSpace(name) ? "👋 Добро пожаловать в <b>KENOS</b>!" : $"👋 Привет, <b>{name}</b>! Добро пожаловать в <b>KENOS</b>!";
-        var text = greeting + "\n\n🎮 <b>Premium BlueStacks</b> для Standoff 2\n⚡️ Лучшая производительность и чувствительность на рынке.";
-        return bot.SendMessage(id, text, ParseMode.Html, replyMarkup: kb.App(), cancellationToken: ct);
+        var user = _names.GetValueOrDefault(id, "");
+        var name = string.IsNullOrWhiteSpace(user) ? "" : $", {user}";
+        var text = $"Добро пожаловать{name} в <b>KENOS</b>\n\n" +
+                   "<b>Premium BlueStacks</b> для Standoff 2\n" +
+                   "Лучшая производительность и чувствительность на рынке.";
+        await bot.SendMessage(id, text, ParseMode.Html, replyMarkup: kb.App(), cancellationToken: ct);
     }
-    private readonly Dictionary<long, string> _lastFirstName = new();
+    private readonly Dictionary<long, string> _names = new();
 
     // ── Рассылка ──────────────────────────────────────────────
     // Используем IReadOnlyList<long> напрямую — нет .ToList() копии
@@ -373,6 +375,29 @@ public sealed class MsgHandler(
                 var (ok, binMsg) = await SyncBin(ct);
                 await bot.SendMessage(_c.AdminChatId,
                     $"JSONBin: {(ok ? "✅" : "❌")} {binMsg}",
+                    ParseMode.Html, cancellationToken: ct);
+                return true;
+            }
+
+            // /key [userId] — выдать ключ на 30 дней
+            case "/key" when count >= 2:
+            {
+                if (!long.TryParse(span[ranges[1]], out var kid)) return false;
+
+                var key = await keys.Activate(kid, "", "Custom BlueStacks", TimeSpan.FromDays(36500), ct);
+
+                try
+                {
+                    await bot.SendMessage(kid,
+                        $"🔑 <b>Ваш ключ KENOS активирован!</b>\n\n" +
+                        $"<code>{key.KeyValue}</code>\n\n" +
+                        $"Открой мини-приложение для просмотра деталей.",
+                        ParseMode.Html, replyMarkup: kb.App(), cancellationToken: ct);
+                }
+                catch { }
+
+                await bot.SendMessage(_c.AdminChatId,
+                    $"✅ Ключ выдан <code>{kid}</code>\n<code>{key.KeyValue}</code>",
                     ParseMode.Html, cancellationToken: ct);
                 return true;
             }
