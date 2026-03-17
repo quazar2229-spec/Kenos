@@ -46,7 +46,7 @@ builder.Services.AddSingleton<Changelog>();
 builder.Services.AddSingleton<InfoService>();
 builder.Services.AddSingleton<JsonBin>();
 builder.Services.AddSingleton<InitDataValidator>(); // кэш подписи TG initData
-builder.Services.AddSingleton<IKeyRepo, MemoryKeyRepo>();
+builder.Services.AddSingleton<IKeyRepo, FileKeyRepo>();
 
 builder.Services.AddScoped<Support>();
 builder.Services.AddScoped<MsgHandler>();
@@ -80,4 +80,48 @@ app.MapPost("/api/validate", (HttpContext ctx, InitDataValidator validator) =>
         : Results.Unauthorized();
 });
 
+app.MapPost("/api/key", async (HttpContext ctx, IKeyRepo keys, InitDataValidator validator) =>
+{
+    var body = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
+    System.Text.Json.JsonElement root;
+    try { root = System.Text.Json.JsonDocument.Parse(body).RootElement; }
+    catch { return Results.BadRequest(); }
+
+    var initData = root.TryGetProperty("initData", out var d) ? d.GetString() ?? "" : "";
+    if (string.IsNullOrWhiteSpace(initData)) return Results.Unauthorized();
+    if (!validator.Validate(initData))        return Results.Unauthorized();
+
+    var userId = ParseUserId(initData);
+    if (userId == 0) return Results.Unauthorized();
+
+    var key = await keys.Get(userId);
+    if (key is null) return Results.Ok(new { active = false });
+
+    return Results.Ok(new
+    {
+        active  = true,
+        key     = key.KeyValue,
+        hwid    = key.Hwid,
+        plan    = key.Plan,
+        expires = key.ExpiresAt.ToString("dd.MM.yyyy")
+    });
+});
+
 await app.RunAsync();
+
+// ── Парсим userId из initData ─────────────────
+static long ParseUserId(string initData)
+{
+    foreach (var pair in initData.Split('&'))
+    {
+        var idx = pair.IndexOf('=');
+        if (idx < 0 || pair[..idx] != "user") continue;
+        try
+        {
+            var u = System.Text.Json.JsonDocument.Parse(Uri.UnescapeDataString(pair[(idx+1)..])).RootElement;
+            return u.TryGetProperty("id", out var id) ? id.GetInt64() : 0;
+        }
+        catch { return 0; }
+    }
+    return 0;
+}
