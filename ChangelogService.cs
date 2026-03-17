@@ -9,10 +9,7 @@ public record Entry(string Ver, string Text, DateTime Date);
 
 public sealed class Changelog
 {
-    private readonly List<Entry> _entries = new()
-    {
-        new Entry("v1.0", "Запуск KENOS — покупка, ключи, поддержка, G-голда и Stars.", DateTime.UtcNow.AddDays(-7))
-    };
+    private readonly List<Entry> _entries = new();
     private readonly ConcurrentDictionary<long, byte> _users = new();
     private readonly string _usersFile;
     private readonly ILogger<Changelog> _log;

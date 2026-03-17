@@ -37,6 +37,7 @@ public sealed class MsgHandler(
         var text = msg.Text ?? "";
 
         log.Track(uid);
+        if(msg.From?.FirstName is { } fn) _lastFirstName[uid] = fn;
 
         if (_c.IsAdmin(uid))
         {
@@ -49,8 +50,14 @@ public sealed class MsgHandler(
         await Send(uid, ct);
     }
 
-    private Task Send(long id, CancellationToken ct) =>
-        bot.SendMessage(id, "KENOS", replyMarkup: kb.App(), cancellationToken: ct);
+    private Task Send(long id, CancellationToken ct)
+    {
+        var name = _lastFirstName.GetValueOrDefault(id, "");
+        var greeting = string.IsNullOrWhiteSpace(name) ? "👋 Добро пожаловать в <b>KENOS</b>!" : $"👋 Привет, <b>{name}</b>! Добро пожаловать в <b>KENOS</b>!";
+        var text = greeting + "\n\n🎮 <b>Premium BlueStacks</b> для Standoff 2\n⚡️ Лучшая производительность и чувствительность на рынке.";
+        return bot.SendMessage(id, text, ParseMode.Html, replyMarkup: kb.App(), cancellationToken: ct);
+    }
+    private readonly Dictionary<long, string> _lastFirstName = new();
 
     // ── Рассылка ──────────────────────────────────────────────
     // Используем IReadOnlyList<long> напрямую — нет .ToList() копии
