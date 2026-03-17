@@ -116,12 +116,9 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   align-items:center;justify-content:center;
   background:#0d0d0d;
   transition:opacity .45s ease-out, visibility .45s;
+  will-change:opacity;
 }
-#loader.hidden{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-}
+#loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
 #cvs-loader{position:absolute;inset:0;pointer-events:none;transform:translateZ(0);opacity:.60}
 
 /* уголки */
@@ -151,7 +148,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   letter-spacing:.35em;color:#fff;line-height:1;
   padding-left:.35em;text-align:center;
   opacity:0;
-  animation:riseIn 1.1s .3s var(--ease) forwards;
+  animation:riseIn 1.1s .3s var(--ease) forwards, glowPulse 4s 1.5s ease-in-out infinite;
 }
 .ld-prog{display:flex;flex-direction:column;align-items:center;gap:9px;opacity:0;animation:fadeIn .6s 1.0s ease forwards}
 .ld-pct{
@@ -247,8 +244,11 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:relative;z-index:1;
   max-width:480px;margin:0 auto;
   padding-bottom:70px;min-height:100vh;
+  /* скрыт до конца лоадера — нет мигания контента */
+  opacity:0;
+  transition:opacity .3s ease;
 }
-/* убрали opacity:0 — лоадер и так перекрывает всё через z-index:9000 */
+#app.ready{ opacity:1; }
 
 /* ambient убран — постоянная анимация opacity грела GPU */
 #app::before{ display:none; }
@@ -268,35 +268,29 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .hdr-profile{display:flex;align-items:center;gap:8px;position:relative}
 
 /* обёртка для колец */
-.hdr-avatar-wrap{
-  position:relative;flex-shrink:0;
-  width:44px;height:44px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
+.hdr-avatar-wrap{position:relative;flex-shrink:0}
 
-/* Кольцо 1 — внутреннее */
+/* Кольцо 1 — внутреннее, крутится по часовой */
 .hdr-avatar-wrap::before{
   content:'';
-  position:absolute;inset:2px;
+  position:absolute;inset:-3px;
   border-radius:50%;
   border:1.5px solid transparent;
   border-top-color:var(--ac);
   border-right-color:var(--ac-dim);
-  animation:spin1 6s linear infinite;
+  animation:spin1 2s linear infinite;
   pointer-events:none;
   z-index:2;
 }
-/* Кольцо 2 — внешнее */
+/* Кольцо 2 — внешнее, крутится против часовой */
 .hdr-avatar-wrap::after{
   content:'';
-  position:absolute;inset:-1px;
+  position:absolute;inset:-7px;
   border-radius:50%;
   border:1px solid transparent;
   border-bottom-color:var(--ac-soft);
   border-left-color:var(--ac-dim);
-  animation:spin2 10s linear infinite;
+  animation:spin2 3.4s linear infinite;
   pointer-events:none;
   z-index:1;
 }
@@ -546,7 +540,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:absolute;top:14px;right:0;
   width:7px;height:7px;border-radius:50%;
   background:rgba(200,200,200,.5);
-  animation:dotPulse 3s ease-in-out infinite;
+  animation:dotPulse 2s ease-in-out infinite;
 }
 /* badge на nav-иконке */
 .ni-badge{
@@ -794,7 +788,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   transition:background .32s ease;
 }
 .status-badge.online{ background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.14); color:rgba(220,220,220,.9); }
-.status-badge.online .dot{ background:rgba(220,220,220,.8); animation:dotPulse 3s ease-in-out infinite; }
+.status-badge.online .dot{ background:rgba(220,220,220,.8); animation:dotPulse 2s ease-in-out infinite; }
 .status-badge.offline{ background:rgba(255,255,255,.04); color:rgba(150,150,150,.6); }
 .status-badge.offline .dot{ background:rgba(150,150,150,.4); }
 .status-badge.loading .dot{ opacity:.4; }
@@ -839,114 +833,12 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .promo-result.err{ border-color:rgba(200,200,200,.1); color:rgba(150,150,150,.7); }
 ═══════════════════════════════════════════ */
 
-/* ═══════════════════════════════════════════
-   PROFILE OVERLAY
-═══════════════════════════════════════════ */
-#profile-overlay{
-  position:fixed;inset:0;z-index:500;
-  background:rgba(0,0,0,.7);
-  display:flex;align-items:flex-end;
-  opacity:0;pointer-events:none;visibility:hidden;
-  transition:opacity .32s var(--smooth), visibility .32s;
-}
-#profile-overlay.open{opacity:1;pointer-events:auto;visibility:visible;}
-.profile-sheet{
-  width:100%;max-width:480px;margin:0 auto;
-  background:#0e0e0e;
-  border-radius:24px 24px 0 0;
-  border-top:1px solid rgba(255,255,255,.08);
-  padding-bottom:calc(24px + env(safe-area-inset-bottom));
-  transform:translateY(100%);
-  transition:transform .4s cubic-bezier(.25,.46,.45,.94);
-}
-#profile-overlay.open .profile-sheet{transform:translateY(0);}
-.profile-handle{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin:14px auto 0;}
 
-/* Шапка профиля */
-.profile-head{
-  display:flex;align-items:center;gap:16px;
-  padding:20px 20px 18px;
-}
-.profile-ava{
-  width:60px;height:60px;border-radius:50%;flex-shrink:0;
-  background:rgba(255,255,255,.06);
-  border:1.5px solid rgba(255,255,255,.12);
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;color:var(--txt-muted);position:relative;
-}
-.profile-ava::before{
-  content:'';position:absolute;inset:-3px;border-radius:50%;
-  border:1.5px solid transparent;
-  border-top-color:rgba(255,255,255,.5);border-right-color:rgba(255,255,255,.15);
-  animation:spin1 6s linear infinite;pointer-events:none;z-index:2;
-}
-.profile-ava::after{
-  content:'';position:absolute;inset:-7px;border-radius:50%;
-  border:1px solid transparent;
-  border-bottom-color:rgba(255,255,255,.2);border-left-color:rgba(255,255,255,.08);
-  animation:spin2 10s linear infinite;pointer-events:none;z-index:1;
-}
-.profile-ava img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.profile-info{flex:1;min-width:0;}
-.profile-name{font-size:19px;font-weight:700;letter-spacing:.02em;color:#fff;line-height:1.2}
-.profile-tag{
-  display:inline-flex;align-items:center;gap:5px;
-  margin-top:6px;padding:3px 10px;border-radius:20px;
-  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
-  color:rgba(200,200,200,.8);
-}
 
-/* Карточки статистики */
-.profile-stats{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;padding:0 16px 16px;
-}
-.profile-stat{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:16px;padding:14px 16px;
-}
-.profile-stat-val{
-  font-family:'Cormorant Garamond',serif;
-  font-size:26px;font-weight:300;color:#fff;
-  letter-spacing:.04em;line-height:1;margin-bottom:4px;
-}
-.profile-stat-lbl{
-  font-size:9px;font-weight:600;letter-spacing:.14em;
-  text-transform:uppercase;color:rgba(255,255,255,.35);
-}
-.profile-stat.active{
-  background:rgba(255,255,255,.07);
-  border-color:rgba(255,255,255,.15);
-}
-.profile-stat.active .profile-stat-val{color:#fff}
 
-/* Строки данных */
-.profile-rows{padding:0 16px;border-top:1px solid rgba(255,255,255,.06);}
-.profile-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);
-}
-.profile-row:last-of-type{border-bottom:none}
-.profile-lbl{display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase}
-.profile-lbl svg{color:rgba(255,255,255,.3);flex-shrink:0}
-.profile-val{
-  font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:300;
-  color:rgba(255,255,255,.85);letter-spacing:.05em;max-width:60%;text-align:right;word-break:break-all;
-}
+/* PROFILE */
 
-/* Кнопка закрыть */
-.profile-close{
-  display:block;margin:12px 16px 0;
-  padding:14px;border-radius:14px;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  color:rgba(255,255,255,.5);font-family:var(--fb);font-size:12px;
-  font-weight:600;letter-spacing:.14em;cursor:pointer;width:calc(100% - 32px);
-  transition:background .28s var(--smooth),color .28s var(--smooth);
-  text-align:center;
-}
-.profile-close:active{background:rgba(255,255,255,.12);color:#fff}
+
 
 #toast{
   position:fixed;bottom:80px;left:50%;
@@ -981,19 +873,6 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 /* iOS Safari — фикс 100vh */
 @supports (-webkit-touch-callout:none){
   #loader,#app{ min-height:-webkit-fill-available; }
-
-  /* Safari WebKit — отключаем backdrop-filter (самый дорогой эффект на старых iOS) */
-  #profile-overlay{
-    backdrop-filter:none !important;
-    -webkit-backdrop-filter:none !important;
-    background:rgba(0,0,0,.82) !important;
-  }
-
-  /* Убираем box-shadow анимацию — Safari перерисовывает каждый кадр */
-  .hdr-avatar{ animation:none !important; }
-
-  /* Второе кольцо на Safari тяжёлое — убираем */
-  .hdr-avatar-wrap::after{ animation-duration:14s !important; }
 }
 </style>
 </head>
@@ -1022,8 +901,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 <!-- ══ APP ══ -->
 <div id="app">
   <header class="hdr">
-    <div class="hdr-profile" id="js-profile-btn" style="cursor:pointer">
-      <div class="hdr-avatar-wrap" id="hdr-ava-wrap">
+    <div class="hdr-profile">
+      <div class="hdr-avatar-wrap" onclick="openProfile()" style="cursor:pointer">
         <div class="hdr-avatar" id="hdr-av"><svg width="15" height="15"><use href="#i-user"/></svg></div>
       </div>
       <span class="hdr-name" id="hdr-nm">—</span>
@@ -1257,7 +1136,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       <div class="p-title" data-i18n="abt.cl">Обновления</div>
       <div class="p-sub" data-i18n="abt.cl.d">История версий бота</div>
       <div id="cl-list">
-        <div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">Нет обновлений</div></div>
+        <div class="cl-e"><div class="cl-v">v1.0</div><div class="cl-d">Запуск KENOS</div><div class="cl-t">Базовый функционал: покупка, ключи, поддержка, G-голда и Telegram Stars.</div></div>
       </div>
     </div>
     <div class="panel">
@@ -1301,58 +1180,52 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   </div><!-- /#view -->
 </div>
 
-<!-- ══ PROFILE OVERLAY ══ -->
-<div id="profile-overlay" onclick="closeProfile(event)">
-  <div class="profile-sheet">
-    <div class="profile-handle"></div>
 
-    <!-- Шапка: аватар + имя + тег -->
-    <div class="profile-head">
-      <div class="profile-ava" id="prf-ava"><svg width="24" height="24"><use href="#i-user"/></svg></div>
-      <div class="profile-info">
-        <div class="profile-name" id="prf-name">—</div>
-        <div class="profile-tag" id="prf-tag">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-          <span id="prf-plan">KENOS PLAYER</span>
-        </div>
+<!-- ══ PROFILE ══ -->
+<div id="prf-overlay" onclick="closeProfile()" style="position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .38s ease"></div>
+<div id="prf-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:9001;background:#0d0d0d;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);overflow-y:auto;transform:translateY(100%);transition:transform .45s cubic-bezier(.16,1,.3,1),opacity .45s ease;opacity:0;padding-bottom:calc(20px + env(safe-area-inset-bottom));max-height:82vh;box-shadow:0 -16px 60px rgba(0,0,0,.8)">
+  <!-- handle -->
+  <div style="width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);margin:12px auto 20px"></div>
+  <!-- header -->
+  <div style="text-align:center;margin-bottom:18px">
+    <p style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--g5);margin-bottom:6px">ВАШ ПРОФИЛЬ</p>
+    <h2 style="font-family:var(--fd);font-size:clamp(28px,8vw,42px);font-weight:300;letter-spacing:.1em;color:var(--txt);margin:0">Профиль</h2>
+  </div>
+  <!-- аватар + план -->
+  <div style="display:flex;align-items:center;gap:12px;padding:0 54px;margin-bottom:12px">
+    <div id="prf-ava" style="width:42px;height:42px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--txt-muted)"><svg width="16" height="16"><use href="#i-user"/></svg></div>
+    <div>
+      <div id="prf-name" style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">—</div>
+      <div style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;background:var(--ac-dim);border:1px solid var(--border-ac);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-dim)">
+        <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span id="prf-plan">KENOS PLAYER</span>
       </div>
     </div>
-
-    <!-- Карточки: статус ключа + дней осталось -->
-    <div class="profile-stats">
-      <div class="profile-stat" id="prf-stat-key">
-        <div class="profile-stat-val" id="prf-key-short">—</div>
-        <div class="profile-stat-lbl">СТАТУС</div>
-      </div>
-      <div class="profile-stat active" id="prf-stat-days">
-        <div class="profile-stat-val" id="prf-days">—</div>
-        <div class="profile-stat-lbl">ДНЕЙ</div>
-      </div>
-    </div>
-
-    <!-- Строки данных -->
-    <div class="profile-rows">
-      <div class="profile-row">
-        <span class="profile-lbl"><svg width="12" height="12"><use href="#i-key"/></svg>Ключ</span>
-        <span class="profile-val" id="prf-key" style="font-size:12px;letter-spacing:.08em">—</span>
-      </div>
-      <div class="profile-row">
-        <span class="profile-lbl"><svg width="12" height="12"><use href="#i-gear"/></svg>HWID</span>
-        <span class="profile-val" id="prf-hwid">—</span>
-      </div>
-      <div class="profile-row">
-        <span class="profile-lbl"><svg width="12" height="12"><use href="#i-zap"/></svg>Истекает</span>
-        <span class="profile-val" id="prf-exp">—</span>
-      </div>
-      <div class="profile-row">
-        <span class="profile-lbl"><svg width="12" height="12"><use href="#i-user"/></svg>ID</span>
-        <span class="profile-val" id="prf-uid">—</span>
-      </div>
-    </div>
-
-    <button class="profile-close" onclick="closeProfile()">Закрыть</button>
+  </div>
+  <!-- статус — как svc-card -->
+  <div style="margin:0 54px 10px;background:rgba(14,14,14,.97);border:1px solid var(--border);border-radius:16px;padding:18px 16px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent)"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none"></div>
+    <div id="prf-key-short" style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--txt);margin-bottom:3px;position:relative">—</div>
+    <div style="font-size:8px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-muted);position:relative">СТАТУС ЛИЦЕНЗИИ</div>
+  </div>
+  <!-- данные — как svc-card -->
+  <div style="margin:0 54px 14px;background:rgba(14,14,14,.97);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent)"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none"></div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:10px;position:relative">ДАННЫЕ ЛИЦЕНЗИИ</div>
+    <div class="info-r" style="padding:10px 0;position:relative"><span class="info-k"><svg width="12" height="12"><use href="#i-key"/></svg>Ключ</span><span class="info-v" id="prf-key" style="font-size:11px;word-break:break-all;text-align:right;max-width:58%">—</span></div>
+    <div class="info-r" style="padding:10px 0;position:relative"><span class="info-k"><svg width="12" height="12"><use href="#i-gear"/></svg>HWID</span><span class="info-v" id="prf-hwid">—</span></div>
+    <div class="info-r" style="padding:10px 0;border-bottom:none;position:relative"><span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg>Telegram ID</span><span class="info-v" id="prf-uid">—</span></div>
+  </div>
+  <div style="padding:0 54px">
+    <button class="btn btn-s" onclick="closeProfile()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      <span>НАЗАД</span>
+    </button>
   </div>
 </div>
+
 
 <!-- ══ NAV ══ -->
 <nav class="nav" id="nav">
@@ -1510,6 +1383,9 @@ function go(id){
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
+      // Сбрасываем анимации — снимаем/вешаем .on чтобы waveIn перезапустился
+      next.classList.remove('on');
+      void next.offsetWidth; // reflow только этого элемента
       next.classList.add('on');
       window.scrollTo({ top: 0, behavior: 'instant' });
     });
@@ -1668,103 +1544,43 @@ async function sendSup(){
    PROFILE
 ══════════════════════════════════════ */
 (()=>{
-  const nm = tgU.username ? '@'+tgU.username : (tgU.first_name || '');
-  const hnm = document.getElementById('hdr-nm');
-  if(nm && hnm) hnm.textContent = nm;
-
+  const nm=tgU.username?'@'+tgU.username:tgU.first_name||'';
+  if(nm) document.getElementById('hdr-nm').textContent=nm;
+  const av = document.getElementById('hdr-av');
+  const pa = document.getElementById('prf-ava');
   if(tgU.photo_url){
-    const av = document.getElementById('hdr-av');
-    if(av) av.innerHTML = '<img src="'+tgU.photo_url+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover">';
+    const img=`<img src="${tgU.photo_url}" alt="">`;
+    av.innerHTML=img;
+    pa.innerHTML=img;
   }
-
-  // Вешаем клик после загрузки DOM
-  document.addEventListener('DOMContentLoaded', ()=>{
-    const btn = document.getElementById('js-profile-btn');
-    if(btn) btn.addEventListener('click', openProfile);
-  });
-  // На случай если DOM уже готов
-  const btn2 = document.getElementById('js-profile-btn');
-  if(btn2) btn2.addEventListener('click', openProfile);
 })();
 
 function openProfile(){
-  try{
-    alert('openProfile вызвана!');
-    const ov = document.getElementById('profile-overlay');
-    if(!ov){ return; }
-
-    // Имя
-    const nm = tgU.username ? '@'+tgU.username : (tgU.first_name || '—');
-    const pn = document.getElementById('prf-name');
-    if(pn) pn.textContent = nm;
-
-    // ID
-    const pu = document.getElementById('prf-uid');
-    if(pu) pu.textContent = tgU.id ? String(tgU.id) : '—';
-
-    // Аватарка в профиле
-    if(tgU.photo_url){
-      const pa = document.getElementById('prf-ava');
-      if(pa) pa.innerHTML = `<img src="${tgU.photo_url}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
-    }
-
-    // Данные ключа
-    const kvEl = document.getElementById('key-val');
-    const khEl = document.getElementById('hwid-v');
-    const keEl = document.getElementById('key-exp');
-    const ksEl = document.getElementById('key-st');
-
-    const kv  = kvEl ? kvEl.textContent.trim() : '—';
-    const kh  = khEl ? khEl.textContent.trim() : '—';
-    const ke  = keEl ? keEl.textContent.trim() : '—';
-    const act = ksEl ? ksEl.classList.contains('act') : false;
-
-    const pkEl  = document.getElementById('prf-key');
-    const phEl  = document.getElementById('prf-hwid');
-    const peEl  = document.getElementById('prf-exp');
-    const ppEl  = document.getElementById('prf-plan');
-    const pksEl = document.getElementById('prf-key-short');
-    const pskEl = document.getElementById('prf-stat-key');
-    const pdEl  = document.getElementById('prf-days');
-
-    if(pkEl)  pkEl.textContent  = (kv && kv !== '—') ? kv : 'Нет ключа';
-    if(phEl)  phEl.textContent  = kh || '—';
-    if(peEl)  peEl.textContent  = ke || '—';
-    if(ppEl)  ppEl.textContent  = act ? 'KENOS PLAYER' : 'НЕТ ЛИЦЕНЗИИ';
-    if(pksEl) pksEl.textContent = act ? 'Активен' : 'Не активен';
-    if(pskEl) pskEl.classList.toggle('active', act);
-
-    // Дней осталось
-    if(pdEl){
-      try{
-        if(act && ke && ke !== '—'){
-          const p = ke.split('.');
-          if(p.length === 3){
-            const d = new Date(+p[2], +p[1]-1, +p[0]);
-            const days = Math.max(0, Math.ceil((d - Date.now()) / 86400000));
-            pdEl.textContent = String(days);
-          } else pdEl.textContent = '—';
-        } else pdEl.textContent = '—';
-      }catch{ pdEl.textContent = '—'; }
-    }
-
-    // Открываем
-    ov.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }catch(err){
-    console.error('openProfile error:', err);
-  }
+  const g=id=>document.getElementById(id);
+  const nm=tgU.username?'@'+tgU.username:(tgU.first_name||'—');
+  if(g('prf-name')) g('prf-name').textContent=nm;
+  if(g('prf-uid'))  g('prf-uid').textContent=tgU.id?String(tgU.id):'—';
+  if(tgU.photo_url){const pa=g('prf-ava');if(pa)pa.innerHTML='<img src="'+tgU.photo_url+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover">';}
+  const kv=g('key-val')?g('key-val').textContent.trim():'—';
+  const kh=g('hwid-v')?g('hwid-v').textContent.trim():'—';
+  const act=g('key-st')?g('key-st').classList.contains('act'):false;
+  if(g('prf-key'))       g('prf-key').textContent=(kv&&kv!=='—')?kv:'Нет ключа';
+  if(g('prf-hwid'))      g('prf-hwid').textContent=kh||'—';
+  if(g('prf-plan'))      g('prf-plan').textContent=act?'KENOS PLAYER':'НЕТ ЛИЦЕНЗИИ';
+  if(g('prf-key-short')) g('prf-key-short').textContent=act?'Активен':'Нет';
+  const ov=g('prf-overlay'),sh=g('prf-sheet');
+  if(!sh)return;
+  if(ov){ov.style.opacity='1';ov.style.pointerEvents='auto';}
+  sh.style.transform='translateY(0)';
+  sh.style.opacity='1';
+  document.body.style.overflow='hidden';
 }
 
-function closeProfile(e){
-  if(e){
-    const t = e.target;
-    // Закрываем только по фону или кнопке
-    if(t.id !== 'profile-overlay' && !t.classList.contains('profile-close')) return;
-  }
-  const ov = document.getElementById('profile-overlay');
-  if(ov) ov.classList.remove('open');
-  document.body.style.overflow = '';
+function closeProfile(){
+  const ov=document.getElementById('prf-overlay'),sh=document.getElementById('prf-sheet');
+  if(ov){ov.style.opacity='0';ov.style.pointerEvents='none';}
+  if(sh){sh.style.transform='translateY(100%)';sh.style.opacity='0';}
+  document.body.style.overflow='';
 }
 
 /* ══════════════════════════════════════
@@ -1855,7 +1671,7 @@ function initSakura(id,count,alpha){
   }
 
   function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight;}
-  _resizeCbs.push(resize);
+  new ResizeObserver(resize).observe(document.documentElement);
   resize();
   for(let i=0;i<count;i++)spawn(i,true);
 
@@ -1899,11 +1715,7 @@ function initSakura(id,count,alpha){
 }
 
 /* iPhone 15 Pro Max уровень — одинаково везде */
-/* Один ResizeObserver на все canvas — не дублируем reflow */
-const _resizeCbs = [];
-new ResizeObserver(() => _resizeCbs.forEach(fn => fn())).observe(document.documentElement);
-
-const _N = _MOB ? 14 : 20;
+const _N = 20;
 initSakura('cvs-sakura', _N, .72);
 initSakura('cvs-loader',  _N, .72);
 
@@ -1962,12 +1774,7 @@ initSakura('cvs-loader',  _N, .72);
 
     if(p < 1) requestAnimationFrame(tick);
     else setTimeout(()=>{
-      const ldEl = document.getElementById('loader');
-      if(ldEl){
-        ldEl.classList.add('hidden');
-        // Принудительно убираем после анимации — на старом Safari visibility иногда не работает
-        setTimeout(()=>{ ldEl.style.display='none'; }, 500);
-      }
+      ld.classList.add('hidden');
       document.getElementById('app')?.classList.add('ready');
       moveSlider(document.getElementById('n-home'));
     }, 250);
@@ -2168,8 +1975,37 @@ loadInfo();
 checkStatus();
 loadReviews();
 
-/* конец */
-
+/* Свайп вниз — закрыть профиль */
+(()=>{
+  let _y0=0, _dragging=false, _sh=null;
+  document.addEventListener('touchstart', e=>{
+    _sh = document.getElementById('prf-sheet');
+    if(!_sh || _sh.style.opacity!=='1') return;
+    if(!e.target.closest('#prf-sheet')) return;
+    _y0 = e.touches[0].clientY;
+    _dragging = true;
+    _sh.style.transition = 'none';
+  },{passive:true});
+  document.addEventListener('touchmove', e=>{
+    if(!_dragging||!_sh) return;
+    const dy = Math.max(0, e.touches[0].clientY - _y0);
+    _sh.style.transform = 'translateY('+dy+'px)';
+    const ov = document.getElementById('prf-overlay');
+    if(ov) ov.style.opacity = String(Math.max(0, 1 - dy/300));
+  },{passive:true});
+  document.addEventListener('touchend', e=>{
+    if(!_dragging||!_sh) return;
+    _dragging = false;
+    const dy = e.changedTouches[0].clientY - _y0;
+    _sh.style.transition = 'transform .45s cubic-bezier(.16,1,.3,1),opacity .45s ease';
+    if(dy > 100) closeProfile();
+    else{
+      _sh.style.transform = 'translateY(0)';
+      const ov = document.getElementById('prf-overlay');
+      if(ov) ov.style.opacity = '1';
+    }
+  },{passive:true});
+})();
 </script>
 </body>
 </html>
