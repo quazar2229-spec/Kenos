@@ -689,17 +689,16 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 /* Скользящая подложка */
 #nav-slider{
   position:absolute;
-  left:0;
-  top:4px;
-  height:46px;
-  width:44px;
+  left:0;top:4px;
+  height:46px;width:44px;
   border-radius:10px;
   background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.14);
-  transition:left .5s cubic-bezier(.25,.46,.45,.94),
-             width .5s cubic-bezier(.25,.46,.45,.94);
-  pointer-events:none;
-  z-index:0;
+  transform:translateX(0);
+  transition:transform .45s cubic-bezier(.25,.46,.45,.94),
+             width .45s cubic-bezier(.25,.46,.45,.94);
+  will-change:transform,width;
+  pointer-events:none;z-index:0;
   box-shadow:0 1px 0 rgba(255,255,255,.1) inset;
 }
 
@@ -1402,7 +1401,7 @@ function moveSlider(navItemEl){
   const navW = nav.offsetWidth;
   const w = Math.min(navItemEl.offsetWidth, navW - 8);
   const x = Math.max(4, Math.min(navItemEl.offsetLeft, navW - w - 4));
-  slider.style.left  = x + 'px';
+  slider.style.transform = 'translateX('+x+'px)';
   slider.style.width = w + 'px';
 }
 

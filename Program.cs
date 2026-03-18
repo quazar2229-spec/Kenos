@@ -46,7 +46,7 @@ builder.Services.AddSingleton<Changelog>();
 builder.Services.AddSingleton<InfoService>();
 builder.Services.AddSingleton<JsonBin>();
 builder.Services.AddSingleton<InitDataValidator>(); // кэш подписи TG initData
-builder.Services.AddSingleton<IKeyRepo, MemoryKeyRepo>();
+builder.Services.AddSingleton<IKeyRepo, FileKeyRepo>();
 
 builder.Services.AddScoped<Support>();
 builder.Services.AddScoped<MsgHandler>();
@@ -80,6 +80,32 @@ app.MapPost("/api/validate", (HttpContext ctx, InitDataValidator validator) =>
         : Results.Unauthorized();
 });
 
+// ── /api/key — получить ключ пользователя ─────────────────
+app.MapPost("/api/key", async (HttpContext ctx, IKeyRepo keys, InitDataValidator validator) =>
+{
+    var body = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
+    System.Text.Json.JsonElement root;
+    try { root = System.Text.Json.JsonDocument.Parse(body).RootElement; }
+    catch { return Results.BadRequest(); }
+
+    var initData = root.TryGetProperty("initData", out var d) ? d.GetString() ?? "" : "";
+    if (!validator.Validate(initData)) return Results.Unauthorized();
+
+    long userId = 0;
+    foreach (var pair in initData.Split('&'))
+    {
+        var idx = pair.IndexOf('=');
+        if (idx < 0 || pair[..idx] != "user") continue;
+        try { var u = System.Text.Json.JsonDocument.Parse(Uri.UnescapeDataString(pair[(idx+1)..])).RootElement; userId = u.TryGetProperty("id", out var id) ? id.GetInt64() : 0; } catch { }
+    }
+    if (userId == 0) return Results.Unauthorized();
+
+    var key = await keys.Get(userId);
+    if (key is null) return Results.Ok(new { active = false });
+    return Results.Ok(new { active = true, key = key.KeyValue, hwid = key.Hwid, plan = key.Plan, expires = key.ExpiresAt.ToString("dd.MM.yyyy") });
+});
+
+// ── /api/ai — прокси к Anthropic ──────────────────────────
 app.MapPost("/api/ai", async (HttpContext ctx) =>
 {
     var body = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
@@ -89,36 +115,32 @@ app.MapPost("/api/ai", async (HttpContext ctx) =>
 
     var lang = root.TryGetProperty("lang", out var l) ? l.GetString() : "ru";
     var system = lang == "en"
-        ? "You are KENOS assistant for BlueStacks setup for Standoff 2. Answer briefly in English."
+        ? "You are KENOS assistant for BlueStacks setup in Standoff 2. Answer briefly in English."
         : "Ты — помощник KENOS, сервиса настройки BlueStacks для Standoff 2. Отвечай кратко, по делу, на русском.";
 
     var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY") ?? "";
     if (string.IsNullOrWhiteSpace(apiKey))
-        return Results.Json(new { reply = "AI не настроен (нет ANTHROPIC_API_KEY)" });
+        return Results.Json(new { reply = "API ключ не настроен" });
 
     using var http = new HttpClient();
     http.DefaultRequestHeaders.Add("x-api-key", apiKey);
     http.DefaultRequestHeaders.Add("anthropic-version", "2023-06-01");
 
-    var messages = root.TryGetProperty("messages", out var m) ? m : default;
-    var payload = new
-    {
-        model = "claude-haiku-4-5-20251001",
-        max_tokens = 800,
-        system,
-        messages = messages.ValueKind != System.Text.Json.JsonValueKind.Undefined
-            ? (object)messages : Array.Empty<object>()
-    };
+    var messages = root.TryGetProperty("messages", out var m) ? m.GetRawText() : "[]";
+    var payload = $"{{\"model\":\"claude-haiku-4-5-20251001\",\"max_tokens\":800,\"system\":{System.Text.Json.JsonSerializer.Serialize(system)},\"messages\":{messages}}}";
 
-    var resp = await http.PostAsJsonAsync("https://api.anthropic.com/v1/messages", payload);
+    var resp = await http.PostAsync("https://api.anthropic.com/v1/messages",
+        new StringContent(payload, System.Text.Encoding.UTF8, "application/json"));
     var result = await resp.Content.ReadAsStringAsync();
-    var doc = System.Text.Json.JsonDocument.Parse(result);
-    var reply = doc.RootElement.TryGetProperty("content", out var cont)
-        && cont.GetArrayLength() > 0
-        ? cont[0].GetProperty("text").GetString()
-        : "Нет ответа";
 
-    return Results.Json(new { reply });
+    try
+    {
+        var doc = System.Text.Json.JsonDocument.Parse(result);
+        var reply = doc.RootElement.TryGetProperty("content", out var cont) && cont.GetArrayLength() > 0
+            ? cont[0].GetProperty("text").GetString() : "Нет ответа";
+        return Results.Json(new { reply });
+    }
+    catch { return Results.Json(new { reply = "Ошибка ответа от AI" }); }
 });
 
 await app.RunAsync();
