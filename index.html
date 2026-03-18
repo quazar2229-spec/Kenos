@@ -31,6 +31,8 @@
   <symbol id="i-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 010-6h20a3 3 0 010 6"/><path d="M2 15a3 3 0 000 6h20a3 3 0 000-6"/><line x1="2" y1="12" x2="22" y2="12"/></symbol>
 </svg>
 <style>
+* { -webkit-tap-highlight-color: transparent; }
+@supports (animation-timeline: scroll()) { * { -webkit-optimize-contrast: auto; } }
 /* ═══════════════════════════════════════════
    TOKENS
 ═══════════════════════════════════════════ */
@@ -386,7 +388,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
    с небольшим смещением — эффект волны
 ══════════════════════════════════════ */
 @keyframes waveIn{
-  from{ opacity:0; transform:translateY(18px); }
+  from{ opacity:0; transform:translateY(14px); }
   to  { opacity:1; transform:translateY(0); }
 }
 
@@ -396,39 +398,33 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .sec.on .panel,
 .sec.on .links,
 .sec.on [style*="padding:0 16px"]{
-  animation: waveIn .65s cubic-bezier(.22,1,.36,1) both;
+  animation: waveIn .5s ease both;
+  will-change:opacity,transform;
 }
 
-/* Волна сверху вниз — каждый блок чуть позже */
-.sec.on .hero                 { animation-delay:.04s }
-.sec.on .sec-title            { animation-delay:.08s }
-.sec.on .svc-grid             { animation-delay:.10s }
-.sec.on .panel:nth-of-type(1) { animation-delay:.10s }
-.sec.on .panel:nth-of-type(2) { animation-delay:.17s }
-.sec.on .panel:nth-of-type(3) { animation-delay:.24s }
-.sec.on .panel:nth-of-type(4) { animation-delay:.31s }
-.sec.on .panel:nth-of-type(5) { animation-delay:.38s }
-.sec.on .links                { animation-delay:.20s }
-.sec.on [style*="padding:0 16px"]{ animation-delay:.30s }
+.sec.on .hero                 { animation-delay:.03s }
+.sec.on .sec-title            { animation-delay:.05s }
+.sec.on .svc-grid             { animation-delay:.07s }
+.sec.on .panel:nth-child(1)  { animation-delay:.05s }
+.sec.on .panel:nth-child(2)  { animation-delay:.12s }
+.sec.on .panel:nth-child(3)  { animation-delay:.19s }
+.sec.on .panel:nth-child(4)  { animation-delay:.26s }
+.sec.on .panel:nth-child(5)  { animation-delay:.33s }
+.sec.on .panel:nth-child(6)  { animation-delay:.40s }
+.sec.on .links                { animation-delay:.18s }
+.sec.on [style*="padding:0 16px"]{ animation-delay:.22s }
 
-/* Текст внутри hero — последовательно */
-.sec.on .hero-eye{ animation:waveIn .55s .07s  cubic-bezier(.22,1,.36,1) both }
-.sec.on .hero-h  { animation:waveIn .65s .14s  cubic-bezier(.22,1,.36,1) both }
-.sec.on .hero-sub{ animation:waveIn .55s .22s  cubic-bezier(.22,1,.36,1) both }
-.sec.on .divider { animation:waveIn .5s .29s cubic-bezier(.22,1,.36,1) both }
+.sec.on .hero-eye{ animation:waveIn .4s .04s ease both }
+.sec.on .hero-h  { animation:waveIn .5s .10s ease both }
+.sec.on .hero-sub{ animation:waveIn .4s .16s ease both }
+.sec.on .divider { animation:waveIn .4s .20s ease both }
 
-/* Карточки */
-.sec.on .svc-card:nth-child(1){ animation:waveIn .58s .14s cubic-bezier(.22,1,.36,1) both }
-.sec.on .svc-card:nth-child(2){ animation:waveIn .58s .22s cubic-bezier(.22,1,.36,1) both }
-.sec.on .svc-card:nth-child(3){ animation:waveIn .58s .30s cubic-bezier(.22,1,.36,1) both }
-.sec.on .svc-card:nth-child(4){ animation:waveIn .58s .38s cubic-bezier(.22,1,.36,1) both }
+.sec.on .svc-card:nth-child(1){ animation:waveIn .42s .08s ease both }
+.sec.on .svc-card:nth-child(2){ animation:waveIn .42s .14s ease both }
+.sec.on .svc-card:nth-child(3){ animation:waveIn .42s .20s ease both }
+.sec.on .svc-card:nth-child(4){ animation:waveIn .42s .26s ease both }
 
-/* Строки */
-.sec.on .info-r:nth-child(1){ animation:waveIn .52s .16s cubic-bezier(.22,1,.36,1) both }
-.sec.on .info-r:nth-child(2){ animation:waveIn .52s .23s cubic-bezier(.22,1,.36,1) both }
-.sec.on .info-r:nth-child(3){ animation:waveIn .52s .30s cubic-bezier(.22,1,.36,1) both }
-.sec.on .info-r:nth-child(4){ animation:waveIn .52s .37s cubic-bezier(.22,1,.36,1) both }
-.sec.on .info-r:nth-child(5){ animation:waveIn .52s .44s cubic-bezier(.22,1,.36,1) both }
+.sec.on .info-r{ animation:none; opacity:1; }
 
 @media(prefers-reduced-motion:reduce){
   .sec.on .hero,.sec.on .sec-title,.sec.on .svc-grid,.sec.on .panel,
@@ -498,12 +494,12 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   background:rgba(14,14,14,.97);border:1px solid var(--border);
   border-radius:16px;padding:18px 14px 14px;
   cursor:pointer;position:relative;overflow:hidden;
-  transition:transform .14s ease,border-color .22s ease,box-shadow .22s ease;
+  transition:transform .1s ease,border-color .18s ease,box-shadow .18s ease;
   box-shadow:0 4px 20px rgba(0,0,0,.45);
 }
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent);pointer-events:none}
 .svc-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none}
-.svc-card:active{transform:scale(.95);transition:transform .08s ease}
+.svc-card:active{transform:scale(.94);transition:transform .06s ease}
 .svc-ico{
   display:flex;justify-content:center;align-items:center;
   margin-bottom:12px;color:var(--txt-dim);
@@ -644,11 +640,13 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   width:100%;padding:13px 22px;border-radius:12px;
   font-family:var(--fb);font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
   cursor:pointer;border:none;text-decoration:none;
-  transition:transform .18s cubic-bezier(.25,.46,.45,.94),
-             background .22s ease,
-             opacity .22s ease;
+  transition:transform .22s cubic-bezier(.25,.46,.45,.94),
+             background .25s ease,
+             opacity .25s ease;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
 }
-.btn:active{transform:scale(.94)!important;transition:transform .08s ease!important}
+.btn:active{transform:scale(.93)!important;transition:transform .06s ease!important}
 .btn-p{
   background:rgba(228,228,228,.92);
   color:rgba(0,0,0,.72);
@@ -695,8 +693,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.14);
   transform:translateX(0);
-  transition:transform .45s cubic-bezier(.25,.46,.45,.94),
-             width .45s cubic-bezier(.25,.46,.45,.94);
+  transition:transform .6s cubic-bezier(.16,1,.3,1),
+             width .6s cubic-bezier(.16,1,.3,1);
   will-change:transform,width;
   pointer-events:none;z-index:0;
   box-shadow:0 1px 0 rgba(255,255,255,.1) inset;
@@ -714,14 +712,14 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   color:var(--txt-muted);
   display:block;
   /* только color transition — никаких filter/transform анимаций */
-  transition:color .2s ease;
+  transition:color .15s ease;
   /* will-change убран — 8 одновременных GPU слоёв убивали fps */
 }
 
 .ni span{
   font-size:8px;letter-spacing:.06em;text-transform:uppercase;
   color:var(--txt-muted);white-space:nowrap;
-  transition:color .2s ease;
+  transition:color .15s ease;
 }
 .ni:hover svg { color:var(--ac-soft); }
 .ni:hover span{ color:var(--ac-soft); }
@@ -1217,7 +1215,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 
 <!-- ══ PROFILE ══ -->
 <div id="prf-overlay" onclick="closeProfile()" style="position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .38s ease"></div>
-<div id="prf-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:9001;background:#0d0d0d;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);overflow-y:auto;transform:translateY(100%);transition:transform .42s cubic-bezier(.16,1,.3,1),opacity .3s ease;opacity:0;padding-bottom:calc(20px + env(safe-area-inset-bottom));max-height:100vh;box-shadow:0 -16px 60px rgba(0,0,0,.8)">
+<div id="prf-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:9001;background:#0d0d0d;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);overflow-y:auto;transform:translateY(100%);transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .35s ease;opacity:0;padding-bottom:calc(20px + env(safe-area-inset-bottom));max-height:100vh;box-shadow:0 -16px 60px rgba(0,0,0,.8)">
   <!-- handle -->
   <div style="width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);margin:8px auto 10px"></div>
   <!-- header -->
