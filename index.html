@@ -674,9 +674,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
    BOTTOM NAV
 ═══════════════════════════════════════════ */
 .nav{
-  position:fixed;bottom:0;left:50%;
-  transform:translateX(-50%);
-  width:100%;max-width:480px;
+  position:fixed;bottom:0;left:0;right:0;
+  width:100%;max-width:480px;margin:0 auto;
   padding:5px 4px calc(5px + env(safe-area-inset-bottom));
   background:#0b0b0b;
   border-top:1px solid var(--border);
@@ -684,6 +683,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   z-index:200;
   overflow:clip;
   isolation:isolate;
+  -webkit-transform:translateZ(0);transform:translateZ(0);
 }
 
 /* Скользящая подложка */
@@ -1197,7 +1197,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       <!-- Инпут -->
       <div style="display:flex;gap:8px;align-items:flex-end">
         <textarea id="ai-input" placeholder="Сообщение..." data-i18n-ph="ai.ph" rows="1"
-          style="flex:1;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:14px;padding:10px 14px;color:var(--txt);font-family:var(--fb);font-size:13px;resize:none;outline:none;max-height:100px;line-height:1.5;transition:border-color .2s ease;-webkit-appearance:none;appearance:none;overflow:hidden"
+          style="flex:1;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:14px;padding:10px 14px;color:var(--txt);font-family:var(--fb);font-size:16px;resize:none;outline:none;max-height:100px;line-height:1.5;transition:border-color .2s ease;-webkit-appearance:none;appearance:none;overflow:hidden"
           onfocus="this.style.borderColor='rgba(255,255,255,.25)'"
           onblur="this.style.borderColor='var(--border)'"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();aiSend()}"
@@ -2103,18 +2103,16 @@ async function aiSend(){
   msgs.scrollTop=msgs.scrollHeight;
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch(API_BASE+'/api/ai',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:_aiLang==='ru'?'Ты — помощник KENOS, сервиса настройки BlueStacks для Standoff 2. Отвечай кратко, по делу, на русском.':'You are KENOS assistant for BlueStacks setup for Standoff 2. Answer briefly in English.',
+        lang:_aiLang,
         messages:_aiHistory
       })
     });
     const data=await res.json();
-    const reply=data.content?.[0]?.text||'Нет ответа';
+    const reply=data.reply||data.content?.[0]?.text||'Нет ответа';
     _aiHistory.push({role:'assistant',content:reply});
     document.getElementById(loadId)?.remove();
 

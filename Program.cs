@@ -46,7 +46,7 @@ builder.Services.AddSingleton<Changelog>();
 builder.Services.AddSingleton<InfoService>();
 builder.Services.AddSingleton<JsonBin>();
 builder.Services.AddSingleton<InitDataValidator>(); // кэш подписи TG initData
-builder.Services.AddSingleton<IKeyRepo, FileKeyRepo>();
+builder.Services.AddSingleton<IKeyRepo, MemoryKeyRepo>();
 
 builder.Services.AddScoped<Support>();
 builder.Services.AddScoped<MsgHandler>();
@@ -80,48 +80,45 @@ app.MapPost("/api/validate", (HttpContext ctx, InitDataValidator validator) =>
         : Results.Unauthorized();
 });
 
-app.MapPost("/api/key", async (HttpContext ctx, IKeyRepo keys, InitDataValidator validator) =>
+app.MapPost("/api/ai", async (HttpContext ctx) =>
 {
     var body = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
     System.Text.Json.JsonElement root;
     try { root = System.Text.Json.JsonDocument.Parse(body).RootElement; }
     catch { return Results.BadRequest(); }
 
-    var initData = root.TryGetProperty("initData", out var d) ? d.GetString() ?? "" : "";
-    if (string.IsNullOrWhiteSpace(initData)) return Results.Unauthorized();
-    if (!validator.Validate(initData))        return Results.Unauthorized();
+    var lang = root.TryGetProperty("lang", out var l) ? l.GetString() : "ru";
+    var system = lang == "en"
+        ? "You are KENOS assistant for BlueStacks setup for Standoff 2. Answer briefly in English."
+        : "Ты — помощник KENOS, сервиса настройки BlueStacks для Standoff 2. Отвечай кратко, по делу, на русском.";
 
-    var userId = ParseUserId(initData);
-    if (userId == 0) return Results.Unauthorized();
+    var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY") ?? "";
+    if (string.IsNullOrWhiteSpace(apiKey))
+        return Results.Json(new { reply = "AI не настроен (нет ANTHROPIC_API_KEY)" });
 
-    var key = await keys.Get(userId);
-    if (key is null) return Results.Ok(new { active = false });
+    using var http = new HttpClient();
+    http.DefaultRequestHeaders.Add("x-api-key", apiKey);
+    http.DefaultRequestHeaders.Add("anthropic-version", "2023-06-01");
 
-    return Results.Ok(new
+    var messages = root.TryGetProperty("messages", out var m) ? m : default;
+    var payload = new
     {
-        active  = true,
-        key     = key.KeyValue,
-        hwid    = key.Hwid,
-        plan    = key.Plan,
-        expires = key.ExpiresAt.ToString("dd.MM.yyyy")
-    });
+        model = "claude-haiku-4-5-20251001",
+        max_tokens = 800,
+        system,
+        messages = messages.ValueKind != System.Text.Json.JsonValueKind.Undefined
+            ? (object)messages : Array.Empty<object>()
+    };
+
+    var resp = await http.PostAsJsonAsync("https://api.anthropic.com/v1/messages", payload);
+    var result = await resp.Content.ReadAsStringAsync();
+    var doc = System.Text.Json.JsonDocument.Parse(result);
+    var reply = doc.RootElement.TryGetProperty("content", out var cont)
+        && cont.GetArrayLength() > 0
+        ? cont[0].GetProperty("text").GetString()
+        : "Нет ответа";
+
+    return Results.Json(new { reply });
 });
 
 await app.RunAsync();
-
-// ── Парсим userId из initData ─────────────────
-static long ParseUserId(string initData)
-{
-    foreach (var pair in initData.Split('&'))
-    {
-        var idx = pair.IndexOf('=');
-        if (idx < 0 || pair[..idx] != "user") continue;
-        try
-        {
-            var u = System.Text.Json.JsonDocument.Parse(Uri.UnescapeDataString(pair[(idx+1)..])).RootElement;
-            return u.TryGetProperty("id", out var id) ? id.GetInt64() : 0;
-        }
-        catch { return 0; }
-    }
-    return 0;
-}
