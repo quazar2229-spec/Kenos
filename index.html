@@ -689,16 +689,19 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 /* Скользящая подложка */
 #nav-slider{
   position:absolute;
-  left:0;top:4px;bottom:4px;
+  left:0;
+  top:50%;
+  transform:translateY(-50%);
+  height:46px;
   width:44px;
-  border-radius:11px;
-  background:rgba(255,255,255,.09);
-  border:1px solid rgba(255,255,255,.12);
-  transition:left .48s cubic-bezier(.25,.46,.45,.94),
-             width .48s cubic-bezier(.25,.46,.45,.94);
+  border-radius:10px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.14);
+  transition:left .5s cubic-bezier(.25,.46,.45,.94),
+             width .5s cubic-bezier(.25,.46,.45,.94);
   pointer-events:none;
   z-index:0;
-  box-shadow:0 1px 0 rgba(255,255,255,.08) inset;
+  box-shadow:0 1px 0 rgba(255,255,255,.1) inset;
 }
 
 .ni{
