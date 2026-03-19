@@ -152,14 +152,40 @@ app.MapPost("/api/ai", async (HttpContext ctx, IConfiguration config) =>
         var resp   = await http.PostAsync("https://api.anthropic.com/v1/messages",
             new StringContent(payload, System.Text.Encoding.UTF8, "application/json"));
         var result = await resp.Content.ReadAsStringAsync();
-        var doc    = System.Text.Json.JsonDocument.Parse(result);
-        var reply  = doc.RootElement.TryGetProperty("content", out var cont) && cont.GetArrayLength() > 0
-            ? cont[0].GetProperty("text").GetString()
-            : (lang == "en" ? "No response" : "Нет ответа");
-        return Results.Json(new { reply });
+
+        // Логируем для отладки
+        Console.WriteLine($"[AI] Status: {(int)resp.StatusCode}, Body: {result[..Math.Min(300, result.Length)]}");
+
+        var doc = System.Text.Json.JsonDocument.Parse(result);
+        var root2 = doc.RootElement;
+
+        // Anthropic возвращает error объект если что-то не так
+        if (root2.TryGetProperty("error", out var err))
+        {
+            var errMsg = err.TryGetProperty("message", out var em) ? em.GetString() : "API error";
+            Console.WriteLine($"[AI] Error: {errMsg}");
+            return Results.Json(new { reply = lang == "en" ? $"AI error: {errMsg}" : $"Ошибка AI: {errMsg}" });
+        }
+
+        string? reply = null;
+        if (root2.TryGetProperty("content", out var cont) && cont.ValueKind == System.Text.Json.JsonValueKind.Array)
+        {
+            foreach (var item in cont.EnumerateArray())
+            {
+                if (item.TryGetProperty("type", out var t) && t.GetString() == "text"
+                    && item.TryGetProperty("text", out var txt))
+                {
+                    reply = txt.GetString();
+                    break;
+                }
+            }
+        }
+
+        return Results.Json(new { reply = reply ?? (lang == "en" ? "No response" : "Нет ответа") });
     }
-    catch
+    catch (Exception ex)
     {
+        Console.WriteLine($"[AI] Exception: {ex.Message}");
         return Results.Json(new { reply = lang == "en" ? "Connection error" : "Ошибка соединения" });
     }
 });
