@@ -1187,7 +1187,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       </div>
     </div>
     <!-- Сообщения -->
-    <div id="ai-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:0 16px 12px;scrollbar-width:none;min-height:0;overscroll-behavior:contain;padding-bottom:80px;">
+    <div id="ai-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:0 16px 12px;scrollbar-width:none;min-height:0;overscroll-behavior:contain;padding-bottom:80px;margin-top:-20px;">
       <div id="ai-empty" style="text-align:center;padding:24px 0">
         <div style="font-size:28px;margin-bottom:8px;opacity:.4">◎</div>
         <div style="font-size:12px;color:var(--txt-muted);letter-spacing:.08em" data-i18n="ai.empty">Спроси что угодно о KENOS</div>
@@ -1252,7 +1252,6 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   max-width:480px;margin:0 auto;
   padding:8px 12px;
   background:#0d0d0d;
-  border-top:1px solid rgba(255,255,255,.08);
   display:none;
   z-index:199;
   transform:translateZ(0);
@@ -2105,7 +2104,7 @@ async function aiSend(){
 
   _aiHistory.push({role:'user', content:text});
   const _ub=document.createElement('div');
-  _ub.style.cssText='align-self:flex-end;max-width:80%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:16px 16px 4px 16px;padding:10px 14px;font-size:13px;color:var(--txt);line-height:1.5;opacity:0;transform:translateY(8px);transition:opacity .28s ease,transform .28s cubic-bezier(.25,.46,.45,.94)';
+  _ub.style.cssText='align-self:flex-end;max-width:80%;background:rgba(255,255,255,.08);border-radius:16px 16px 4px 16px;padding:10px 14px;font-size:13px;color:var(--txt);line-height:1.5;opacity:0;transform:translateY(8px);transition:opacity .28s ease,transform .28s cubic-bezier(.25,.46,.45,.94)';
   _ub.innerHTML=text.replace(/</g,'&lt;');
   msgs.appendChild(_ub);
   // Скрываем placeholder при первом сообщении
@@ -2146,7 +2145,7 @@ async function aiSend(){
 
     // Создаём пузырь и печатаем посимвольно
     const bubble = document.createElement('div');
-    bubble.style.cssText='align-self:flex-start;max-width:88%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:13px;color:var(--txt);line-height:1.6;opacity:0;transition:opacity .3s ease';
+    bubble.style.cssText='align-self:flex-start;max-width:88%;background:rgba(255,255,255,.04);border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:13px;color:var(--txt);line-height:1.6;opacity:0;transition:opacity .3s ease';
     msgs.appendChild(bubble);
     requestAnimationFrame(()=>{ bubble.style.opacity='1'; });
 
