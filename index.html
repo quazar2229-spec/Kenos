@@ -284,7 +284,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   border:1.5px solid transparent;
   border-top-color:var(--ac);
   border-right-color:var(--ac-dim);
-  animation:spin1 2s linear infinite;
+  animation:spin1 6s linear infinite;
   pointer-events:none;
   z-index:2;
 }
@@ -296,7 +296,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   border:1px solid transparent;
   border-bottom-color:var(--ac-soft);
   border-left-color:var(--ac-dim);
-  animation:spin2 3.4s linear infinite;
+  animation:spin2 10s linear infinite;
   pointer-events:none;
   z-index:1;
 }
@@ -396,9 +396,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .sec.on .sec-title,
 .sec.on .svc-grid,
 .sec.on .panel,
-.sec.on .links,
-.sec.on [style*="padding:0 16px"]{
-  animation: waveIn .65s ease both;
+.sec.on .links{
+  animation: waveIn .55s ease both;
   will-change:opacity,transform;
 }
 
@@ -412,7 +411,6 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .sec.on .panel:nth-child(5)  { animation-delay:.48s }
 .sec.on .panel:nth-child(6)  { animation-delay:.58s }
 .sec.on .links                { animation-delay:.18s }
-.sec.on [style*="padding:0 16px"]{ animation-delay:.22s }
 
 .sec.on .hero-eye{ animation:waveIn .55s .05s ease both }
 .sec.on .hero-h  { animation:waveIn .65s .12s ease both }
@@ -1176,7 +1174,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   </section>
 
   <!-- ИИ АССИСТЕНТ -->
-  <section id="s-ai" class="sec" style="height:calc(100vh - 60px);overflow:hidden;display:flex;flex-direction:column;position:relative;touch-action:none;">
+  <section id="s-ai" class="sec" style="height:calc(100vh - 60px);overflow:hidden;display:flex;flex-direction:column;position:relative;">
     <div style="flex-shrink:0;text-align:center;padding:18px 0 4px">
       <p class="hero-eye" style="margin-bottom:3px" data-i18n="ai.eye">Искусственный интеллект</p>
       <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px);margin-bottom:8px" data-i18n="ai.h">Ассистент</h1>
@@ -1189,7 +1187,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
         <div style="font-size:12px;color:var(--txt-muted);letter-spacing:.08em" data-i18n="ai.empty">Спроси что угодно о KENOS</div>
       </div>
     </div>
-    <div id="ai-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;padding:8px 16px 0;scrollbar-width:none;min-height:0;overscroll-behavior:contain;padding-bottom:calc(70px + env(safe-area-inset-bottom));">
+    <div id="ai-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:8px 16px calc(70px + env(safe-area-inset-bottom));scrollbar-width:none;min-height:0;overscroll-behavior:contain;">
   </section>
 
   </div><!-- /#view -->
@@ -1261,9 +1259,9 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
       onfocus="this.style.borderColor='rgba(255,255,255,.25)'"
       onblur="this.style.borderColor='var(--border)'"
       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();aiSend()}"
-      oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+      oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';const b=document.getElementById('ai-btn');if(b)b.style.height=this.style.height"></textarea>
     <button onclick="aiSend()" id="ai-btn"
-      style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid var(--border);color:var(--txt);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s">
+      style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid var(--border);color:var(--txt);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,height .15s ease;align-self:flex-end;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
     </button>
   </div>
@@ -2177,7 +2175,7 @@ async function aiSend(){
   _lb.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#fff;display:block;animation:dotPulse 1.2s 0s ease-in-out infinite;box-shadow:0 0 8px rgba(255,255,255,.8)"></span><span style="width:6px;height:6px;border-radius:50%;background:#fff;display:block;animation:dotPulse 1.2s .22s ease-in-out infinite;box-shadow:0 0 8px rgba(255,255,255,.8)"></span><span style="width:6px;height:6px;border-radius:50%;background:#fff;display:block;animation:dotPulse 1.2s .44s ease-in-out infinite;box-shadow:0 0 8px rgba(255,255,255,.8)"></span>';
   msgs.appendChild(_lb);
   requestAnimationFrame(()=>{ _lb.style.opacity='1'; });
-  msgs.scrollTop=msgs.scrollHeight;
+  msgs.scrollTo({top:msgs.scrollHeight,behavior:"smooth"});
 
   try{
     const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
@@ -2212,7 +2210,7 @@ async function aiSend(){
       if(i>=reply.length) return;
       const ch=reply[i++];
       bubble.innerHTML=reply.slice(0,i).replace(/</g,'&lt;').replace(/\n/g,'<br>');
-      msgs.scrollTop=msgs.scrollHeight;
+      msgs.scrollTo({top:msgs.scrollHeight,behavior:"smooth"});
       setTimeout(typeChar, ch==='\n'?30:ch===' '?18:12);
     }
     typeChar();
@@ -2222,7 +2220,7 @@ async function aiSend(){
     msgs.innerHTML+=`<div style="align-self:flex-start;padding:10px;font-size:12px;color:rgba(255,80,80,.7)">${e.message||'Ошибка'}</div>`;
   }
   btn.disabled=false; btn.style.opacity='1';
-  msgs.scrollTop=msgs.scrollHeight;
+  msgs.scrollTo({top:msgs.scrollHeight,behavior:"smooth"});
 }
 </script>
 </body>
