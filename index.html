@@ -400,10 +400,9 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   0%  {opacity:0;transform:translateY(6px)}
   100%{opacity:1;transform:translateY(0)}
 }
-.ai-letter{
-  display:inline-block;
-  animation:letterWave .25s ease both;
-}
+.ai-letter{display:inline-block;animation:letterWave .22s ease both;}
+
+@keyframes waveIn{
   from{ opacity:0; transform:translateY(14px); }
   to  { opacity:1; transform:translateY(0); }
 }
@@ -1968,25 +1967,35 @@ function showPromoResult(text, type){
 
 /* Фикс клавиатуры — держим ai-bar над клавиатурой */
 (()=>{
-  if(!window.visualViewport) return;
   const bar = document.getElementById('ai-bar');
-  const nav = document.getElementById('nav');
+
+  // Блокируем скролл страницы при фокусе на инпуте
+  const inp = document.getElementById('ai-input');
+  if(inp){
+    inp.addEventListener('focus', ()=>{
+      // Даём браузеру поднять клавиатуру, потом фиксируем позицию
+      setTimeout(()=>{
+        const msgs = document.getElementById('ai-msgs');
+        if(msgs) msgs.scrollTop = msgs.scrollHeight;
+      }, 350);
+    }, {passive:true});
+  }
+
+  if(!window.visualViewport || !bar) return;
+
   function onResize(){
-    if(!bar) return;
     const vv = window.visualViewport;
     const fromBottom = window.innerHeight - vv.height - vv.offsetTop;
     if(fromBottom > 50){
-      // Клавиатура открыта
-      bar.style.bottom = (fromBottom) + 'px';
-      // Скроллим msgs вниз
+      bar.style.bottom = fromBottom + 'px';
       const msgs = document.getElementById('ai-msgs');
       if(msgs) msgs.scrollTop = msgs.scrollHeight;
     } else {
       bar.style.bottom = 'calc(60px + env(safe-area-inset-bottom))';
     }
   }
-  window.visualViewport.addEventListener('resize', onResize);
-  window.visualViewport.addEventListener('scroll', onResize);
+  window.visualViewport.addEventListener('resize', onResize, {passive:true});
+  window.visualViewport.addEventListener('scroll', onResize, {passive:true});
 })();
 
 /* ══════════════════════════════════════
@@ -2239,18 +2248,10 @@ async function aiSend(){
     let i=0;
     function typeChar(){
       if(i>=reply.length){ msgs.scrollTop=msgs.scrollHeight; return; }
-      const ch=reply[i++];
-      if(ch==='\n'){
-        bubble.appendChild(document.createElement('br'));
-      } else {
-        const span=document.createElement('span');
-        span.className='ai-letter';
-        span.style.animationDelay=(i*0.012)+'s';
-        span.textContent=ch;
-        bubble.appendChild(span);
-      }
+      i++;
+      bubble.innerHTML=reply.slice(0,i).replace(/</g,'&lt;').replace(/\n/g,'<br>');
       msgs.scrollTop=msgs.scrollHeight;
-      setTimeout(typeChar, ch==='\n'?25:ch===' '?10:8);
+      setTimeout(typeChar, reply[i-1]==='\n'?25:reply[i-1]===' '?8:5);
     }
     typeChar();
   }catch(e){
