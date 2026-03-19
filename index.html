@@ -1194,7 +1194,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
         <div style="font-size:12px;color:var(--txt-muted);letter-spacing:.08em" data-i18n="ai.empty">Спроси что угодно о KENOS</div>
       </div>
     </div>
-    <div id="ai-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:8px 16px calc(80px + env(safe-area-inset-bottom));scrollbar-width:none;min-height:0;overscroll-behavior:contain;"></div>
+    <div id="ai-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:8px 16px calc(80px + env(safe-area-inset-bottom));scrollbar-width:none;min-height:0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;"></div>
   </section>
 
   </div><!-- /#view -->
@@ -1405,25 +1405,6 @@ function moveSlider(navItemEl){
   slider.style.transform = 'translateX('+x+'px)';
   slider.style.width = w + 'px';
 }
-
-/* Блокируем скролл страницы в разделе ИИ */
-let _aiTouchY = 0;
-document.addEventListener('touchstart', e => {
-  _aiTouchY = e.touches[0].clientY;
-}, { passive: true });
-
-document.addEventListener('touchmove', e => {
-  if(!document.getElementById('s-ai')?.classList.contains('on')) return;
-  const msgs = document.getElementById('ai-msgs');
-  const dy = e.touches[0].clientY - _aiTouchY; // + = вниз, - = вверх
-  // Внутри msgs — разрешаем скролл вверх только если есть что показать
-  if(msgs && msgs.contains(e.target)){
-    if(dy > 0 && msgs.scrollTop <= 0) e.preventDefault(); // тянут вниз в верхней позиции
-    return;
-  }
-  // Везде ещё — блокируем листание вниз
-  if(dy < 0) e.preventDefault(); // листание вниз
-}, { passive: false });
 
 function go(id){
   if(id === _cur){
