@@ -368,7 +368,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   opacity:0;
   pointer-events:none;
   visibility:hidden;
-  transition:opacity .38s ease, transform .38s cubic-bezier(.16,1,.3,1);
+  transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
   transform:translateY(12px);
 }
 
@@ -389,23 +389,22 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
    Каждый блок появляется снизу вверх
    с небольшим смещением — эффект волны
 ══════════════════════════════════════ */
+/* ══ AI секция — плавные анимации ══ */
 @keyframes bubbleIn{
-  from{opacity:0;transform:translateY(10px) scale(.96)}
-  to  {opacity:1;transform:translateY(0) scale(1)}
+  from{opacity:0;transform:translateY(12px)}
+  to  {opacity:1;transform:translateY(0)}
 }
 .ai-bubble{
-  animation:bubbleIn .28s cubic-bezier(.25,.46,.45,.94) both;
+  animation:bubbleIn .65s cubic-bezier(.16,1,.3,1) both;
   will-change:opacity,transform;
 }
-/* Волна появления букв */
-@keyframes letterWave{
-  0%  {opacity:0;transform:translateY(6px)}
-  100%{opacity:1;transform:translateY(0)}
-}
-.ai-letter{display:inline-block;animation:letterWave .22s ease both;}
+#s-ai.on > div:first-child p  { animation:waveIn .55s .03s cubic-bezier(.16,1,.3,1) both; }
+#s-ai.on > div:first-child h1  { animation:waveIn .65s .08s cubic-bezier(.16,1,.3,1) both; }
+#s-ai.on > div:first-child > div:nth-child(3){ animation:waveIn .55s .14s cubic-bezier(.16,1,.3,1) both; }
+#s-ai.on #ai-empty            { animation:waveIn .75s .22s cubic-bezier(.16,1,.3,1) both; }
 
 @keyframes waveIn{
-  from{ opacity:0; transform:translateY(14px); }
+  from{ opacity:0; transform:translateY(20px); }
   to  { opacity:1; transform:translateY(0); }
 }
 
@@ -413,8 +412,9 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .sec.on .sec-title,
 .sec.on .svc-grid,
 .sec.on .panel,
-.sec.on .links{
-  animation: waveIn .55s ease both;
+.sec.on .links,
+.sec.on .btn{
+  animation: waveIn .75s cubic-bezier(.16,1,.3,1) both;
   will-change:opacity,transform;
 }
 
@@ -429,15 +429,20 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .sec.on .panel:nth-child(6)  { animation-delay:.58s }
 .sec.on .links                { animation-delay:.18s }
 
-.sec.on .hero-eye{ animation:waveIn .55s .05s ease both }
-.sec.on .hero-h  { animation:waveIn .65s .12s ease both }
-.sec.on .hero-sub{ animation:waveIn .55s .20s ease both }
-.sec.on .divider { animation:waveIn .5s .26s ease both }
+/* Кнопки внутри панелей — волна после панели */
+.sec.on .btn:nth-of-type(1){ animation-delay:.22s }
+.sec.on .btn:nth-of-type(2){ animation-delay:.30s }
+.sec.on .btn.mt             { animation-delay:.30s }
 
-.sec.on .svc-card:nth-child(1){ animation:waveIn .55s .10s ease both }
-.sec.on .svc-card:nth-child(2){ animation:waveIn .55s .18s ease both }
-.sec.on .svc-card:nth-child(3){ animation:waveIn .55s .26s ease both }
-.sec.on .svc-card:nth-child(4){ animation:waveIn .55s .34s ease both }
+.sec.on .hero-eye{ animation:waveIn .75s .06s cubic-bezier(.16,1,.3,1) both }
+.sec.on .hero-h  { animation:waveIn .85s .14s cubic-bezier(.16,1,.3,1) both }
+.sec.on .hero-sub{ animation:waveIn .75s .22s cubic-bezier(.16,1,.3,1) both }
+.sec.on .divider { animation:waveIn .7s  .28s cubic-bezier(.16,1,.3,1) both }
+
+.sec.on .svc-card:nth-child(1){ animation:waveIn .75s .10s cubic-bezier(.16,1,.3,1) both }
+.sec.on .svc-card:nth-child(2){ animation:waveIn .75s .20s cubic-bezier(.16,1,.3,1) both }
+.sec.on .svc-card:nth-child(3){ animation:waveIn .75s .30s cubic-bezier(.16,1,.3,1) both }
+.sec.on .svc-card:nth-child(4){ animation:waveIn .75s .40s cubic-bezier(.16,1,.3,1) both }
 
 .sec.on .info-r{ animation:none; opacity:1; }
 
@@ -655,21 +660,49 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   width:100%;padding:13px 22px;border-radius:12px;
   font-family:var(--fb);font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
   cursor:pointer;border:none;text-decoration:none;
-  transition:transform .22s cubic-bezier(.25,.46,.45,.94),
+  transition:transform .25s cubic-bezier(.16,1,.3,1),
              background .25s ease,
+             box-shadow .25s ease,
              opacity .25s ease;
   backface-visibility:hidden;
   -webkit-backface-visibility:hidden;
 }
-.btn:active{transform:scale(.93)!important;transition:transform .06s ease!important}
+.btn:hover{ transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.35); }
+.btn:active{ transform:scale(.93)!important; transition:transform .08s ease!important; box-shadow:none; }
 .btn-p{
   background:rgba(228,228,228,.92);
   color:rgba(0,0,0,.72);
   font-weight:600;letter-spacing:.2em;
+  position:relative;overflow:hidden;
 }
-.btn-p:active{background:rgba(255,255,255,.97);transform:scale(.95)!important}
+.btn-p::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0);
+  border-radius:inherit;
+  transition:background .3s ease;
+  pointer-events:none;
+}
+.btn-p:hover{ background:rgba(255,255,255,.98); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.4); }
+.btn-p:active{ background:rgba(255,255,255,.97);transform:scale(.93)!important; box-shadow:none; }
+.btn-p:active::after{ background:rgba(0,0,0,.06); }
 .btn-s{background:rgba(255,255,255,.04);color:var(--txt);border:1px solid var(--border)}
-.btn-s:active{background:rgba(255,255,255,.08)}
+.btn-s:hover{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.2); }
+.btn-s:active{ background:rgba(255,255,255,.08); }
+
+/* AI инпут — анимация появления */
+@keyframes inputSlideIn{
+  from{ opacity:0; transform:translateY(12px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+#ai-bar[style*="block"]{
+  animation:inputSlideIn .45s cubic-bezier(.16,1,.3,1) both;
+}
+#ai-input{
+  transition:border-color .25s ease, height .2s cubic-bezier(.16,1,.3,1)!important;
+}
+#ai-input:focus{
+  box-shadow:0 0 0 1px rgba(255,255,255,.12);
+}
 .mt{margin-top:11px}
 
 /* ═══════════════════════════════════════════
@@ -887,6 +920,56 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 @supports (-webkit-touch-callout:none){
   #loader,#app{ min-height:-webkit-fill-available; }
 }
+
+
+/* ══ УНИВЕРСАЛЬНАЯ TAP АНИМАЦИЯ ══ */
+*{-webkit-tap-highlight-color:transparent}
+
+/* Всё кликабельное */
+button, [onclick], .svc-card, .btn, .lpill, .ni,
+.dlink, .lang-b, .key-copy, .info-r a, .panel,
+.hdr-avatar-wrap, .logo-t{
+  transition:transform .2s cubic-bezier(.16,1,.3,1),
+             opacity .2s ease,
+             background .2s ease,
+             border-color .2s ease,
+             box-shadow .2s ease;
+  cursor:pointer;
+}
+
+/* Нажатие — мгновенный feedback */
+button:active, [onclick]:active, .svc-card:active,
+.btn:active, .lpill:active, .dlink:active,
+.lang-b:active, .hdr-avatar-wrap:active{
+  transform:scale(.94)!important;
+  opacity:.8;
+}
+
+/* Нав-айтемы — чуть мягче */
+.ni:active{ transform:scale(.88)!important; }
+
+/* Ссылки внутри панелей */
+a:active{ opacity:.6; }
+
+/* Карточки сервисов при hover (ПК) */
+.svc-card:hover{
+  transform:translateY(-2px) scale(1.01);
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+}
+.svc-card:active{
+  transform:scale(.94)!important;
+  box-shadow:none;
+}
+
+/* Кнопки при hover */
+
+
+/* Кнопка отправки ии */
+#ai-btn:hover{ background:rgba(255,255,255,.2)!important; transform:scale(1.06); }
+#ai-btn:active{ transform:scale(.88)!important; }
+
+/* Lang switcher */
+.lang-b:hover{ opacity:.8; }
 </style>
 </head>
 <body>
@@ -1258,7 +1341,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 
 
 <!-- ══ AI INPUT BAR ══ -->
-<div id="ai-bar" style="position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:0;right:0;max-width:480px;margin:0 auto;padding:8px 12px 10px;background:#0d0d0d;display:none;z-index:199;transform:translateZ(0);transition:bottom .4s cubic-bezier(.16,1,.3,1),opacity .3s ease,transform .4s cubic-bezier(.16,1,.3,1);">
+<div id="ai-bar" style="position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:0;right:0;max-width:480px;margin:0 auto;padding:8px 12px 10px;background:#0d0d0d;display:none;z-index:199;transform:translateZ(0);transition:bottom .55s cubic-bezier(.16,1,.3,1),opacity .55s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1);">
   <div style="display:flex;gap:8px;align-items:flex-end;">
     <textarea id="ai-input" placeholder="Сообщение..." data-i18n-ph="ai.ph" rows="1"
       style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:10px 14px;color:#fff;font-family:inherit;font-size:15px;resize:none;outline:none;max-height:120px;line-height:1.45;-webkit-appearance:none;overflow:hidden;transition:border-color .2s;"
@@ -1433,14 +1516,12 @@ function go(id){
   // Убираем старую секцию
   prev?.classList.remove('on');
 
+  // Показываем новую — double rAF чтобы waveIn перезапустился
   requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      // Сбрасываем анимации — снимаем/вешаем .on чтобы waveIn перезапустился
-      next.classList.remove('on');
-      void next.offsetWidth; // reflow только этого элемента
-      next.classList.add('on');
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    });
+    next.classList.remove('on');
+    void next.offsetWidth;
+    next.classList.add('on');
+    window.scrollTo({ top: 0, behavior: 'instant' });
   });
 
   // Навбар — обновляем сразу
@@ -1449,21 +1530,19 @@ function go(id){
   activeNav?.classList.add('on');
   moveSlider(activeNav);
 
-  // AI input bar — показываем только в разделе ИИ
+  // AI input bar — мгновенно скрываем, плавно показываем
   const aiBar = document.getElementById('ai-bar');
-  if(aiBar) aiBar._hideN = 0;
   if(aiBar){
     if(id === 's-ai'){
+      aiBar.style.opacity='0';
+      aiBar.style.transform='translateZ(0) translateY(16px)';
       aiBar.style.display='block';
-      requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
         aiBar.style.opacity='1';
         aiBar.style.transform='translateZ(0) translateY(0)';
-      });
+      }));
     } else {
-      aiBar.style.opacity='0';
-      aiBar.style.transform='translateZ(0) translateY(20px)';
-      const _hideId = ++aiBar._hideN;
-      setTimeout(()=>{ if(aiBar._hideN===_hideId) aiBar.style.display='none'; }, 400);
+      aiBar.style.display='none';
     }
   }
 }
