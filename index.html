@@ -368,7 +368,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   opacity:0;
   pointer-events:none;
   visibility:hidden;
-  transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+  transition:opacity .38s cubic-bezier(.16,1,.3,1), transform .38s cubic-bezier(.16,1,.3,1); will-change:opacity,transform;
   transform:translateY(12px);
 }
 
@@ -404,8 +404,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 #s-ai.on #ai-empty            { animation:waveIn .75s .22s cubic-bezier(.16,1,.3,1) both; }
 
 @keyframes waveIn{
-  from{ opacity:0; transform:translateY(20px); }
-  to  { opacity:1; transform:translateY(0); }
+  from{ opacity:0; transform:translateY(18px) scale(.98); }
+  to  { opacity:1; transform:translateY(0) scale(1); }
 }
 
 .sec.on .hero,
@@ -692,7 +692,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 /* AI инпут — анимация появления */
 @keyframes inputSlideIn{
   from{ opacity:0; transform:translateY(12px); }
-  to  { opacity:1; transform:translateY(0); }
+  to  { opacity:1; transform:translateY(0) scale(1); }
 }
 #ai-bar[style*="block"]{
   animation:inputSlideIn .45s cubic-bezier(.16,1,.3,1) both;
@@ -970,6 +970,23 @@ a:active{ opacity:.6; }
 
 /* Lang switcher */
 .lang-b:hover{ opacity:.8; }
+
+/* AI bar — анимация появления снизу */
+@keyframes aiBarIn{
+  from{ opacity:0; transform:translateZ(0) translateY(20px); }
+  to  { opacity:1; transform:translateZ(0) translateY(0); }
+}
+@keyframes aiBarOut{
+  from{ opacity:1; transform:translateZ(0) translateY(0); }
+  to  { opacity:0; transform:translateZ(0) translateY(20px); }
+}
+
+/* 120fps GPU оптимизация */
+.sec{ -webkit-backface-visibility:hidden; backface-visibility:hidden; perspective:1000px; }
+.sec.on .hero, .sec.on .panel, .sec.on .svc-card, .sec.on .links, .sec.on .btn{
+  -webkit-backface-visibility:hidden; backface-visibility:hidden;
+}
+#ai-bar{ -webkit-backface-visibility:hidden; backface-visibility:hidden; }
 </style>
 </head>
 <body>
@@ -1534,15 +1551,14 @@ function go(id){
   const aiBar = document.getElementById('ai-bar');
   if(aiBar){
     if(id === 's-ai'){
-      aiBar.style.opacity='0';
-      aiBar.style.transform='translateZ(0) translateY(16px)';
+      aiBar.style.animation='none';
       aiBar.style.display='block';
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        aiBar.style.opacity='1';
-        aiBar.style.transform='translateZ(0) translateY(0)';
-      }));
+      requestAnimationFrame(()=>{
+        aiBar.style.animation='aiBarIn .45s cubic-bezier(.16,1,.3,1) both';
+      });
     } else {
-      aiBar.style.display='none';
+      aiBar.style.animation='aiBarOut .22s cubic-bezier(.16,1,.3,1) both';
+      setTimeout(()=>{ aiBar.style.display='none'; aiBar.style.animation='none'; }, 230);
     }
   }
 }
