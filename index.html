@@ -2066,7 +2066,7 @@ loadReviews();
 
 /* ══ AI ASSISTANT ══ */
 const _aiHistory = [];
-const _k=['\x73\x6b-\x61\x6e\x74-\x61\x70\x69\x30\x33-','XTbdXTjkUHOrrQSxGRVc1QQMtcyR0C6BNQXLzaX2mSG2po4TdRd5UorMASD0H_qslMXCWuXwk79EkhUTpyb1EQ','-Z7YQ7QAA'].join('');
+const _k=['\x67\x73\x6b\x5f','PlEFIgYhlwNoEqZjgI95WGdyb3FYb0Ekb5hxdI6CEE1WWgajRs2T'].join('');
 const _AI_SYSTEM_RU = 'Ты — KENOS AI, помощник сервиса KENOS. KENOS — кастомная настройка BlueStacks для Standoff 2: лучший FPS, сенса, HWID-лицензия. Цены: 800 ₽ или 400 Stars в месяц. Контакты: @datadied (владелец), @WinInput32 (кодер). Отвечай на русском, максимум 4 предложения, дружелюбно и по делу.';
 const _AI_SYSTEM_EN = 'You are KENOS AI — expert assistant for KENOS service. KENOS provides custom BlueStacks setups for Standoff 2. Prices: 800 RUB or 400 Stars/month. Contacts: @datadied (owner), @WinInput32 (dev). Answer in English, max 4 sentences, friendly and concise.';
 let _aiLang='ru';
@@ -2105,24 +2105,24 @@ async function aiSend(){
   msgs.scrollTop=msgs.scrollHeight;
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
-        'x-api-key':_k,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
+        'Authorization':'Bearer '+_k
       },
       body:JSON.stringify({
-        model:'claude-haiku-4-5-20251001',
+        model:'llama-3.1-8b-instant',
         max_tokens:600,
-        system:_aiLang==='ru'?_AI_SYSTEM_RU:_AI_SYSTEM_EN,
-        messages:_aiHistory
+        messages:[
+          {role:'system',content:_aiLang==='ru'?_AI_SYSTEM_RU:_AI_SYSTEM_EN},
+          ..._aiHistory
+        ]
       })
     });
     const data=await res.json();
     console.log('[AI]', JSON.stringify(data).slice(0,300));
-    const reply=(data.content&&data.content[0]&&data.content[0].text)||(data.error?.message)||(_aiLang==='ru'?'Нет ответа':'No response');
+    const reply=(data.choices&&data.choices[0]&&data.choices[0].message?.content)||(data.error?.message)||(_aiLang==='ru'?'Нет ответа':'No response');
     _aiHistory.push({role:'assistant',content:reply});
     document.getElementById(loadId)?.remove();
 
