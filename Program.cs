@@ -133,7 +133,7 @@ app.MapPost("/api/ai", async (HttpContext ctx, IConfiguration config) =>
         Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY")
         ?? Environment.GetEnvironmentVariable("KENOS_ANTHROPIC_API_KEY")
         ?? config["ANTHROPIC_API_KEY"]
-        ?? "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";
+        ?? "";
 
     if (string.IsNullOrWhiteSpace(apiKey))
         return Results.Json(new { reply = lang == "en"
