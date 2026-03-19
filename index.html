@@ -2172,7 +2172,7 @@ async function aiSend(){
   _lb.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#fff;display:block;animation:dotPulse 1.2s 0s ease-in-out infinite;box-shadow:0 0 8px rgba(255,255,255,.8)"></span><span style="width:6px;height:6px;border-radius:50%;background:#fff;display:block;animation:dotPulse 1.2s .22s ease-in-out infinite;box-shadow:0 0 8px rgba(255,255,255,.8)"></span><span style="width:6px;height:6px;border-radius:50%;background:#fff;display:block;animation:dotPulse 1.2s .44s ease-in-out infinite;box-shadow:0 0 8px rgba(255,255,255,.8)"></span>';
   msgs.appendChild(_lb);
   requestAnimationFrame(()=>{ _lb.style.opacity='1'; });
-  msgs.scrollTo({top:msgs.scrollHeight,behavior:"smooth"});
+  msgs.scrollTop=msgs.scrollHeight;
 
   try{
     const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
@@ -2201,6 +2201,7 @@ async function aiSend(){
     bubble.className='ai-bubble';
     bubble.style.cssText='align-self:flex-start;max-width:84%;background:rgba(255,255,255,.05);border-radius:18px 18px 18px 4px;padding:9px 14px;font-size:14px;color:rgba(255,255,255,.88);line-height:1.5;word-break:break-word;';
     msgs.appendChild(bubble);
+    msgs.scrollTop = msgs.scrollHeight;
     
 
     let i=0;
@@ -2208,7 +2209,7 @@ async function aiSend(){
       if(i>=reply.length) return;
       const ch=reply[i++];
       bubble.innerHTML=reply.slice(0,i).replace(/</g,'&lt;').replace(/\n/g,'<br>');
-      msgs.scrollTo({top:msgs.scrollHeight,behavior:"smooth"});
+      msgs.scrollTop=msgs.scrollHeight;
       setTimeout(typeChar, ch==='\n'?30:ch===' '?18:12);
     }
     typeChar();
@@ -2218,7 +2219,7 @@ async function aiSend(){
     msgs.innerHTML+=`<div style="align-self:flex-start;padding:10px;font-size:12px;color:rgba(255,80,80,.7)">${e.message||'Ошибка'}</div>`;
   }
   btn.disabled=false; btn.style.opacity='1';
-  msgs.scrollTo({top:msgs.scrollHeight,behavior:"smooth"});
+  msgs.scrollTop=msgs.scrollHeight;
 }
 </script>
 </body>
