@@ -387,7 +387,14 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
    Каждый блок появляется снизу вверх
    с небольшим смещением — эффект волны
 ══════════════════════════════════════ */
-@keyframes waveIn{
+@keyframes bubbleIn{
+  from{opacity:0;transform:translateY(10px) scale(.96)}
+  to  {opacity:1;transform:translateY(0) scale(1)}
+}
+.ai-bubble{
+  animation:bubbleIn .28s cubic-bezier(.25,.46,.45,.94) both;
+  will-change:opacity,transform;
+}
   from{ opacity:0; transform:translateY(14px); }
   to  { opacity:1; transform:translateY(0); }
 }
@@ -1187,7 +1194,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
         <div style="font-size:12px;color:var(--txt-muted);letter-spacing:.08em" data-i18n="ai.empty">Спроси что угодно о KENOS</div>
       </div>
     </div>
-    <div id="ai-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:8px 16px calc(70px + env(safe-area-inset-bottom));scrollbar-width:none;min-height:0;overscroll-behavior:contain;">
+    <div id="ai-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:8px 16px calc(80px + env(safe-area-inset-bottom));scrollbar-width:none;min-height:0;overscroll-behavior:contain;"></div>
   </section>
 
   </div><!-- /#view -->
@@ -2160,13 +2167,14 @@ async function aiSend(){
 
   _aiHistory.push({role:'user', content:text});
   const _ub=document.createElement('div');
-  _ub.style.cssText='align-self:flex-end;max-width:80%;background:rgba(255,255,255,.08);border-radius:16px 16px 4px 16px;padding:10px 14px;font-size:13px;color:var(--txt);line-height:1.5;opacity:0;transform:translateY(8px);transition:opacity .28s ease,transform .28s cubic-bezier(.25,.46,.45,.94)';
+  _ub.className='ai-bubble';
+  _ub.style.cssText='align-self:flex-end;max-width:80%;background:rgba(255,255,255,.08);border-radius:16px 16px 4px 16px;padding:10px 14px;font-size:13px;color:var(--txt);line-height:1.5;';
   _ub.innerHTML=text.replace(/</g,'&lt;');
   msgs.appendChild(_ub);
   // Скрываем placeholder при первом сообщении
   const empty=document.getElementById('ai-empty');
   if(empty) empty.style.display='none';
-  requestAnimationFrame(()=>{ _ub.style.opacity='1'; _ub.style.transform='translateY(0)'; });
+  
 
   const loadId='ail'+Date.now();
   const _lb=document.createElement('div');
@@ -2201,9 +2209,10 @@ async function aiSend(){
 
     // Создаём пузырь и печатаем посимвольно
     const bubble = document.createElement('div');
-    bubble.style.cssText='align-self:flex-start;max-width:88%;background:rgba(255,255,255,.04);border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:13px;color:var(--txt);line-height:1.6;opacity:0;transition:opacity .3s ease';
+    bubble.className='ai-bubble';
+    bubble.style.cssText='align-self:flex-start;max-width:88%;background:rgba(255,255,255,.04);border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:13px;color:var(--txt);line-height:1.6;';
     msgs.appendChild(bubble);
-    requestAnimationFrame(()=>{ bubble.style.opacity='1'; });
+    
 
     let i=0;
     function typeChar(){
