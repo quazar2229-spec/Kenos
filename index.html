@@ -368,7 +368,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   opacity:0;
   pointer-events:none;
   visibility:hidden;
-  transition:opacity .32s var(--smooth);
+  transition:opacity .38s ease, transform .38s cubic-bezier(.16,1,.3,1);
+  transform:translateY(12px);
 }
 
 .sec.on{
@@ -376,6 +377,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   opacity:1;
   pointer-events:auto;
   visibility:visible;
+  transform:translateY(0);
 }
 
 /* ══════════════════════════════════════
@@ -1256,7 +1258,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 
 
 <!-- ══ AI INPUT BAR ══ -->
-<div id="ai-bar" style="position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:0;right:0;max-width:480px;margin:0 auto;padding:8px 12px 10px;background:#0d0d0d;display:none;z-index:199;transform:translateZ(0);">
+<div id="ai-bar" style="position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:0;right:0;max-width:480px;margin:0 auto;padding:8px 12px 10px;background:#0d0d0d;display:none;z-index:199;transform:translateZ(0);transition:bottom .4s cubic-bezier(.16,1,.3,1),opacity .3s ease,transform .4s cubic-bezier(.16,1,.3,1);">
   <div style="display:flex;gap:8px;align-items:flex-end;">
     <textarea id="ai-input" placeholder="Сообщение..." data-i18n-ph="ai.ph" rows="1"
       style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:10px 14px;color:#fff;font-family:inherit;font-size:15px;resize:none;outline:none;max-height:120px;line-height:1.45;-webkit-appearance:none;overflow:hidden;transition:border-color .2s;"
@@ -1449,7 +1451,21 @@ function go(id){
 
   // AI input bar — показываем только в разделе ИИ
   const aiBar = document.getElementById('ai-bar');
-  if(aiBar) aiBar.style.display = id === 's-ai' ? 'block' : 'none';
+  if(aiBar) aiBar._hideN = 0;
+  if(aiBar){
+    if(id === 's-ai'){
+      aiBar.style.display='block';
+      requestAnimationFrame(()=>{
+        aiBar.style.opacity='1';
+        aiBar.style.transform='translateZ(0) translateY(0)';
+      });
+    } else {
+      aiBar.style.opacity='0';
+      aiBar.style.transform='translateZ(0) translateY(20px)';
+      const _hideId = ++aiBar._hideN;
+      setTimeout(()=>{ if(aiBar._hideN===_hideId) aiBar.style.display='none'; }, 400);
+    }
+  }
 }
 
 /* ══════════════════════════════════════
