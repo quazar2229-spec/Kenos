@@ -106,7 +106,7 @@ app.MapPost("/api/key", async (HttpContext ctx, IKeyRepo keys, InitDataValidator
 });
 
 // ── /api/ai — прокси к Anthropic ──────────────────────────
-app.MapPost("/api/ai", async (HttpContext ctx) =>
+app.MapPost("/api/ai", async (HttpContext ctx, IConfiguration config) =>
 {
     var body = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
     System.Text.Json.JsonElement root;
@@ -115,41 +115,53 @@ app.MapPost("/api/ai", async (HttpContext ctx) =>
 
     var lang = root.TryGetProperty("lang", out var l) ? l.GetString() : "ru";
     var system = lang == "en"
-        ? "You are KENOS assistant for BlueStacks setup in Standoff 2. Answer briefly in English."
-        : "Ты — помощник KENOS, сервиса настройки BlueStacks для Standoff 2. Отвечай кратко, по делу, на русском.";
+        ? """
+          You are KENOS AI — expert assistant for KENOS service.
+          KENOS provides custom BlueStacks setups for Standoff 2.
+          Prices: 800 RUB or 400 Stars/month. Contacts: @datadied (owner), @WinInput32 (dev).
+          Answer in English, max 4 sentences, friendly and concise.
+          """
+        : """
+          Ты — KENOS AI, помощник сервиса KENOS.
+          KENOS — кастомная настройка BlueStacks для Standoff 2: лучший FPS, сенса, HWID-лицензия.
+          Цены: 800 ₽ или 400 Stars в месяц. Контакты: @datadied (владелец), @WinInput32 (кодер).
+          Отвечай на русском, максимум 4 предложения, дружелюбно и по делу.
+          """;
 
-    // Читаем ключ напрямую из окружения
-    var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY") ?? "";
+    // Ищем ключ во всех источниках: env → IConfiguration → KENOS_ prefix
+    var apiKey =
+        Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY")
+        ?? config["ANTHROPIC_API_KEY"]
+        ?? config["Anthropic:ApiKey"]
+        ?? "";
+
     if (string.IsNullOrWhiteSpace(apiKey))
-    {
-        // Дебаг — показываем все переменные содержащие ANTHROP
-        var envKeys = Environment.GetEnvironmentVariables().Keys
-            .Cast<string>()
-            .Where(k => k.Contains("ANTHROP", StringComparison.OrdinalIgnoreCase))
-            .ToList();
-        var hint = envKeys.Any() ? string.Join(",", envKeys) : "не найдено";
-        return Results.Json(new { reply = $"API ключ не найден. Переменные: {hint}" });
-    }
+        return Results.Json(new { reply = lang == "en"
+            ? "AI service is not configured yet. Contact @datadied."
+            : "AI сервис ещё не настроен. Обратитесь к @datadied." });
 
     using var http = new HttpClient();
     http.DefaultRequestHeaders.Add("x-api-key", apiKey);
     http.DefaultRequestHeaders.Add("anthropic-version", "2023-06-01");
 
     var messages = root.TryGetProperty("messages", out var m) ? m.GetRawText() : "[]";
-    var payload = $"{{\"model\":\"claude-haiku-4-5-20251001\",\"max_tokens\":800,\"system\":{System.Text.Json.JsonSerializer.Serialize(system)},\"messages\":{messages}}}";
-
-    var resp = await http.PostAsync("https://api.anthropic.com/v1/messages",
-        new StringContent(payload, System.Text.Encoding.UTF8, "application/json"));
-    var result = await resp.Content.ReadAsStringAsync();
+    var payload  = $$"""{"model":"claude-haiku-4-5-20251001","max_tokens":600,"system":{{System.Text.Json.JsonSerializer.Serialize(system)}},"messages":{{messages}}}""";
 
     try
     {
-        var doc = System.Text.Json.JsonDocument.Parse(result);
-        var reply = doc.RootElement.TryGetProperty("content", out var cont) && cont.GetArrayLength() > 0
-            ? cont[0].GetProperty("text").GetString() : "Нет ответа";
+        var resp   = await http.PostAsync("https://api.anthropic.com/v1/messages",
+            new StringContent(payload, System.Text.Encoding.UTF8, "application/json"));
+        var result = await resp.Content.ReadAsStringAsync();
+        var doc    = System.Text.Json.JsonDocument.Parse(result);
+        var reply  = doc.RootElement.TryGetProperty("content", out var cont) && cont.GetArrayLength() > 0
+            ? cont[0].GetProperty("text").GetString()
+            : (lang == "en" ? "No response" : "Нет ответа");
         return Results.Json(new { reply });
     }
-    catch { return Results.Json(new { reply = "Ошибка ответа от AI" }); }
+    catch
+    {
+        return Results.Json(new { reply = lang == "en" ? "Connection error" : "Ошибка соединения" });
+    }
 });
 
 await app.RunAsync();
