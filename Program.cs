@@ -105,6 +105,19 @@ app.MapPost("/api/key", async (HttpContext ctx, IKeyRepo keys, InitDataValidator
     return Results.Ok(new { active = true, key = key.KeyValue, hwid = key.Hwid, plan = key.Plan, expires = key.ExpiresAt.ToString("dd.MM.yyyy") });
 });
 
+// ── /api/aitest — проверка ключа ──────────────────────────
+app.MapGet("/api/aitest", (IConfiguration config) =>
+{
+    var k1 = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY") ?? "";
+    var k2 = Environment.GetEnvironmentVariable("KENOS_ANTHROPIC_API_KEY") ?? "";
+    var k3 = config["ANTHROPIC_API_KEY"] ?? "";
+    return Results.Json(new {
+        env1 = k1.Length > 0 ? $"OK ({k1.Length} chars, starts: {k1[..8]})" : "EMPTY",
+        env2 = k2.Length > 0 ? $"OK ({k2.Length} chars)" : "EMPTY",
+        cfg  = k3.Length > 0 ? $"OK ({k3.Length} chars)" : "EMPTY",
+    });
+});
+
 // ── /api/ai — прокси к Anthropic ──────────────────────────
 app.MapPost("/api/ai", async (HttpContext ctx, IConfiguration config) =>
 {
