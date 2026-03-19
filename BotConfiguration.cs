@@ -11,6 +11,7 @@ public sealed class BotConfig
     public string WebAppUrl   { get; init; } = "";
     public string JsonBinKey  { get; init; } = "";
     public string JsonBinId   { get; init; } = "";
+    public string AnthropicKey { get; init; } = "";
 
     public string SupportChatLink { get; init; } = "https://t.me/scantoptmz";
     public string ChannelLink     { get; init; } = "https://t.me/scantoptmz";

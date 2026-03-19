@@ -144,8 +144,7 @@ app.MapPost("/api/ai", async (HttpContext ctx, IConfiguration config) =>
     // API ключ
     var apiKey =
         Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY")
-        ?? Environment.GetEnvironmentVariable("KENOS_ANTHROPIC_API_KEY")
-        ?? config["ANTHROPIC_API_KEY"]
+        ?? cfg.AnthropicKey
         ?? "";
 
     if (string.IsNullOrWhiteSpace(apiKey))
