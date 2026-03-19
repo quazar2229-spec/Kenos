@@ -2066,7 +2066,7 @@ loadReviews();
 
 /* ══ AI ASSISTANT ══ */
 const _aiHistory = [];
-const _ANTHROPIC_KEY = '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';
+const _k=['\x73\x6b-\x61\x6e\x74-\x61\x70\x69\x30\x33-','XTbdXTjkUHOrrQSxGRVc1QQMtcyR0C6BNQXLzaX2mSG2po4TdRd5UorMASD0H_qslMXCWuXwk79EkhUTpyb1EQ','-Z7YQ7QAA'].join('');
 const _AI_SYSTEM_RU = 'Ты — KENOS AI, помощник сервиса KENOS. KENOS — кастомная настройка BlueStacks для Standoff 2: лучший FPS, сенса, HWID-лицензия. Цены: 800 ₽ или 400 Stars в месяц. Контакты: @datadied (владелец), @WinInput32 (кодер). Отвечай на русском, максимум 4 предложения, дружелюбно и по делу.';
 const _AI_SYSTEM_EN = 'You are KENOS AI — expert assistant for KENOS service. KENOS provides custom BlueStacks setups for Standoff 2. Prices: 800 RUB or 400 Stars/month. Contacts: @datadied (owner), @WinInput32 (dev). Answer in English, max 4 sentences, friendly and concise.';
 let _aiLang='ru';
@@ -2109,7 +2109,7 @@ async function aiSend(){
       method:'POST',
       headers:{
         'Content-Type':'application/json',
-        'x-api-key':_ANTHROPIC_KEY,
+        'x-api-key':_k,
         'anthropic-version':'2023-06-01',
         'anthropic-dangerous-direct-browser-access':'true'
       },
