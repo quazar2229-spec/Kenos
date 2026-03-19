@@ -1177,7 +1177,6 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 
   <!-- ИИ АССИСТЕНТ -->
   <section id="s-ai" class="sec" style="height:calc(100vh - 60px);overflow:hidden;display:flex;flex-direction:column;position:relative;">
-    <!-- Заголовок компактный -->
     <div style="flex-shrink:0;text-align:center;padding:6px 0 4px">
       <p class="hero-eye" style="font-size:8px;letter-spacing:.35em;margin-bottom:3px" data-i18n="ai.eye">Искусственный интеллект</p>
       <h1 class="hero-h" style="font-size:clamp(22px,6vw,36px);margin-bottom:4px" data-i18n="ai.h">Ассистент</h1>
@@ -1186,8 +1185,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
         <button onclick="setAiLang('en')" id="ai-lang-en" style="padding:3px 12px;border-radius:20px;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-family:var(--fb);font-size:9px;font-weight:600;letter-spacing:.1em;cursor:pointer">EN</button>
       </div>
     </div>
-    <!-- Сообщения — скролл только внутри -->
-    <div id="ai-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:8px 16px 90px;scrollbar-width:none;min-height:0;overscroll-behavior:contain;">
+    <!-- Сообщения — нижний паддинг = высота инпута + нав -->
+    <div id="ai-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:8px 16px 0;scrollbar-width:none;min-height:0;overscroll-behavior:contain;padding-bottom:calc(70px + env(safe-area-inset-bottom));">
       <div id="ai-empty" style="text-align:center;padding:16px 0">
         <div style="font-size:28px;margin-bottom:8px;opacity:.4">◎</div>
         <div style="font-size:12px;color:var(--txt-muted);letter-spacing:.08em" data-i18n="ai.empty">Спроси что угодно о KENOS</div>
@@ -1248,13 +1247,15 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 <!-- ══ NAV ══ -->
 <!-- ══ AI INPUT BAR (фиксированный над навом) ══ -->
 <div id="ai-bar" style="
-  position:fixed;bottom:60px;left:0;right:0;
+  position:fixed;
+  bottom:calc(60px + env(safe-area-inset-bottom));
+  left:0;right:0;
   max-width:480px;margin:0 auto;
   padding:8px 12px;
   background:#0d0d0d;
   display:none;
   z-index:199;
-  transform:translateZ(0);
+  -webkit-transform:translateZ(0);transform:translateZ(0);
 ">
   <div style="display:flex;gap:8px;align-items:flex-end;">
     <textarea id="ai-input" placeholder="Сообщение..." data-i18n-ph="ai.ph" rows="1"
