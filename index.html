@@ -2066,6 +2066,9 @@ loadReviews();
 
 /* ══ AI ASSISTANT ══ */
 const _aiHistory = [];
+const _ANTHROPIC_KEY = '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';
+const _AI_SYSTEM_RU = 'Ты — KENOS AI, помощник сервиса KENOS. KENOS — кастомная настройка BlueStacks для Standoff 2: лучший FPS, сенса, HWID-лицензия. Цены: 800 ₽ или 400 Stars в месяц. Контакты: @datadied (владелец), @WinInput32 (кодер). Отвечай на русском, максимум 4 предложения, дружелюбно и по делу.';
+const _AI_SYSTEM_EN = 'You are KENOS AI — expert assistant for KENOS service. KENOS provides custom BlueStacks setups for Standoff 2. Prices: 800 RUB or 400 Stars/month. Contacts: @datadied (owner), @WinInput32 (dev). Answer in English, max 4 sentences, friendly and concise.';
 let _aiLang='ru';
 function setAiLang(l){
   _aiLang=l;
@@ -2102,16 +2105,23 @@ async function aiSend(){
   msgs.scrollTop=msgs.scrollHeight;
 
   try{
-    const res=await fetch(API_BASE+'/api/ai',{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':_ANTHROPIC_KEY,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
       body:JSON.stringify({
-        lang:_aiLang,
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:600,
+        system:_aiLang==='ru'?_AI_SYSTEM_RU:_AI_SYSTEM_EN,
         messages:_aiHistory
       })
     });
     const data=await res.json();
-    const reply=data.reply||data.content?.[0]?.text||'Нет ответа';
+    const reply=(data.content&&data.content[0]&&data.content[0].text)||(_aiLang==='ru'?'Нет ответа':'No response');
     _aiHistory.push({role:'assistant',content:reply});
     document.getElementById(loadId)?.remove();
 
