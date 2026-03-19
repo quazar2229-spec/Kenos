@@ -128,12 +128,12 @@ app.MapPost("/api/ai", async (HttpContext ctx, IConfiguration config) =>
           Отвечай на русском, максимум 4 предложения, дружелюбно и по делу.
           """;
 
-    // Ищем ключ во всех источниках: env → IConfiguration → KENOS_ prefix
+    // API ключ
     var apiKey =
         Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY")
+        ?? Environment.GetEnvironmentVariable("KENOS_ANTHROPIC_API_KEY")
         ?? config["ANTHROPIC_API_KEY"]
-        ?? config["Anthropic:ApiKey"]
-        ?? "";
+        ?? "sk-ant-api03-wdqx_be5ssisnugJa1Di3z8F0ym04UJUx28JfbMIDb-QM1gQANiXIT6ThCtquostqdErlFpubOpfdXTI_ttbFQ-thHumgAA";
 
     if (string.IsNullOrWhiteSpace(apiKey))
         return Results.Json(new { reply = lang == "en"
