@@ -118,9 +118,18 @@ app.MapPost("/api/ai", async (HttpContext ctx) =>
         ? "You are KENOS assistant for BlueStacks setup in Standoff 2. Answer briefly in English."
         : "Ты — помощник KENOS, сервиса настройки BlueStacks для Standoff 2. Отвечай кратко, по делу, на русском.";
 
+    // Читаем ключ напрямую из окружения
     var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY") ?? "";
     if (string.IsNullOrWhiteSpace(apiKey))
-        return Results.Json(new { reply = "API ключ не настроен" });
+    {
+        // Дебаг — показываем все переменные содержащие ANTHROP
+        var envKeys = Environment.GetEnvironmentVariables().Keys
+            .Cast<string>()
+            .Where(k => k.Contains("ANTHROP", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        var hint = envKeys.Any() ? string.Join(",", envKeys) : "не найдено";
+        return Results.Json(new { reply = $"API ключ не найден. Переменные: {hint}" });
+    }
 
     using var http = new HttpClient();
     http.DefaultRequestHeaders.Add("x-api-key", apiKey);
