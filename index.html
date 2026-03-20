@@ -242,6 +242,17 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   0%,100%{opacity:.45}
   50%    {opacity:.85}
 }
+@keyframes textShimmer{
+  0%,100%{text-shadow:0 0 10px rgba(255,255,255,.08),0 0 2px rgba(255,255,255,.04)}
+  50%    {text-shadow:0 0 22px rgba(255,255,255,.22),0 0 8px rgba(255,255,255,.10)}
+}
+.p-title,.hero-h,.p-sub,.p-body,.info-v,.info-k,
+.svc-name,.key-val,.rev-name,.rev-text,.cl-t,.cl-v,
+.logo-t,.note b,.btn span,.tag span{
+  animation:textShimmer 5s ease-in-out infinite;
+}
+.hero-h{animation:textShimmer 4s ease-in-out infinite,glowPulse 4s 1.5s ease-in-out infinite}
+.logo-t{animation:textShimmer 6s 1s ease-in-out infinite}
 
 /* ═══════════════════════════════════════════
    APP SHELL
@@ -773,7 +784,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .ni:hover span{ color:var(--ac-soft); }
 .ni:active{ opacity:.7; transition:opacity .1s ease; }
 .ni.on:active{ opacity:1; } /* уже на этом разделе — никакого эффекта */
-.ni.on.bouncing{ animation:navBounceBack .38s cubic-bezier(.25,.46,.45,.94) forwards; }
+/* nav bounce убран — иконка остаётся статичной */
 
 /* Активная иконка */
 .ni.on span{ color:var(--ac); }
@@ -987,6 +998,14 @@ a:active{ opacity:.6; }
   -webkit-backface-visibility:hidden; backface-visibility:hidden;
 }
 #ai-bar{ -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+
+/* Числа — tabular монопространственный */
+.num, #fps-num, .ld-pct, .p-val, .cl-v{
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  font-family: var(--fb) !important;
+  letter-spacing: .02em;
+}
 </style>
 </head>
 <body>
@@ -1067,6 +1086,45 @@ a:active{ opacity:.6; }
       <a class="lpill" href="https://t.me/scantoptmz"    target="_blank"><svg width="12" height="12"><use href="#i-chat"/></svg><span data-i18n="lnk.ct">Чат</span></a>
       <a class="lpill" href="https://t.me/datadied"      target="_blank"><svg width="12" height="12"><use href="#i-user"/></svg><span data-i18n="lnk.ow">Владелец</span></a>
       <a class="lpill" href="https://t.me/WinInput32" target="_blank"><svg width="12" height="12"><use href="#i-code"/></svg><span data-i18n="lnk.dev">Кодеры</span></a>
+    </div>
+
+    <!-- Калькулятор FPS -->
+    <div class="panel" id="fps-calc-panel">
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-zap"/></svg>Калькулятор FPS</div>
+      <div class="p-sub">Примерный FPS в Standoff 2 на KENOS BlueStacks</div>
+
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
+        <!-- CPU -->
+        <div ontouchstart="event.preventDefault();openPicker('cpu')" onclick="openPicker('cpu')" id="fps-cpu-btn" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color .25s,background .25s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='rgba(255,255,255,.22)';this.style.background='rgba(255,255,255,.09)'" onmouseleave="this.style.borderColor='rgba(255,255,255,.1)';this.style.background='rgba(255,255,255,.06)'">
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);flex-shrink:0;margin-right:2px;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:2px;">Процессор</div>
+            <div id="cpu-label" style="font-size:13px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Нажми чтобы выбрать</div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <input type="hidden" id="fps-cpu">
+
+        <!-- GPU -->
+        <div ontouchstart="event.preventDefault();openPicker('gpu')" onclick="openPicker('gpu')" id="fps-gpu-btn" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color .25s,background .25s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='rgba(255,255,255,.22)';this.style.background='rgba(255,255,255,.09)'" onmouseleave="this.style.borderColor='rgba(255,255,255,.1)';this.style.background='rgba(255,255,255,.06)'">
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);flex-shrink:0;margin-right:2px;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:2px;">Видеокарта</div>
+            <div id="gpu-label" style="font-size:13px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Нажми чтобы выбрать</div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <input type="hidden" id="fps-gpu">
+      </div>
+
+      <!-- Результат -->
+      <div id="fps-result" style="display:none;margin-top:14px;padding:18px;background:rgba(255,255,255,.04);border-radius:16px;border:1px solid rgba(255,255,255,.07);text-align:center;">
+        <div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:4px;">FPS в Standoff 2 · KENOS</div>
+        <div id="fps-num" style="font-family:'Cormorant Garamond',serif;font-size:68px;font-weight:300;color:#fff;line-height:1;">—</div>
+        <div id="fps-badge" style="font-size:12px;margin-top:6px;color:rgba(255,255,255,.45);"></div>
+        <div id="fps-note" style="font-size:11px;color:rgba(255,255,255,.25);margin-top:10px;line-height:1.6;"></div>
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,.15);text-align:center;margin-top:10px;line-height:1.5;">BS работает на процессоре — чем мощнее CPU, тем выше FPS</div>
     </div>
   </section>
 
@@ -1192,14 +1250,11 @@ a:active{ opacity:.6; }
       <div class="form">
         <div class="form-g">
           <label class="form-l" data-i18n="frm.subj">Тема</label>
-          <select class="form-i" id="sp-subj" style="appearance:none;cursor:pointer">
-            <option value="" data-i18n="frm.s0">Выберите тему...</option>
-            <option value="buy" data-i18n="frm.s1">Покупка / Оплата</option>
-            <option value="key" data-i18n="frm.s2">Проблема с ключом</option>
-            <option value="hwid" data-i18n="frm.s3">Привязка HWID</option>
-            <option value="tech" data-i18n="frm.s4">Техническая проблема</option>
-            <option value="oth" data-i18n="frm.s5">Другое</option>
-          </select>
+          <div ontouchstart="event.preventDefault();openSubjectPicker()" onclick="openSubjectPicker()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:12px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:border-color .25s,background .25s;position:relative;overflow:hidden;"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);pointer-events:none;"></div><div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.06) 0%,transparent 60%);pointer-events:none;"></div>
+            <span id="subj-label" style="font-size:13px;color:rgba(255,255,255,.38);" data-i18n="frm.s0">Выберите тему...</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <input type="hidden" id="sp-subj">
         </div>
         <div class="form-g">
           <label class="form-l" data-i18n="frm.msg">Сообщение</label>
@@ -1356,6 +1411,68 @@ a:active{ opacity:.6; }
   </div>
 </div>
 
+
+<!-- ══ PICKER SHEET ══ -->
+<div id="picker-ov" onclick="closePicker()" style="position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);pointer-events:none;transition:background .42s ease,backdrop-filter .42s ease,-webkit-backdrop-filter .42s ease;"></div>
+<div id="picker-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:8001;max-width:480px;margin:0 auto;background:rgba(14,14,14,.97);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);transform:translateY(100%);opacity:0;transition:transform .6s cubic-bezier(.16,1,.3,1),opacity .42s ease;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -16px 60px rgba(0,0,0,.8);">
+  <!-- Подсветка сверху как в профиле -->
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);pointer-events:none;z-index:1;"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.05) 0%,transparent 55%);pointer-events:none;z-index:0;"></div>
+  <div style="flex-shrink:0;padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07);position:relative;z-index:2;">
+    <span id="picker-title" style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);"></span>
+    <button onclick="closePicker()" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;">✕</button>
+  </div>
+  <!-- Поиск -->
+  <div style="flex-shrink:0;padding:8px 12px;position:relative;z-index:2;">
+    <input id="picker-search" type="text" placeholder="Поиск..." oninput="filterPicker(this.value)"
+      style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:9px 12px;color:#fff;font-size:14px;outline:none;-webkit-appearance:none;">
+  </div>
+  <div id="picker-list" style="overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;position:relative;z-index:2;scrollbar-width:none;-ms-overflow-style:none;"></div>
+</div>
+<style>#picker-list::-webkit-scrollbar{display:none}
+
+/* Пункты пикера — свечение текста вместо размытия */
+.picker-item{
+  padding:13px 16px;
+  font-size:14px;
+  font-family:var(--fb);
+  color:rgba(255,255,255,.7);
+  cursor:pointer;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  position:relative;
+  overflow:hidden;
+  transition:color .22s ease, text-shadow .22s ease;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+/* Блик сверху как у карточек */
+.picker-item::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);
+  opacity:0;
+  transition:opacity .22s ease;
+  pointer-events:none;
+}
+/* Радиальный градиент как у svc-card */
+.picker-item::after{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.07) 0%,transparent 65%);
+  opacity:0;
+  transition:opacity .22s ease;
+  pointer-events:none;
+}
+.picker-item:hover,
+.picker-item:active{
+  color:#fff;
+  text-shadow:0 0 18px rgba(255,255,255,.55),0 0 6px rgba(255,255,255,.25);
+}
+.picker-item:hover::before,
+.picker-item:active::before,
+.picker-item:hover::after,
+.picker-item:active::after{ opacity:1; }
+.picker-item:active{ color:#fff; opacity:.85; }</style>
 
 <!-- ══ AI INPUT BAR ══ -->
 <div id="ai-bar" style="position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:0;right:0;max-width:480px;margin:0 auto;padding:8px 12px 10px;background:#0d0d0d;display:none;z-index:199;transform:translateZ(0);transition:bottom .55s cubic-bezier(.16,1,.3,1),opacity .55s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1);">
@@ -1518,9 +1635,6 @@ function moveSlider(navItemEl){
 
 function go(id){
   if(id === _cur){
-    /* тапнул на тот же раздел — bounce */
-    const el = document.getElementById(SEC_NAV[id]);
-    if(el){ el.classList.add('bouncing'); el.addEventListener('animationend',()=>el.classList.remove('bouncing'),{once:true}); }
     return;
   }
 
@@ -1549,6 +1663,8 @@ function go(id){
 
   // AI input bar — мгновенно скрываем, плавно показываем
   const aiBar = document.getElementById('ai-bar');
+  const aiSec = document.getElementById('s-ai');
+  const nav2  = document.getElementById('nav');
   if(aiBar){
     if(id === 's-ai'){
       aiBar.style.animation='none';
@@ -1557,6 +1673,9 @@ function go(id){
         aiBar.style.animation='aiBarIn .45s cubic-bezier(.16,1,.3,1) both';
       });
     } else {
+      /* Возвращаем навбар и секцию при уходе с ИИ */
+      if(nav2){ nav2.style.transform=''; nav2.style.opacity=''; nav2.style.transition=''; }
+      if(aiSec){ aiSec.style.bottom=''; aiSec.style.transition=''; }
       aiBar.style.animation='aiBarOut .22s cubic-bezier(.16,1,.3,1) both';
       setTimeout(()=>{ aiBar.style.display='none'; aiBar.style.animation='none'; }, 230);
     }
@@ -1696,6 +1815,8 @@ async function sendSup(){
     toast(t('toast.sent'));
     subjEl.value = '';
     msgEl.value  = '';
+    const sl = document.getElementById('subj-label');
+    if(sl){ sl.textContent = t('frm.s0'); sl.style.color='rgba(255,255,255,.38)'; }
   } catch {
     // Fallback: отправить данные напрямую в бот
     tg?.sendData?.(JSON.stringify({ type:'support', subject:subj, message:msg, user_id:tgU.id||0 }));
@@ -2058,7 +2179,7 @@ async function applyPromo(){
     });
     const d = await r.json();
     if(d.ok){
-      showPromoResult(`✓ Промокод активирован — скидка ${d.discount}%\n${d.desc || ''}`, 'ok');
+      showPromoResult(` Промокод активирован — скидка ${d.discount}%\n${d.desc || ''}`, 'ok');
       inp.value = '';
     } else {
       showPromoResult(d.error || 'Промокод недействителен', 'err');
@@ -2076,38 +2197,327 @@ function showPromoResult(text, type){
   setTimeout(() => el.classList.remove('show'), 4000);
 }
 
-/* Фикс клавиатуры — держим ai-bar над клавиатурой */
+/* Плавная подстройка под клавиатуру в ИИ-разделе */
 (()=>{
-  const bar = document.getElementById('ai-bar');
+  const bar     = document.getElementById('ai-bar');
+  const aiSec   = document.getElementById('s-ai');
+  const inp     = document.getElementById('ai-input');
+  const msgs    = document.getElementById('ai-msgs');
+  const nav     = document.getElementById('nav');
 
-  // Блокируем скролл страницы при фокусе на инпуте
-  const inp = document.getElementById('ai-input');
-  if(inp){
-    inp.addEventListener('focus', ()=>{
-      // Даём браузеру поднять клавиатуру, потом фиксируем позицию
-      setTimeout(()=>{
-        const msgs = document.getElementById('ai-msgs');
-        if(msgs) msgs.scrollTop = msgs.scrollHeight;
-      }, 350);
-    }, {passive:true});
-  }
+  if(!bar || !inp) return;
 
-  if(!window.visualViewport || !bar) return;
+  /* Плавный transition на bottom у bar и у секции */
+  const SPRING = 'cubic-bezier(.16,1,.3,1)';
+  bar.style.transition   = `bottom .38s ${SPRING}, opacity .55s ${SPRING}, transform .55s ${SPRING}`;
 
-  function onResize(){
-    const vv = window.visualViewport;
-    const fromBottom = window.innerHeight - vv.height - vv.offsetTop;
-    if(fromBottom > 50){
-      bar.style.bottom = fromBottom + 'px';
-      const msgs = document.getElementById('ai-msgs');
-      if(msgs) msgs.scrollTop = msgs.scrollHeight;
+  let _kbOpen = false;
+
+  function applyLayout(keyboardH){
+    const navH   = nav ? nav.offsetHeight : 60;
+    const safeB  = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sab') || '0') || 0;
+
+    if(keyboardH > 80){
+      /* Клавиатура открыта */
+      if(!_kbOpen){
+        _kbOpen = true;
+        /* Скрываем навбар плавно */
+        if(nav){ nav.style.transition=`transform .35s ${SPRING},opacity .3s ease`; nav.style.transform='translateY(100%)'; nav.style.opacity='0'; }
+      }
+      /* bar поднимается над клавиатурой */
+      bar.style.bottom = keyboardH + 'px';
+      /* Секция растягивается — bottom = высота клавиатуры */
+      if(aiSec){ aiSec.style.transition=`bottom .38s ${SPRING}`; aiSec.style.bottom = (keyboardH + 4) + 'px'; }
+      /* Скролл к последнему сообщению */
+      requestAnimationFrame(()=>{ if(msgs) msgs.scrollTop = msgs.scrollHeight; });
     } else {
-      bar.style.bottom = 'calc(60px + env(safe-area-inset-bottom))';
+      /* Клавиатура закрыта */
+      if(_kbOpen){
+        _kbOpen = false;
+        /* Возвращаем навбар */
+        if(nav){ nav.style.transform='translateY(0)'; nav.style.opacity='1'; }
+      }
+      bar.style.bottom = `calc(${navH}px + env(safe-area-inset-bottom))`;
+      if(aiSec){ aiSec.style.transition=`bottom .38s ${SPRING}`; aiSec.style.bottom = navH + 'px'; }
     }
   }
-  window.visualViewport.addEventListener('resize', onResize, {passive:true});
-  window.visualViewport.addEventListener('scroll', onResize, {passive:true});
+
+  /* VisualViewport API — самый точный способ на мобиле */
+  if(window.visualViewport){
+    let _rafId = 0;
+    function onVV(){
+      cancelAnimationFrame(_rafId);
+      _rafId = requestAnimationFrame(()=>{
+        const vv = window.visualViewport;
+        const keyboardH = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+        applyLayout(keyboardH);
+      });
+    }
+    window.visualViewport.addEventListener('resize', onVV, {passive:true});
+    window.visualViewport.addEventListener('scroll', onVV, {passive:true});
+  }
+
+  /* Fallback через focus/blur */
+  inp.addEventListener('focus', ()=>{
+    /* На iOS keyboard может не триггерить visualViewport сразу */
+    setTimeout(()=>{
+      if(!window.visualViewport) return;
+      const vv = window.visualViewport;
+      const kH = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      if(kH < 80) return; /* уже обработано */
+      applyLayout(kH);
+    }, 350);
+  }, {passive:true});
+
+  inp.addEventListener('blur', ()=>{
+    setTimeout(()=>{
+      if(window.visualViewport){
+        const vv = window.visualViewport;
+        const kH = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+        applyLayout(kH);
+      } else { applyLayout(0); }
+    }, 100);
+  }, {passive:true});
+
+  /* Блокируем скролл страницы — только ИИ-секция скролится внутри */
+  inp.addEventListener('touchstart', e=>{ if(_kbOpen) e.stopPropagation(); }, {passive:true});
 })();
+
+/* ══════════════════════════════════════
+   SUBJECT PICKER (Help form)
+══════════════════════════════════════ */
+const SUBJECTS = [
+  {n:'Покупка / Оплата', v:'buy'},
+  {n:'Проблема с ключом', v:'key'},
+  {n:'Привязка HWID', v:'hwid'},
+  {n:'Техническая проблема', v:'tech'},
+  {n:'Другое', v:'oth'},
+];
+const SUBJECTS_EN = [
+  {n:'Purchase / Payment', v:'buy'},
+  {n:'Key Issue', v:'key'},
+  {n:'HWID Binding', v:'hwid'},
+  {n:'Technical Issue', v:'tech'},
+  {n:'Other', v:'oth'},
+];
+
+function openSubjectPicker(){
+  _pickerScrollY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  const items = lang==='ru' ? SUBJECTS : SUBJECTS_EN;
+  _pickerType = 'subj';
+  _allItems = items.map(i=>({...i, group:''}));
+  const sheet = document.getElementById('picker-sheet');
+  const ov    = document.getElementById('picker-ov');
+  document.getElementById('picker-title').textContent = lang==='ru' ? 'Выберите тему' : 'Select topic';
+  document.getElementById('picker-search').style.display = 'none';
+  renderPickerList(_allItems);
+  ov.style.pointerEvents='auto';
+  ov.style.background='rgba(0,0,0,.55)';
+  ov.style.backdropFilter='blur(8px)';
+  ov.style.webkitBackdropFilter='blur(8px)';
+  sheet.style.transform='translateY(0)';
+  sheet.style.opacity='1';
+}
+
+/* ══════════════════════════════════════
+   FPS PICKER
+══════════════════════════════════════ */
+const FPS_DATA = {
+  cpu:{
+    title:'Выберите процессор',
+    groups:[
+      {label:'AMD Ryzen 9000',items:[
+        {n:'Ryzen 9 9950X',v:684},{n:'Ryzen 9 9900X',v:672},{n:'Ryzen 7 9800X3D',v:566},{n:'Ryzen 7 9700X',v:625},{n:'Ryzen 5 9600X',v:590}
+      ]},
+      {label:'AMD Ryzen 7000',items:[
+        {n:'Ryzen 9 7950X',v:613},{n:'Ryzen 9 7900X',v:601},{n:'Ryzen 7 7800X3D',v:542},{n:'Ryzen 7 7700X',v:566},{n:'Ryzen 7 7700',v:542},{n:'Ryzen 5 7600X',v:519},{n:'Ryzen 5 7600',v:495},{n:'Ryzen 5 7600F',v:472}
+      ]},
+      {label:'AMD Ryzen 5000',items:[
+        {n:'Ryzen 9 5950X',v:448},{n:'Ryzen 9 5900X',v:436},{n:'Ryzen 7 5800X3D',v:377},{n:'Ryzen 7 5800X',v:401},{n:'Ryzen 7 5700X',v:377},{n:'Ryzen 5 5600X',v:354},{n:'Ryzen 5 5600',v:342},{n:'Ryzen 5 5500',v:318}
+      ]},
+      {label:'AMD Ryzen 3000',items:[
+        {n:'Ryzen 9 3900X',v:306},{n:'Ryzen 7 3700X',v:283},{n:'Ryzen 5 3600X',v:259},{n:'Ryzen 5 3600',v:247},{n:'Ryzen 5 3500X',v:212},{n:'Ryzen 5 3500',v:188}
+      ]},
+      {label:'Intel Core i9',items:[
+        {n:'Core i9-14900K',v:660},{n:'Core i9-13900K',v:649},{n:'Core i9-12900K',v:613},{n:'Core i9-11900K',v:578},{n:'Core i9-10900K',v:542}
+      ]},
+      {label:'Intel Core i7',items:[
+        {n:'Core i7-14700K',v:590},{n:'Core i7-13700K',v:566},{n:'Core i7-12700K',v:542},{n:'Core i7-11700K',v:507},{n:'Core i7-10700K',v:472},{n:'Core i7-9700K',v:424},{n:'Core i7-8700K',v:377}
+      ]},
+      {label:'Intel Core i5',items:[
+        {n:'Core i5-14600K',v:519},{n:'Core i5-13600K',v:495},{n:'Core i5-12600K',v:472},{n:'Core i5-11600K',v:436},{n:'Core i5-10600K',v:401},{n:'Core i5-10400F',v:330},{n:'Core i5-9600K',v:354},{n:'Core i5-9400F',v:259}
+      ]},
+      {label:'Intel Core i3',items:[
+        {n:'Core i3-12100F',v:236},{n:'Core i3-10100F',v:212},{n:'Core i3-9100F',v:188}
+      ]}
+    ]
+  },
+  gpu:{
+    title:'Выберите видеокарту',
+    groups:[
+      {label:'NVIDIA RTX 40xx',items:[
+        {n:'RTX 4090',v:1.0},{n:'RTX 4080 Super',v:1.0},{n:'RTX 4080',v:1.0},{n:'RTX 4070 Ti Super',v:1.0},{n:'RTX 4070 Ti',v:1.0},{n:'RTX 4070 Super',v:1.0},{n:'RTX 4070',v:1.0},{n:'RTX 4060 Ti',v:1.0},{n:'RTX 4060',v:1.0}
+      ]},
+      {label:'NVIDIA RTX 30xx',items:[
+        {n:'RTX 3090 Ti',v:1.0},{n:'RTX 3090',v:1.0},{n:'RTX 3080 Ti',v:1.0},{n:'RTX 3080',v:1.0},{n:'RTX 3070 Ti',v:1.0},{n:'RTX 3070',v:1.0},{n:'RTX 3060 Ti',v:1.0},{n:'RTX 3060',v:1.0},{n:'RTX 3050',v:0.95}
+      ]},
+      {label:'NVIDIA GTX',items:[
+        {n:'GTX 1080 Ti',v:1.0},{n:'GTX 1080',v:1.0},{n:'GTX 1070 Ti',v:1.0},{n:'GTX 1070',v:1.0},{n:'GTX 1060 6GB',v:0.98},{n:'GTX 1060 3GB',v:0.92},{n:'GTX 1050 Ti',v:0.88},{n:'GTX 1050',v:0.80},{n:'GTX 970',v:0.70},{n:'GTX 960',v:0.60},{n:'GTX 950',v:0.50}
+      ]},
+      {label:'AMD RX 7000',items:[
+        {n:'RX 7900 XTX',v:1.0},{n:'RX 7900 XT',v:1.0},{n:'RX 7800 XT',v:1.0},{n:'RX 7700 XT',v:1.0},{n:'RX 7600',v:1.0}
+      ]},
+      {label:'AMD RX 6000',items:[
+        {n:'RX 6900 XT',v:1.0},{n:'RX 6800 XT',v:1.0},{n:'RX 6700 XT',v:1.0},{n:'RX 6600 XT',v:1.0},{n:'RX 6600',v:1.0},{n:'RX 6500 XT',v:0.95}
+      ]},
+      {label:'AMD RX 5000',items:[
+        {n:'RX 5700 XT',v:1.0},{n:'RX 5700',v:1.0},{n:'RX 5600 XT',v:0.95},{n:'RX 5500 XT',v:0.90}
+      ]},
+      {label:'Интегрированная',items:[
+        {n:'Intel UHD 730/770',v:0.35},{n:'Intel UHD 630',v:0.30},{n:'AMD Radeon Vega (Ryzen)',v:0.50}
+      ]}
+    ]
+  }
+};
+
+let _pickerType = null;
+let _allItems = [];
+
+let _pickerScrollY = 0;
+
+function openPicker(type){
+  _pickerScrollY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  _pickerType = type;
+  const data = FPS_DATA[type];
+  const sheet = document.getElementById('picker-sheet');
+  const ov = document.getElementById('picker-ov');
+  const list = document.getElementById('picker-list');
+  const search = document.getElementById('picker-search');
+  document.getElementById('picker-title').textContent = data.title;
+  search.value = '';
+
+  // Строим список
+  _allItems = [];
+  data.groups.forEach(g => g.items.forEach(i => _allItems.push({...i, group:g.label})));
+  renderPickerList(_allItems);
+
+  ov.style.pointerEvents='auto';
+  ov.style.background='rgba(0,0,0,.55)';
+  ov.style.backdropFilter='blur(8px)';
+  ov.style.webkitBackdropFilter='blur(8px)';
+  sheet.style.transform='translateY(0)';
+  sheet.style.opacity='1';
+  setTimeout(()=> search.focus(), 400);
+}
+
+function renderPickerList(items){
+  const list = document.getElementById('picker-list');
+  let html = '';
+  let lastGroup = '';
+  items.forEach(item => {
+    if(item.group !== lastGroup){
+      lastGroup = item.group;
+      html += `<div style="padding:8px 16px 4px;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.22);font-weight:600;">${item.group}</div>`;
+    }
+    html += `<div class="picker-item" onclick="selectPicker('${item.n}',${item.v})">${item.n}</div>`;
+  });
+  if(!items.length) html = `<div style="padding:24px;text-align:center;color:rgba(255,255,255,.3);font-size:13px;">Не найдено</div>`;
+  list.innerHTML = html;
+}
+
+function filterPicker(q){
+  if(!q){ renderPickerList(_allItems); return; }
+  const filtered = _allItems.filter(i => i.n.toLowerCase().includes(q.toLowerCase()));
+  renderPickerList(filtered);
+}
+
+function selectPicker(name, val){
+  if(_pickerType === 'subj'){
+    document.getElementById('subj-label').textContent = name;
+    document.getElementById('subj-label').style.color = '#fff';
+    document.getElementById('sp-subj').value = val;
+    // Restore search for next fps picker open
+    document.getElementById('picker-search').style.display = '';
+  } else {
+    const labelEl = document.getElementById(_pickerType+'-label');
+    const inputEl = document.getElementById('fps-'+_pickerType);
+    const btn     = document.getElementById('fps-'+_pickerType+'-btn');
+    labelEl.textContent = name;
+    labelEl.style.color = '#fff';
+    if(btn) btn.style.borderColor = 'rgba(255,255,255,.22)';
+    inputEl.value = val;
+    calcFPS();
+  }
+  closePicker();
+}
+
+function closePicker(){
+  document.body.style.overflow = '';
+  const sheet = document.getElementById('picker-sheet');
+  const ov = document.getElementById('picker-ov');
+  sheet.style.transform='translateY(100%)';
+  sheet.style.opacity='0';
+  if(ov){
+    ov.style.background='rgba(0,0,0,0)';
+    ov.style.backdropFilter='blur(0px)';
+    ov.style.webkitBackdropFilter='blur(0px)';
+    ov.style.pointerEvents='none';
+  }
+  document.getElementById('picker-search').blur();
+}
+
+/* ══════════════════════════════════════
+   FPS CALCULATOR
+══════════════════════════════════════ */
+function calcFPS(){
+  const cpuEl = document.getElementById('fps-cpu');
+  const gpuEl = document.getElementById('fps-gpu');
+  const result = document.getElementById('fps-result');
+  const numEl  = document.getElementById('fps-num');
+  const noteEl = document.getElementById('fps-note');
+  const badgeEl= document.getElementById('fps-badge');
+
+  const cpuFps = parseFloat(cpuEl.value);
+  const gpuMul = parseFloat(gpuEl.value);
+
+  if(!cpuFps || !gpuMul){ result.style.display='none'; return; }
+
+  // GPU ниже порога — бутылочное горлышко
+  let fps = cpuFps;
+  let note = '';
+
+  if(gpuMul < 0.6){
+    fps = Math.round(fps * 0.45);
+    note = 'Слабая GPU ограничивает FPS. Обновите видеокарту.';
+  } else if(gpuMul < 0.85){
+    fps = Math.round(fps * 0.75);
+    note = 'GPU немного ограничивает. Рекомендуем GTX 1060+ или RX 580+';
+  } else if(gpuMul < 1.0){
+    fps = Math.round(fps * 0.92);
+    note = 'Хороший результат. GPU справляется.';
+  } else {
+    note = 'Отличное железо! GPU не является бутылочным горлышком.';
+  }
+
+  // Небольшой разброс для реализма
+  const lo = Math.max(30, fps - 15);
+  const hi = fps + 20;
+
+  numEl.textContent = `${lo}–${hi}`;
+
+  // Цвет по результату
+  if(fps >= 400) numEl.style.color='#fff';
+  else if(fps >= 240) numEl.style.color='rgba(255,255,255,.8)';
+  else if(fps >= 144) numEl.style.color='rgba(255,220,100,.9)';
+  else numEl.style.color='rgba(255,130,100,.9)';
+
+  badgeEl.textContent = fps >= 400 ? 'FPS · Топ результат' : fps >= 240 ? 'FPS · Отлично' : fps >= 144 ? 'FPS · Хорошо' : 'FPS · Стоит улучшить железо';
+  noteEl.textContent = note;
+  result.style.display='block';
+  result.style.animation='waveIn .4s cubic-bezier(.16,1,.3,1) both';
+}
 
 /* ══════════════════════════════════════
    CHANGELOG
