@@ -2435,15 +2435,27 @@ function renderPickerList(items){
   if(!items.length) html = `<div style="padding:24px;text-align:center;color:rgba(255,255,255,.3);font-size:13px;">Не найдено</div>`;
   list.innerHTML = html;
 
-  /* touchstart → класс tapped для мобильной анимации */
+  /* touchstart → класс tapped только если это реальный тап, а не скролл */
   list.querySelectorAll('.picker-item').forEach(el => {
-    el.addEventListener('touchstart', ()=>{
-      el.classList.add('tapped');
+    let _startY = 0;
+    let _moved = false;
+    el.addEventListener('touchstart', e=>{
+      _startY = e.touches[0].clientY;
+      _moved = false;
+      /* Добавляем с небольшой задержкой — если начался скролл, отменяем */
+      setTimeout(()=>{ if(!_moved) el.classList.add('tapped'); }, 80);
+    }, {passive:true});
+    el.addEventListener('touchmove', e=>{
+      if(Math.abs(e.touches[0].clientY - _startY) > 6){
+        _moved = true;
+        el.classList.remove('tapped');
+      }
     }, {passive:true});
     el.addEventListener('touchend', ()=>{
-      setTimeout(()=> el.classList.remove('tapped'), 320);
+      setTimeout(()=> el.classList.remove('tapped'), 250);
     }, {passive:true});
     el.addEventListener('touchcancel', ()=>{
+      _moved = true;
       el.classList.remove('tapped');
     }, {passive:true});
   });
