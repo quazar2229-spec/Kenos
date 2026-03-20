@@ -110,8 +110,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:fixed;top:0;left:0;
   width:100%;height:100%;
   z-index:0;pointer-events:none;
-  opacity:.45;
-  mix-blend-mode:screen;
+  opacity:.55;
 }
 
 /* ═══════════════════════════════════════════
@@ -373,29 +372,10 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   pointer-events:none;
   visibility:hidden;
   transition:
-    opacity    .45s cubic-bezier(.25,.46,.45,.94),
-    transform  .45s cubic-bezier(.25,.46,.45,.94),
-    visibility .45s;
-  transform:translateY(16px);
-  /* will-change УБРАН с базового состояния — 9 GPU-слоёв одновременно = перегруз compositor */
-}
-
-/* ── Исходящая секция ── */
-.sec.leaving{
-  opacity:0;
-  transform:translateY(-6px);
-  pointer-events:none;
-  visibility:hidden;
-  will-change:opacity,transform; /* только пока анимируется */
-}
-
-.sec.on{
-  position:relative;
-  opacity:1;
-  pointer-events:auto;
-  visibility:visible;
-  transform:translateY(0);
-  will-change:auto; /* сбрасываем после появления — GPU слой больше не нужен */
+    opacity    .5s cubic-bezier(.25,.46,.45,.94),
+    transform  .5s cubic-bezier(.25,.46,.45,.94),
+    visibility .5s;
+  transform:translateY(14px);
 }
 
 .sec.on{
@@ -1982,7 +1962,7 @@ let _bmpOk=false;
 /* ── Основная функция ── */
 function initSakura(id,count,alpha){
   const cvs=document.getElementById(id);if(!cvs)return;
-  const ctx=cvs.getContext('2d',{alpha:true,desynchronized:true});
+  const ctx=cvs.getContext('2d',{alpha:true});
   let W=0,H=0;
 
   /* STRIDE 9: x,y,si,ci,vx,vy,ai,vai,ali */
