@@ -40,24 +40,23 @@
   --fd:'Cormorant Garamond',serif;
   --fb:'Rajdhani',sans-serif;
   --bg:#0d0d0d;
-  --panel:rgba(14,14,14,.97);
-  --card:rgba(14,14,14,.97);
-  --g5:#555;--g4:#999;
+  --panel:rgba(22,22,22,.97);
+  --card:rgba(22,22,22,.97);
+  --g5:#777;--g4:#aaa;
   --ease:cubic-bezier(.25,.46,.45,.94);
   --fast:.28s;--mid:.38s;
   --smooth:cubic-bezier(.25,.46,.45,.94);
-  /* iOS-style spring — для кнопок и карточек */
   --spring:cubic-bezier(.34,1.2,.64,1);
   --ac:rgba(255,255,255,1);
-  --ac-dim:rgba(255,255,255,.08);
+  --ac-dim:rgba(255,255,255,.10);
   --ac-glow:rgba(255,255,255,.5);
-  --ac-soft:rgba(255,255,255,.22);
-  --slider-bg:rgba(255,255,255,.07);
+  --ac-soft:rgba(255,255,255,.28);
+  --slider-bg:rgba(255,255,255,.09);
   --txt:#fff;
-  --txt-dim:rgba(255,255,255,.6);
-  --txt-muted:rgba(255,255,255,.22);
-  --border:rgba(255,255,255,.08);
-  --border-ac:rgba(255,255,255,.18);
+  --txt-dim:rgba(255,255,255,.75);
+  --txt-muted:rgba(255,255,255,.38);
+  --border:rgba(255,255,255,.13);
+  --border-ac:rgba(255,255,255,.25);
 }
 
 /* ═══════════════════════════════════════════
@@ -111,7 +110,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:fixed;top:0;left:0;
   width:100%;height:100%;
   z-index:0;pointer-events:none;
-  opacity:.60;
+  opacity:.35;
 }
 
 /* ═══════════════════════════════════════════
@@ -273,8 +272,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:sticky;top:0;z-index:100;
   padding:10px 16px;
   display:flex;align-items:center;justify-content:space-between;
-  background:#0b0b0b;
-  border-bottom:1px solid rgba(255,255,255,.08);
+  background:#0d0d0d;
+  border-bottom:1px solid rgba(255,255,255,.12);
   overflow:visible;
 }
 .hdr-profile{display:flex;align-items:center;gap:8px}
@@ -496,7 +495,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   box-shadow:0 0 0 1px var(--ac-dim);
 }
 .hero{padding:40px 20px 14px;text-align:center}
-.hero-eye{font-size:10px;letter-spacing:.38em;color:var(--g5);text-transform:uppercase;margin-bottom:11px}
+.hero-eye{font-size:10px;letter-spacing:.38em;color:rgba(255,255,255,.5);text-transform:uppercase;margin-bottom:11px}
 /* KENOS hero */
 .hero-h{
   font-family:var(--fd);font-size:clamp(58px,15vw,88px);
@@ -504,9 +503,9 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   color:var(--txt);display:block;text-align:center;
   cursor:default;
 }
-.hero-sub{font-size:11px;letter-spacing:.22em;color:var(--g5);text-transform:uppercase}
+.hero-sub{font-size:11px;letter-spacing:.22em;color:rgba(255,255,255,.45);text-transform:uppercase}
 .divider{width:34px;height:1px;margin:16px auto}
-.sec-title{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--g5);padding:0 16px 9px}
+.sec-title{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.45);padding:0 16px 9px}
 
 /* ═══════════════════════════════════════════
    GLASS PANEL
@@ -514,7 +513,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 ═══════════════════════════════════════════ */
 .panel{
   margin:0 16px 13px;padding:20px;
-  background:var(--panel);
+  background:rgba(22,22,22,.97);
   border:1px solid var(--border);
   border-radius:16px;
   position:relative;overflow:hidden;
@@ -528,9 +527,9 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   background:linear-gradient(90deg,transparent,var(--border-ac),transparent);
   pointer-events:none;
 }
-.p-title{font-family:var(--fd);font-size:21px;font-weight:300;letter-spacing:.1em;color:var(--txt);margin-bottom:3px;display:flex;align-items:center;gap:8px}
-.p-sub{font-size:10px;color:var(--g5);letter-spacing:.12em;text-transform:uppercase;margin-bottom:13px}
-.p-body{font-size:13px;line-height:1.85;color:var(--txt-dim)}
+.p-title{font-family:var(--fd);font-size:21px;font-weight:300;letter-spacing:.1em;color:#fff;margin-bottom:3px;display:flex;align-items:center;gap:8px}
+.p-sub{font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.12em;text-transform:uppercase;margin-bottom:13px}
+.p-body{font-size:13px;line-height:1.85;color:rgba(255,255,255,.75)}
 
 /* ═══════════════════════════════════════════
    SERVICE GRID
@@ -538,26 +537,26 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .svc-grid{padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .svc-card{
   -webkit-tap-highlight-color:transparent;
-  background:rgba(14,14,14,.97);border:1px solid var(--border);
+  background:rgba(28,28,28,.98);border:1px solid var(--border);
   border-radius:16px;padding:18px 14px 14px;
   cursor:pointer;position:relative;overflow:hidden;
   transition:transform .1s ease,border-color .18s ease,box-shadow .18s ease;
-  box-shadow:0 4px 20px rgba(0,0,0,.45);
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
 }
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent);pointer-events:none}
 .svc-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none}
 .svc-card:active{transform:scale(.94);transition:transform .06s ease}
 .svc-ico{
   display:flex;justify-content:center;align-items:center;
-  margin-bottom:12px;color:var(--txt-dim);
+  margin-bottom:12px;color:rgba(255,255,255,.75);
   position:relative;z-index:1;
 }
 .svc-card:nth-child(1) .svc-ico{animation-delay:0s}
 .svc-card:nth-child(2) .svc-ico{animation-delay:-1s}
 .svc-card:nth-child(3) .svc-ico{animation-delay:-2s}
 .svc-card:nth-child(4) .svc-ico{animation-delay:-3s}
-.svc-name{font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--txt);margin-bottom:3px;position:relative;z-index:1}
-.svc-desc{font-size:10px;color:var(--g5);position:relative;z-index:1}
+.svc-name{font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:#fff;margin-bottom:3px;position:relative;z-index:1}
+.svc-desc{font-size:10px;color:rgba(255,255,255,.55);position:relative;z-index:1}
 
 /* ── INFO ENTRIES — тех работы и объявления ── */
 .info-entry{
@@ -658,9 +657,9 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .key-st.off{color:var(--g5)}
 .info-r{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
 .info-r:last-child{border-bottom:none}
-.info-k{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--g5);letter-spacing:.07em}
-.info-k svg{color:var(--txt-muted)}
-.info-v{font-size:12px;color:var(--txt);font-weight:500}
+.info-k{display:flex;align-items:center;gap:7px;font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.07em}
+.info-k svg{color:rgba(255,255,255,.45)}
+.info-v{font-size:12px;color:#fff;font-weight:500}
 
 /* ═══════════════════════════════════════════
    FORM
@@ -750,8 +749,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:fixed;bottom:0;left:0;right:0;
   width:100%;max-width:480px;margin:0 auto;
   padding:5px 4px calc(5px + env(safe-area-inset-bottom));
-  background:#0b0b0b;
-  border-top:1px solid var(--border);
+  background:#0d0d0d;
+  border-top:1px solid rgba(255,255,255,.12);
   display:flex;justify-content:space-around;
   z-index:200;
   overflow:clip;
@@ -784,16 +783,14 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   z-index:1;
 }
 .ni svg{
-  color:var(--txt-muted);
+  color:rgba(255,255,255,.45);
   display:block;
-  /* только color transition — никаких filter/transform анимаций */
   transition:color .15s ease;
-  /* will-change убран — 8 одновременных GPU слоёв убивали fps */
 }
 
 .ni span{
   font-size:8px;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--txt-muted);white-space:nowrap;
+  color:rgba(255,255,255,.45);white-space:nowrap;
   transition:color .15s ease;
 }
 .ni:hover svg { color:var(--ac-soft); }
@@ -965,8 +962,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 *{-webkit-tap-highlight-color:transparent}
 
 /* Всё кликабельное — мягкая пружина */
-button, [onclick], .svc-card, .btn, .lpill, .ni,
-.dlink, .lang-b, .key-copy, .info-r a, .panel,
+button, .svc-card, .btn, .lpill, .ni,
+.dlink, .lang-b, .key-copy, .info-r a,
 .hdr-avatar-wrap, .logo-t{
   transition:transform .38s cubic-bezier(.25,.46,.45,.94),
              opacity   .38s cubic-bezier(.25,.46,.45,.94),
@@ -976,9 +973,8 @@ button, [onclick], .svc-card, .btn, .lpill, .ni,
   cursor:pointer;
 }
 
-/* Нажатие — мягкий scale */
-button:active, [onclick]:active, .svc-card:active,
-.btn:active, .lpill:active, .dlink:active,
+/* Нажатие — только конкретные элементы, НЕ [onclick] глобально */
+button:active, .btn:active, .lpill:active, .dlink:active,
 .lang-b:active, .hdr-avatar-wrap:active{
   transform:scale(.96)!important;
   opacity:.75;
@@ -2096,7 +2092,7 @@ function initSakura(id,count,alpha){
   let stageIdx = 0;
 
   let cur  = 0;
-  const DUR = 4200;
+  const DUR = 2200;
   let t0 = 0; // ставим в первом кадре
 
   function ease(x){ return x<.5 ? 8*x*x*x*x : 1-Math.pow(-2*x+2,4)/2; }
@@ -2132,6 +2128,16 @@ function initSakura(id,count,alpha){
 
   // Старт через 1с — дать анимациям CSS появиться
   setTimeout(()=> requestAnimationFrame(tick), 1000);
+
+  // Страховка — если что-то пошло не так, показываем через 5с
+  setTimeout(()=>{
+    document.getElementById('loader')?.classList.add('hidden');
+    const app = document.getElementById('app');
+    if(app && !app.classList.contains('ready')){
+      app.classList.add('ready');
+      moveSlider(document.getElementById('n-home'));
+    }
+  }, 5000);
 })();
 
 /* ══════════════════════════════════════
