@@ -2100,6 +2100,8 @@ function initSakura(id,count,alpha){
     else setTimeout(()=>{
       ld.classList.add('hidden');
       document.getElementById('app')?.classList.add('ready');
+      const homeEl = document.getElementById('s-home');
+      if(homeEl) homeEl.classList.add('on');
       moveSlider(document.getElementById('n-home'));
     }, 250);
   }
@@ -2113,6 +2115,8 @@ function initSakura(id,count,alpha){
     const app = document.getElementById('app');
     if(app && !app.classList.contains('ready')){
       app.classList.add('ready');
+      const homeEl = document.getElementById('s-home');
+      if(homeEl) homeEl.classList.add('on');
       moveSlider(document.getElementById('n-home'));
     }
   }, 5000);
