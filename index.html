@@ -397,10 +397,10 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .ai-bubble{
   animation:bubbleIn .5s cubic-bezier(.16,1,.3,1) both;
 }
-#s-ai.on > div:first-child p  { animation:waveIn .55s .03s cubic-bezier(.16,1,.3,1) both; }
-#s-ai.on > div:first-child h1  { animation:waveIn .65s .08s cubic-bezier(.16,1,.3,1) both; }
-#s-ai.on > div:first-child > div:nth-child(3){ animation:waveIn .55s .14s cubic-bezier(.16,1,.3,1) both; }
-#s-ai.on #ai-empty            { animation:waveIn .75s .22s cubic-bezier(.16,1,.3,1) both; }
+#s-ai.on > div:first-child p  { animation:waveIn .75s .08s cubic-bezier(.16,1,.3,1) both; }
+#s-ai.on > div:first-child h1  { animation:waveIn .90s .16s cubic-bezier(.16,1,.3,1) both; }
+#s-ai.on > div:first-child > div:nth-child(3){ animation:waveIn .75s .24s cubic-bezier(.16,1,.3,1) both; }
+#s-ai.on #ai-empty            { animation:waveIn .85s .34s cubic-bezier(.16,1,.3,1) both; }
 
 @keyframes waveIn{
   from{ opacity:0; transform:translateY(22px) scale(.97); }
@@ -957,7 +957,7 @@ button:active, .btn:active, .lpill:active,
 }
 
 /* Нав-айтемы */
-.ni:active{ transform:scale(.88)!important; transition:transform .08s ease; }
+.ni:active{ opacity:.65; transition:opacity .12s ease; }
 
 /* Ссылки */
 a:active{ opacity:.55; transition:opacity .1s ease; }
@@ -987,7 +987,7 @@ a:active{ opacity:.55; transition:opacity .1s ease; }
 
 /* AI bar — анимация появления снизу */
 @keyframes aiBarIn{
-  from{ opacity:0; transform:translateY(24px); }
+  from{ opacity:0; transform:translateY(32px); }
   to  { opacity:1; transform:translateY(0); }
 }
 @keyframes aiBarOut{
@@ -1038,7 +1038,7 @@ a:active{ opacity:.55; transition:opacity .1s ease; }
 }
 .svc-card:active{transform:scale(.95)!important;box-shadow:none}
 button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:scale(.96)!important;opacity:.75}
-.ni:active{transform:scale(.90)!important}
+.ni:active{ opacity:.65; transition:opacity .12s ease; }
 
 </style>
 </head>
@@ -1673,7 +1673,7 @@ function go(id){
       aiBar.style.animation='none';
       aiBar.style.display='block';
       requestAnimationFrame(()=>{
-        aiBar.style.animation='aiBarIn .45s cubic-bezier(.16,1,.3,1) both';
+        aiBar.style.animation='aiBarIn .65s cubic-bezier(.16,1,.3,1) both';
       });
     } else {
       aiBar.style.animation='aiBarOut .22s cubic-bezier(.16,1,.3,1) both';
