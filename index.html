@@ -1388,7 +1388,7 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
   </section>
 
   <!-- ИИ АССИСТЕНТ -->
-  <section id="s-ai" class="sec" style="position:fixed!important;top:50px;left:0;right:0;bottom:60px;overflow:hidden;display:flex;flex-direction:column;">
+  <section id="s-ai" class="sec" style="position:fixed!important;top:50px;left:0;right:0;bottom:60px;overflow:hidden;display:flex;flex-direction:column;touch-action:none;">
     <div style="flex-shrink:0;text-align:center;padding:18px 0 4px">
       <p class="hero-eye" style="margin-bottom:3px" data-i18n="ai.eye">Искусственный интеллект</p>
       <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px);margin-bottom:8px" data-i18n="ai.h">Ассистент</h1>
@@ -2233,33 +2233,39 @@ function showPromoResult(text, type){
   const nav  = document.getElementById('nav');
   if(!bar || !inp) return;
 
-  const SPRING = 'cubic-bezier(.16,1,.3,1)';
-  bar.style.transition = `bottom .42s ${SPRING}`;
-
-  let _kb = false;
+  const SP = 'cubic-bezier(.16,1,.3,1)';
+  let _kb = false, _raf = 0;
 
   function applyLayout(kbH){
     const navH = nav ? nav.offsetHeight : 60;
     if(kbH > 80){
       if(!_kb){
         _kb = true;
-        if(nav){ nav.style.transition=`transform .38s ${SPRING},opacity .3s ease`; nav.style.transform='translateY(100%)'; nav.style.opacity='0'; }
+        /* Блокируем скролл страницы */
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        if(nav){ nav.style.transition=`transform .38s ${SP},opacity .3s ease`; nav.style.transform='translateY(100%)'; nav.style.opacity='0'; }
       }
+      bar.style.transition = `bottom .42s ${SP}`;
       bar.style.bottom = kbH + 'px';
-      if(sec){ sec.style.transition=`bottom .42s ${SPRING}`; sec.style.bottom=(kbH+2)+'px'; }
+      if(sec){ sec.style.transition=`bottom .42s ${SP}`; sec.style.bottom=(kbH+2)+'px'; }
       requestAnimationFrame(()=>{ if(msgs) msgs.scrollTop=msgs.scrollHeight; });
     } else {
       if(_kb){
         _kb = false;
-        if(nav){ nav.style.transition=`transform .42s ${SPRING},opacity .35s ease`; nav.style.transform=''; nav.style.opacity=''; }
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        if(nav){ nav.style.transition=`transform .42s ${SP},opacity .35s ease`; nav.style.transform=''; nav.style.opacity=''; }
       }
+      bar.style.transition = `bottom .42s ${SP}`;
       bar.style.bottom = `calc(${navH}px + env(safe-area-inset-bottom))`;
-      if(sec){ sec.style.transition=`bottom .42s ${SPRING}`; sec.style.bottom=navH+'px'; }
+      if(sec){ sec.style.transition=`bottom .42s ${SP}`; sec.style.bottom=navH+'px'; }
     }
   }
 
   if(window.visualViewport){
-    let _raf = 0;
     const onVV = () => {
       cancelAnimationFrame(_raf);
       _raf = requestAnimationFrame(()=>{
@@ -2272,12 +2278,15 @@ function showPromoResult(text, type){
   }
 
   inp.addEventListener('focus', ()=>{
+    /* Предотвращаем скролл страницы при фокусе */
+    window.scrollTo({top:0, behavior:'instant'});
     setTimeout(()=>{
+      window.scrollTo({top:0, behavior:'instant'});
       if(!window.visualViewport) return;
       const vv = window.visualViewport;
       const kH = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
       if(kH > 80) applyLayout(kH);
-    }, 380);
+    }, 300);
   }, {passive:true});
 
   inp.addEventListener('blur', ()=>{
