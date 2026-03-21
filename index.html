@@ -1469,17 +1469,17 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
 </div>
 
 <!-- ══ AI INPUT BAR ══ -->
-<div id="ai-bar" style="position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:0;right:0;max-width:480px;margin:0 auto;padding:8px 12px 10px;background:#0d0d0d;display:none;z-index:199;transform:translateZ(0);transition:bottom .55s cubic-bezier(.16,1,.3,1),opacity .55s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1);">
-  <div style="display:flex;gap:8px;align-items:flex-end;">
+<div id="ai-bar" style="position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:0;right:0;max-width:480px;margin:0 auto;padding:10px 14px 12px;background:#0d0d0d;display:none;z-index:199;transform:translateZ(0);transition:bottom .55s cubic-bezier(.16,1,.3,1),opacity .55s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1);">
+  <div style="display:flex;gap:10px;align-items:flex-end;">
     <textarea id="ai-input" placeholder="Сообщение..." data-i18n-ph="ai.ph" rows="1"
-      style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:10px 14px;color:#fff;font-family:inherit;font-size:15px;resize:none;outline:none;max-height:120px;line-height:1.45;-webkit-appearance:none;overflow:hidden;transition:border-color .2s;"
-      onfocus="this.style.borderColor='rgba(255,255,255,.25)'"
-      onblur="this.style.borderColor='rgba(255,255,255,.1)'"
+      style="flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:13px 18px;color:#fff;font-family:inherit;font-size:16px;resize:none;outline:none;max-height:140px;line-height:1.5;-webkit-appearance:none;overflow:hidden;transition:border-color .25s ease,background .25s ease;"
+      onfocus="this.style.borderColor='rgba(255,255,255,.0)';this.style.background='rgba(255,255,255,.1)'"
+      onblur="this.style.borderColor='rgba(255,255,255,.12)';this.style.background='rgba(255,255,255,.07)'"
       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();aiSend()}"
-      oninput="this.style.height='36px';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+      oninput="this.style.height='48px';this.style.height=Math.min(this.scrollHeight,140)+'px'"></textarea>
     <button onclick="aiSend()" id="ai-btn"
-      style="width:40px;height:40px;min-height:40px;max-height:40px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);color:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;margin-bottom:2px;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
+      style="width:48px;height:48px;min-width:48px;min-height:48px;border-radius:50%;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.16);color:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;margin-bottom:1px;">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
     </button>
   </div>
 </div>
