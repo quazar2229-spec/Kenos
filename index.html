@@ -1054,7 +1054,7 @@ a:active{ opacity:.55; transition:opacity .18s ease; }
 
   <div id="view">
   <!-- ГЛАВНАЯ -->
-  <section id="s-home" class="sec on">
+  <section id="s-home" class="sec">
     <div class="hero">
       <p class="hero-eye" data-i18n="hero.eye">Emulator Solutions</p>
       <h1 class="hero-h">KENOS</h1>
@@ -1637,7 +1637,7 @@ const SEC_NAV = {
   's-key':'n-key','s-hlp':'n-hlp','s-inf':'n-inf',
   's-adm':'n-adm','s-abt':'n-abt','s-ai':'n-ai'
 };
-let _cur = 's-home';
+let _cur = '';
 
 function moveSlider(navItemEl){
   const slider = document.getElementById('nav-slider');
@@ -2100,8 +2100,7 @@ function initSakura(id,count,alpha){
     else setTimeout(()=>{
       ld.classList.add('hidden');
       document.getElementById('app')?.classList.add('ready');
-      const homeEl = document.getElementById('s-home');
-      if(homeEl) homeEl.classList.add('on');
+      go('s-home');
       moveSlider(document.getElementById('n-home'));
     }, 250);
   }
@@ -2109,14 +2108,12 @@ function initSakura(id,count,alpha){
   // Старт через 1с — дать анимациям CSS появиться
   setTimeout(()=> requestAnimationFrame(tick), 1000);
 
-  // Страховка — если что-то пошло не так, показываем через 5с
   setTimeout(()=>{
     document.getElementById('loader')?.classList.add('hidden');
     const app = document.getElementById('app');
     if(app && !app.classList.contains('ready')){
       app.classList.add('ready');
-      const homeEl = document.getElementById('s-home');
-      if(homeEl) homeEl.classList.add('on');
+      go('s-home');
       moveSlider(document.getElementById('n-home'));
     }
   }, 5000);
