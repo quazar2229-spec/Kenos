@@ -1653,7 +1653,8 @@ function go(id){
     }, 240);
   }
 
-  window.scrollTo({ top:0, behavior:'instant' });
+  /* Скролл вверх — только не для ИИ (там fixed секция, скролл не нужен) */
+  if(id !== 's-ai') window.scrollTo({ top:0, behavior:'instant' });
 
   /* Новая секция — небольшая задержка для эффекта смены */
   setTimeout(()=>{
@@ -2728,6 +2729,11 @@ async function aiSend(){
   const text = inp.value.trim();
   if(!text || btn.disabled) return;
 
+  /* Скроллим только контейнер сообщений — страница не трогается */
+  function scrollMsgs(){ 
+    requestAnimationFrame(()=>{ msgs.scrollTop = msgs.scrollHeight; }); 
+  }
+
   inp.value=''; inp.style.height='36px';
   btn.disabled=true; btn.style.opacity='.4';
 
@@ -2737,10 +2743,8 @@ async function aiSend(){
   _ub.style.cssText='align-self:flex-end;max-width:78%;background:rgba(255,255,255,.1);border-radius:18px 18px 4px 18px;padding:9px 14px;font-size:14px;color:#fff;line-height:1.45;word-break:break-word;';
   _ub.innerHTML=text.replace(/</g,'&lt;');
   msgs.appendChild(_ub);
-  // Скрываем placeholder при первом сообщении
   const empty=document.getElementById('ai-empty');
   if(empty) empty.style.display='none';
-  
 
   const loadId='ail'+Date.now();
   const _lb=document.createElement('div');
@@ -2749,7 +2753,7 @@ async function aiSend(){
   _lb.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#fff;display:block;animation:dotPulse 1.2s 0s ease-in-out infinite;box-shadow:0 0 8px rgba(255,255,255,.8)"></span><span style="width:6px;height:6px;border-radius:50%;background:#fff;display:block;animation:dotPulse 1.2s .22s ease-in-out infinite;box-shadow:0 0 8px rgba(255,255,255,.8)"></span><span style="width:6px;height:6px;border-radius:50%;background:#fff;display:block;animation:dotPulse 1.2s .44s ease-in-out infinite;box-shadow:0 0 8px rgba(255,255,255,.8)"></span>';
   msgs.appendChild(_lb);
   requestAnimationFrame(()=>{ _lb.style.opacity='1'; });
-  msgs.scrollTop=msgs.scrollHeight;
+  scrollMsgs();
 
   try{
     const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
@@ -2768,22 +2772,19 @@ async function aiSend(){
       })
     });
     const data=await res.json();
-    console.log('[AI]', JSON.stringify(data).slice(0,300));
     const reply=(data.choices&&data.choices[0]&&data.choices[0].message?.content)||(data.error?.message)||(_aiLang==='ru'?'Нет ответа':'No response');
     _aiHistory.push({role:'assistant',content:reply});
     document.getElementById(loadId)?.remove();
 
-    // Создаём пузырь и печатаем посимвольно
     const bubble = document.createElement('div');
     bubble.className='ai-bubble';
     bubble.style.cssText='align-self:flex-start;max-width:84%;background:rgba(255,255,255,.05);border-radius:18px 18px 18px 4px;padding:9px 14px;font-size:14px;color:rgba(255,255,255,.88);line-height:1.5;word-break:break-word;';
     msgs.appendChild(bubble);
-    msgs.scrollTop = msgs.scrollHeight;
-    
+    scrollMsgs();
 
     let i=0;
     function typeChar(){
-      if(i>=reply.length){ msgs.scrollTop=msgs.scrollHeight; return; }
+      if(i>=reply.length){ scrollMsgs(); return; }
       i++;
       bubble.innerHTML=reply.slice(0,i).replace(/</g,'&lt;').replace(/\n/g,'<br>');
       msgs.scrollTop=msgs.scrollHeight;
@@ -2796,7 +2797,7 @@ async function aiSend(){
     msgs.innerHTML+=`<div style="align-self:flex-start;padding:10px;font-size:12px;color:rgba(255,80,80,.7)">${e.message||'Ошибка'}</div>`;
   }
   btn.disabled=false; btn.style.opacity='1';
-  msgs.scrollTop=msgs.scrollHeight;
+  scrollMsgs();
 }
 </script>
 </body>
