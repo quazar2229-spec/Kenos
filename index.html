@@ -368,11 +368,10 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .sec{
   position:absolute;
   top:0;left:0;right:0;
-  opacity:0;
+  opacity:1;
   pointer-events:none;
   visibility:hidden;
   transition:
-    opacity    .5s cubic-bezier(.25,.46,.45,.94),
     transform  .5s cubic-bezier(.25,.46,.45,.94),
     visibility .5s;
   transform:translateY(14px);
@@ -1659,17 +1658,14 @@ function go(id){
 
   _cur = id;
 
-  /* 1. Старая секция — мгновенно убираем pointer-events и visibility,
-        но opacity плавно уходит через CSS transition */
+  /* 1. Старая секция — убираем через visibility и transform */
   if(prev){
-    prev.style.transition = 'opacity .28s cubic-bezier(.25,.46,.45,.94), transform .28s cubic-bezier(.25,.46,.45,.94)';
-    prev.style.opacity    = '0';
+    prev.style.transition = 'transform .28s cubic-bezier(.25,.46,.45,.94), visibility .28s';
     prev.style.transform  = 'translateY(-6px)';
     prev.style.pointerEvents = 'none';
     setTimeout(()=>{
       prev.classList.remove('on');
       prev.style.transition = '';
-      prev.style.opacity    = '';
       prev.style.transform  = '';
       prev.style.pointerEvents = '';
     }, 300);
@@ -2100,17 +2096,6 @@ function initSakura(id,count,alpha){
     else setTimeout(()=>{
       ld.classList.add('hidden');
       document.getElementById('app')?.classList.add('ready');
-      // Сбрасываем анимации — перезапускаем их после показа контента
-      const home = document.getElementById('s-home');
-      if(home){
-        const els = home.querySelectorAll('.hero,.hero-eye,.hero-h,.hero-sub,.divider,.sec-title,.svc-grid,.svc-card,.panel,.links,.btn');
-        els.forEach(el=>{ el.style.animation='none'; });
-        requestAnimationFrame(()=>{
-          requestAnimationFrame(()=>{
-            els.forEach(el=>{ el.style.animation=''; });
-          });
-        });
-      }
       moveSlider(document.getElementById('n-home'));
     }, 250);
   }
