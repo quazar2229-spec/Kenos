@@ -368,13 +368,18 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .sec{
   position:absolute;
   top:0;left:0;right:0;
-  opacity:1;
+  opacity:0;
   pointer-events:none;
   visibility:hidden;
+  transform:translateY(14px);
+}
+
+/* Анимация появления — только после первого рендера */
+.sec.animated{
   transition:
+    opacity    .5s cubic-bezier(.25,.46,.45,.94),
     transform  .5s cubic-bezier(.25,.46,.45,.94),
     visibility .5s;
-  transform:translateY(14px);
 }
 
 .sec.on{
@@ -408,7 +413,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 #s-ai.on #ai-empty            { animation:waveIn .75s .22s cubic-bezier(.16,1,.3,1) both; }
 
 @keyframes waveIn{
-  from{ opacity:1; transform:translateY(18px) scale(.98); }
+  from{ opacity:0; transform:translateY(18px) scale(.98); }
   to  { opacity:1; transform:translateY(0) scale(1); }
 }
 
@@ -1658,14 +1663,17 @@ function go(id){
 
   _cur = id;
 
-  /* 1. Старая секция — убираем через visibility и transform */
+  /* 1. Старая секция — мгновенно убираем pointer-events и visibility,
+        но opacity плавно уходит через CSS transition */
   if(prev){
-    prev.style.transition = 'transform .28s cubic-bezier(.25,.46,.45,.94), visibility .28s';
+    prev.style.transition = 'opacity .28s cubic-bezier(.25,.46,.45,.94), transform .28s cubic-bezier(.25,.46,.45,.94)';
+    prev.style.opacity    = '0';
     prev.style.transform  = 'translateY(-6px)';
     prev.style.pointerEvents = 'none';
     setTimeout(()=>{
       prev.classList.remove('on');
       prev.style.transition = '';
+      prev.style.opacity    = '';
       prev.style.transform  = '';
       prev.style.pointerEvents = '';
     }, 300);
@@ -1958,7 +1966,7 @@ let _bmpOk=false;
 /* ── Основная функция ── */
 function initSakura(id,count,alpha){
   const cvs=document.getElementById(id);if(!cvs)return;
-  const ctx=cvs.getContext('2d',{alpha:true});
+  const ctx=cvs.getContext('2d',{alpha:true,desynchronized:true});
   let W=0,H=0;
 
   /* STRIDE 9: x,y,si,ci,vx,vy,ai,vai,ali */
@@ -2097,6 +2105,10 @@ function initSakura(id,count,alpha){
       ld.classList.add('hidden');
       document.getElementById('app')?.classList.add('ready');
       moveSlider(document.getElementById('n-home'));
+      /* Включаем transition ТОЛЬКО после первого показа — нет мигания */
+      requestAnimationFrame(()=>{
+        document.querySelectorAll('.sec').forEach(s=>s.classList.add('animated'));
+      });
     }, 250);
   }
 
