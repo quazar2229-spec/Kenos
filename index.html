@@ -46,6 +46,7 @@
   --ease:cubic-bezier(.25,.46,.45,.94);
   --fast:.28s;--mid:.38s;
   --smooth:cubic-bezier(.25,.46,.45,.94);
+  /* iOS-style spring — для кнопок и карточек */
   --spring:cubic-bezier(.34,1.2,.64,1);
   --ac:rgba(255,255,255,1);
   --ac-dim:rgba(255,255,255,.08);
@@ -110,7 +111,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   position:fixed;top:0;left:0;
   width:100%;height:100%;
   z-index:0;pointer-events:none;
-  opacity:.55;
+  opacity:.60;
 }
 
 /* ═══════════════════════════════════════════
@@ -121,7 +122,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   background:#0d0d0d;
-  transition:opacity .35s ease-out, visibility .35s;
+  transition:opacity .45s ease-out, visibility .45s;
 }
 #loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
 #cvs-loader{position:absolute;inset:0;pointer-events:none;transform:translateZ(0);opacity:.60}
@@ -241,13 +242,6 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   0%,100%{opacity:.45}
   50%    {opacity:.85}
 }
-/* glowPulse переведён на opacity — text-shadow анимация вызывает repaint, opacity — нет */
-@keyframes heroPulse{
-  0%,100%{ opacity:.88 }
-  50%    { opacity:1   }
-}
-.hero-h{ animation:heroPulse 4s 1.5s ease-in-out infinite; }
-.logo-t{ animation:logoGlow 6s 1s ease-in-out infinite; }
 
 /* ═══════════════════════════════════════════
    APP SHELL
@@ -371,15 +365,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   opacity:0;
   pointer-events:none;
   visibility:hidden;
-  transform:translateY(14px);
-}
-
-/* Анимация появления — только после первого рендера */
-.sec.animated{
-  transition:
-    opacity    .5s cubic-bezier(.25,.46,.45,.94),
-    transform  .5s cubic-bezier(.25,.46,.45,.94),
-    visibility .5s;
+  transition:opacity .38s cubic-bezier(.16,1,.3,1), transform .38s cubic-bezier(.16,1,.3,1); will-change:opacity,transform;
+  transform:translateY(12px);
 }
 
 .sec.on{
@@ -406,6 +393,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 }
 .ai-bubble{
   animation:bubbleIn .65s cubic-bezier(.16,1,.3,1) both;
+  will-change:opacity,transform;
 }
 #s-ai.on > div:first-child p  { animation:waveIn .55s .03s cubic-bezier(.16,1,.3,1) both; }
 #s-ai.on > div:first-child h1  { animation:waveIn .65s .08s cubic-bezier(.16,1,.3,1) both; }
@@ -424,6 +412,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .sec.on .links,
 .sec.on .btn{
   animation: waveIn .75s cubic-bezier(.16,1,.3,1) both;
+  will-change:opacity,transform;
 }
 
 .sec.on .hero                 { animation-delay:.03s }
@@ -530,7 +519,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .svc-card:active{transform:scale(.94);transition:transform .06s ease}
 .svc-ico{
   display:flex;justify-content:center;align-items:center;
-  margin-bottom:12px;color:rgba(255,255,255,.75);
+  margin-bottom:12px;color:var(--txt-dim);
   position:relative;z-index:1;
 }
 .svc-card:nth-child(1) .svc-ico{animation-delay:0s}
@@ -749,8 +738,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.14);
   transform:translateX(0);
-  transition:transform .65s cubic-bezier(.25,.46,.45,.94),
-             width     .65s cubic-bezier(.25,.46,.45,.94);
+  transition:transform 1.1s cubic-bezier(.16,1,.3,1),
+             width 1.1s cubic-bezier(.16,1,.3,1);
   will-change:transform,width;
   pointer-events:none;z-index:0;
   box-shadow:0 1px 0 rgba(255,255,255,.1) inset;
@@ -767,7 +756,9 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .ni svg{
   color:var(--txt-muted);
   display:block;
+  /* только color transition — никаких filter/transform анимаций */
   transition:color .15s ease;
+  /* will-change убран — 8 одновременных GPU слоёв убивали fps */
 }
 
 .ni span{
@@ -779,7 +770,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .ni:hover span{ color:var(--ac-soft); }
 .ni:active{ opacity:.7; transition:opacity .1s ease; }
 .ni.on:active{ opacity:1; } /* уже на этом разделе — никакого эффекта */
-/* nav bounce убран — иконка остаётся статичной */
+.ni.on.bouncing{ animation:navBounceBack .38s cubic-bezier(.25,.46,.45,.94) forwards; }
 
 /* Активная иконка */
 .ni.on span{ color:var(--ac); }
@@ -915,18 +906,6 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   #toast{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(30,30,30,.96)}
   /* меньше лепестков сакуры — JS читает этот флаг */
   body{ --mobile:1; }
-  /* backdrop-filter blur — самый тяжёлый эффект, убираем на мобиле */
-  #prf-overlay,#picker-ov{
-    backdrop-filter:none!important;
-    -webkit-backdrop-filter:none!important;
-    background:rgba(0,0,0,.72)!important;
-  }
-  #prf-sheet,#picker-sheet{
-    backdrop-filter:none!important;
-    -webkit-backdrop-filter:none!important;
-  }
-  /* Убираем тяжёлые box-shadow на слабых устройствах */
-  .panel{ box-shadow:none!important; }
 }
 
 /* Respect reduced motion — никаких анимаций для людей с эпилепсией */
@@ -943,56 +922,51 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 /* ══ УНИВЕРСАЛЬНАЯ TAP АНИМАЦИЯ ══ */
 *{-webkit-tap-highlight-color:transparent}
 
-/* Всё кликабельное — мягкая пружина */
-button, .svc-card, .btn, .lpill, .ni,
-.dlink, .lang-b, .key-copy, .info-r a,
+/* Всё кликабельное */
+button, [onclick], .svc-card, .btn, .lpill, .ni,
+.dlink, .lang-b, .key-copy, .info-r a, .panel,
 .hdr-avatar-wrap, .logo-t{
-  transition:transform .38s cubic-bezier(.25,.46,.45,.94),
-             opacity   .38s cubic-bezier(.25,.46,.45,.94),
-             background .32s cubic-bezier(.25,.46,.45,.94),
-             border-color .32s cubic-bezier(.25,.46,.45,.94),
-             box-shadow   .32s cubic-bezier(.25,.46,.45,.94);
+  transition:transform .2s cubic-bezier(.16,1,.3,1),
+             opacity .2s ease,
+             background .2s ease,
+             border-color .2s ease,
+             box-shadow .2s ease;
   cursor:pointer;
 }
 
-/* Нажатие — только конкретные элементы, НЕ [onclick] глобально */
-button:active, .btn:active, .lpill:active, .dlink:active,
+/* Нажатие — мгновенный feedback */
+button:active, [onclick]:active, .svc-card:active,
+.btn:active, .lpill:active, .dlink:active,
 .lang-b:active, .hdr-avatar-wrap:active{
-  transform:scale(.96)!important;
-  opacity:.75;
-  transition:transform .12s cubic-bezier(.25,.46,.45,.94),
-             opacity   .12s ease;
+  transform:scale(.94)!important;
+  opacity:.8;
 }
 
-/* Нав-айтемы */
-.ni:active{ transform:scale(.90)!important;
-  transition:transform .12s cubic-bezier(.25,.46,.45,.94); }
+/* Нав-айтемы — чуть мягче */
+.ni:active{ transform:scale(.88)!important; }
 
 /* Ссылки внутри панелей */
-a:active{ opacity:.55; transition:opacity .18s ease; }
+a:active{ opacity:.6; }
 
-/* Карточки сервисов */
-@media(hover:hover){
-  .svc-card:hover{
-    transform:translateY(-2px) scale(1.01);
-    box-shadow:0 8px 24px rgba(0,0,0,.5);
-  }
+/* Карточки сервисов при hover (ПК) */
+.svc-card:hover{
+  transform:translateY(-2px) scale(1.01);
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
 }
 .svc-card:active{
-  transform:scale(.95)!important;
+  transform:scale(.94)!important;
   box-shadow:none;
-  transition:transform .12s cubic-bezier(.25,.46,.45,.94)!important;
 }
 
-/* Кнопка ИИ */
-@media(hover:hover){
-  #ai-btn:hover{ background:rgba(255,255,255,.2)!important; transform:scale(1.06); }
-}
-#ai-btn:active{ transform:scale(.88)!important;
-  transition:transform .12s cubic-bezier(.25,.46,.45,.94)!important; }
+/* Кнопки при hover */
+
+
+/* Кнопка отправки ии */
+#ai-btn:hover{ background:rgba(255,255,255,.2)!important; transform:scale(1.06); }
+#ai-btn:active{ transform:scale(.88)!important; }
 
 /* Lang switcher */
-@media(hover:hover){ .lang-b:hover{ opacity:.8; } }
+.lang-b:hover{ opacity:.8; }
 
 /* AI bar — анимация появления снизу */
 @keyframes aiBarIn{
@@ -1004,8 +978,12 @@ a:active{ opacity:.55; transition:opacity .18s ease; }
   to  { opacity:0; transform:translateZ(0) translateY(20px); }
 }
 
-/* GPU — только нужные слои */
-#ai-bar{ backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+/* 120fps GPU оптимизация */
+.sec{ -webkit-backface-visibility:hidden; backface-visibility:hidden; perspective:1000px; }
+.sec.on .hero, .sec.on .panel, .sec.on .svc-card, .sec.on .links, .sec.on .btn{
+  -webkit-backface-visibility:hidden; backface-visibility:hidden;
+}
+#ai-bar{ -webkit-backface-visibility:hidden; backface-visibility:hidden; }
 
 /* Числа — tabular монопространственный */
 .num, #fps-num, .ld-pct, .p-val, .cl-v{
@@ -1014,6 +992,35 @@ a:active{ opacity:.55; transition:opacity .18s ease; }
   font-family: var(--fb) !important;
   letter-spacing: .02em;
 }
+
+/* Пикер — пункты */
+.picker-item{
+  padding:13px 16px;font-size:14px;font-family:var(--fb);
+  color:rgba(255,255,255,.7);cursor:pointer;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  position:relative;overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;user-select:none;-webkit-user-select:none;
+}
+@keyframes pickerTap{
+  0%  {color:rgba(255,255,255,.7);text-shadow:none}
+  30% {color:#fff;text-shadow:0 0 32px rgba(255,255,255,.9),0 0 12px rgba(255,255,255,.5)}
+  100%{color:rgba(255,255,255,.85);text-shadow:0 0 8px rgba(255,255,255,.2)}
+}
+@media(hover:hover){
+  .picker-item:hover{color:#fff;text-shadow:0 0 18px rgba(255,255,255,.55)}
+}
+.picker-item.tapped{animation:pickerTap .55s cubic-bezier(.16,1,.3,1) forwards}
+#picker-list::-webkit-scrollbar{display:none}
+
+/* Нет hover на тач-устройствах */
+@media(hover:hover){
+  .svc-card:hover{transform:translateY(-2px) scale(1.01);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+}
+.svc-card:active{transform:scale(.95)!important;box-shadow:none}
+button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:scale(.96)!important;opacity:.75}
+.ni:active{transform:scale(.90)!important}
+
 </style>
 </head>
 <body>
@@ -1132,7 +1139,7 @@ a:active{ opacity:.55; transition:opacity .18s ease; }
         <div id="fps-badge" style="font-size:12px;margin-top:6px;color:rgba(255,255,255,.45);"></div>
         <div id="fps-note" style="font-size:11px;color:rgba(255,255,255,.25);margin-top:10px;line-height:1.6;"></div>
       </div>
-      <div style="font-size:10px;color:rgba(255,255,255,.15);text-align:center;margin-top:10px;line-height:1.5;">BS работает на процессоре — чем мощнее CPU, тем выше FPS</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.15);text-align:center;margin-top:10px;line-height:1.5;">BS работает на 4 ядрах — X3D кэш не влияет на FPS</div>
     </div>
   </section>
 
@@ -1421,6 +1428,7 @@ a:active{ opacity:.55; transition:opacity .18s ease; }
 
 
 <!-- ══ PICKER SHEET ══ -->
+<div id="picker-ov" onclick="closePicker()" style="position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);pointer-events:none;transition:background .3s ease,backdrop-filter .3s ease,-webkit-backdrop-filter .3s ease;"></div>
 <div id="picker-ov" onclick="closePicker()" style="position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);pointer-events:none;transition:background .42s ease,backdrop-filter .42s ease,-webkit-backdrop-filter .42s ease;"></div>
 <div id="picker-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:8001;max-width:480px;margin:0 auto;background:rgba(14,14,14,.97);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);transform:translateY(100%);opacity:0;transition:transform .6s cubic-bezier(.16,1,.3,1),opacity .42s ease;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -16px 60px rgba(0,0,0,.8);">
   <!-- Подсветка сверху как в профиле -->
@@ -1435,65 +1443,8 @@ a:active{ opacity:.55; transition:opacity .18s ease; }
     <input id="picker-search" type="text" placeholder="Поиск..." oninput="filterPicker(this.value)"
       style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:9px 12px;color:#fff;font-size:14px;outline:none;-webkit-appearance:none;">
   </div>
-  <div id="picker-list" style="overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;position:relative;z-index:2;scrollbar-width:none;-ms-overflow-style:none;"></div>
+  <div id="picker-list" style="overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;position:relative;z-index:2;"></div>
 </div>
-<style>#picker-list::-webkit-scrollbar{display:none}
-
-/* Пункты пикера */
-.picker-item{
-  padding:13px 16px;
-  font-size:14px;
-  font-family:var(--fb);
-  color:rgba(255,255,255,.7);
-  cursor:pointer;
-  border-bottom:1px solid rgba(255,255,255,.05);
-  position:relative;
-  overflow:hidden;
-  transition:color .18s ease, text-shadow .18s ease, opacity .12s ease;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  user-select:none;
-  -webkit-user-select:none;
-}
-.picker-item::before{
-  content:'';
-  position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
-  opacity:0;transition:opacity .18s ease;pointer-events:none;
-}
-.picker-item::after{
-  content:'';
-  position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.09) 0%,transparent 70%);
-  opacity:0;transition:opacity .18s ease;pointer-events:none;
-}
-
-@keyframes pickerTap{
-  0%  { color:rgba(255,255,255,.7); text-shadow:none; }
-  30% { color:#fff; text-shadow:0 0 32px rgba(255,255,255,.9),0 0 12px rgba(255,255,255,.5); }
-  100%{ color:rgba(255,255,255,.85); text-shadow:0 0 8px rgba(255,255,255,.2); }
-}
-@keyframes pickerSheetIn{
-  from{ transform:translateY(60px); opacity:0; }
-  to  { transform:translateY(0);    opacity:1; }
-}
-/* hover только на устройствах с настоящим курсором */
-@media(hover:hover){
-  .picker-item:hover{
-    color:#fff;
-    text-shadow:0 0 18px rgba(255,255,255,.55),0 0 6px rgba(255,255,255,.25);
-  }
-  .picker-item:hover::before,
-  .picker-item:hover::after{ opacity:1; }
-}
-
-/* Нажатие — плавная вспышка */
-.picker-item.tapped{
-  animation: pickerTap .55s cubic-bezier(.16,1,.3,1) forwards;
-}
-.picker-item.tapped::before,
-.picker-item.tapped::after{ opacity:1; transition:opacity .55s ease; }
-</style>
 
 <!-- ══ AI INPUT BAR ══ -->
 <div id="ai-bar" style="position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:0;right:0;max-width:480px;margin:0 auto;padding:8px 12px 10px;background:#0d0d0d;display:none;z-index:199;transform:translateZ(0);transition:bottom .55s cubic-bezier(.16,1,.3,1),opacity .55s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1);">
@@ -1655,7 +1606,9 @@ function moveSlider(navItemEl){
 }
 
 function go(id){
-  if(id === _cur) return;
+  if(id === _cur){
+    return;
+  }
 
   const prev = document.getElementById(_cur);
   const next = document.getElementById(id);
@@ -1663,8 +1616,6 @@ function go(id){
 
   _cur = id;
 
-  /* 1. Старая секция — мгновенно убираем pointer-events и visibility,
-        но opacity плавно уходит через CSS transition */
   if(prev){
     prev.style.transition = 'opacity .28s cubic-bezier(.25,.46,.45,.94), transform .28s cubic-bezier(.25,.46,.45,.94)';
     prev.style.opacity    = '0';
@@ -1679,15 +1630,13 @@ function go(id){
     }, 300);
   }
 
-  /* 2. Скролл — мгновенно, без анимации (иначе дёргает) */
   window.scrollTo({ top:0, behavior:'instant' });
 
-  /* 3. Новая секция появляется после небольшой паузы */
   setTimeout(()=>{
     next.classList.add('on');
   }, 60);
 
-  /* 4. Навбар */
+  // Навбар — обновляем сразу
   document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
   const activeNav = document.getElementById(SEC_NAV[id]);
   activeNav?.classList.add('on');
@@ -1695,8 +1644,6 @@ function go(id){
 
   // AI input bar — мгновенно скрываем, плавно показываем
   const aiBar = document.getElementById('ai-bar');
-  const aiSec = document.getElementById('s-ai');
-  const nav2  = document.getElementById('nav');
   if(aiBar){
     if(id === 's-ai'){
       aiBar.style.animation='none';
@@ -1705,9 +1652,6 @@ function go(id){
         aiBar.style.animation='aiBarIn .45s cubic-bezier(.16,1,.3,1) both';
       });
     } else {
-      /* Возвращаем навбар и секцию при уходе с ИИ */
-      if(nav2){ nav2.style.transform=''; nav2.style.opacity=''; nav2.style.transition=''; }
-      if(aiSec){ aiSec.style.bottom=''; aiSec.style.transition=''; }
       aiBar.style.animation='aiBarOut .22s cubic-bezier(.16,1,.3,1) both';
       setTimeout(()=>{ aiBar.style.display='none'; aiBar.style.animation='none'; }, 230);
     }
@@ -1995,8 +1939,7 @@ function initSakura(id,count,alpha){
   for(let i=0;i<count;i++)spawn(i,true);
 
   let alive=true,lastT=0;
-  const isMobWeak = /iPhone|iPad|Android/i.test(navigator.userAgent) && (navigator.deviceMemory||4) <= 2;
-  const CAP = isMobWeak ? 1000/30 : 1000/63; /* слабые — 30fps, остальные — 60fps */
+  const CAP=1000/63;
 
   document.addEventListener('visibilitychange',()=>{
     alive=!document.hidden;if(alive)requestAnimationFrame(fr);
@@ -2034,18 +1977,10 @@ function initSakura(id,count,alpha){
   requestAnimationFrame(fr);
 }
 
-/* Адаптивное кол-во лепестков — слабые телефоны получают меньше */
-(()=>{
-  const mem = navigator.deviceMemory || 4;       /* GB RAM, если API есть */
-  const cpu = navigator.hardwareConcurrency || 4; /* кол-во ядер */
-  const isMob = /iPhone|iPad|Android/i.test(navigator.userAgent);
-  let n;
-  if(isMob && (mem <= 2 || cpu <= 4)) n = 6;     /* слабый телефон */
-  else if(isMob)                       n = 12;    /* нормальный телефон */
-  else                                 n = 20;    /* ПК */
-  initSakura('cvs-sakura', n, .72);
-  initSakura('cvs-loader',  Math.min(n, 10), .72);
-})();
+/* iPhone 15 Pro Max уровень — одинаково везде */
+const _N = 20;
+initSakura('cvs-sakura', _N, .72);
+initSakura('cvs-loader',  _N, .72);
 
 /* ══════════════════════════════════════
    LOADER — плавный прогресс с статусами
@@ -2074,7 +2009,7 @@ function initSakura(id,count,alpha){
   let stageIdx = 0;
 
   let cur  = 0;
-  const DUR = 2200;
+  const DUR = 4200;
   let t0 = 0; // ставим в первом кадре
 
   function ease(x){ return x<.5 ? 8*x*x*x*x : 1-Math.pow(-2*x+2,4)/2; }
@@ -2105,30 +2040,15 @@ function initSakura(id,count,alpha){
       ld.classList.add('hidden');
       document.getElementById('app')?.classList.add('ready');
       moveSlider(document.getElementById('n-home'));
-      /* Включаем transition ТОЛЬКО после первого показа — нет мигания */
-      requestAnimationFrame(()=>{
-        document.querySelectorAll('.sec').forEach(s=>s.classList.add('animated'));
-      });
     }, 250);
   }
 
   // Старт через 1с — дать анимациям CSS появиться
   setTimeout(()=> requestAnimationFrame(tick), 1000);
-
-  // Страховка — если что-то пошло не так, показываем через 5с
-  setTimeout(()=>{
-    document.getElementById('loader')?.classList.add('hidden');
-    const app = document.getElementById('app');
-    if(app && !app.classList.contains('ready')){
-      app.classList.add('ready');
-      moveSlider(document.getElementById('n-home'));
-    }
-  }, 5000);
 })();
 
 /* ══════════════════════════════════════
    МОБИЛЬНАЯ ОПТИМИЗАЦИЯ
-   touchstart на nav — убирает 300ms задержку, но только при реальном тапе
 ══════════════════════════════════════ */
 (()=>{
   if(!('ontouchstart' in window)) return;
@@ -2150,14 +2070,13 @@ function initSakura(id,count,alpha){
     }, { passive: true });
 
     el.addEventListener('touchend', e => {
-      if(_moved) return; /* это был скролл — игнорируем */
+      if(_moved) return;
       e.preventDefault();
       const onclick = el.getAttribute('onclick');
       if(onclick) eval(onclick);
     }, { passive: false });
   });
 
-  // Passive scroll на всём документе — плавный скролл на iOS
   document.addEventListener('touchmove', ()=>{}, { passive: true });
 })();
 
@@ -2263,124 +2182,38 @@ function showPromoResult(text, type){
   setTimeout(() => el.classList.remove('show'), 4000);
 }
 
-/* Плавная подстройка под клавиатуру в ИИ-разделе */
+/* Фикс клавиатуры — держим ai-bar над клавиатурой */
 (()=>{
-  const bar     = document.getElementById('ai-bar');
-  const aiSec   = document.getElementById('s-ai');
-  const inp     = document.getElementById('ai-input');
-  const msgs    = document.getElementById('ai-msgs');
-  const nav     = document.getElementById('nav');
+  const bar = document.getElementById('ai-bar');
 
-  if(!bar || !inp) return;
+  // Блокируем скролл страницы при фокусе на инпуте
+  const inp = document.getElementById('ai-input');
+  if(inp){
+    inp.addEventListener('focus', ()=>{
+      // Даём браузеру поднять клавиатуру, потом фиксируем позицию
+      setTimeout(()=>{
+        const msgs = document.getElementById('ai-msgs');
+        if(msgs) msgs.scrollTop = msgs.scrollHeight;
+      }, 350);
+    }, {passive:true});
+  }
 
-  /* Плавный transition на bottom у bar и у секции */
-  const SPRING = 'cubic-bezier(.16,1,.3,1)';
-  bar.style.transition   = `bottom .38s ${SPRING}, opacity .55s ${SPRING}, transform .55s ${SPRING}`;
+  if(!window.visualViewport || !bar) return;
 
-  let _kbOpen = false;
-
-  function applyLayout(keyboardH){
-    const navH   = nav ? nav.offsetHeight : 60;
-    const safeB  = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sab') || '0') || 0;
-
-    if(keyboardH > 80){
-      /* Клавиатура открыта */
-      if(!_kbOpen){
-        _kbOpen = true;
-        /* Скрываем навбар плавно */
-        if(nav){ nav.style.transition=`transform .35s ${SPRING},opacity .3s ease`; nav.style.transform='translateY(100%)'; nav.style.opacity='0'; }
-      }
-      /* bar поднимается над клавиатурой */
-      bar.style.bottom = keyboardH + 'px';
-      /* Секция растягивается — bottom = высота клавиатуры */
-      if(aiSec){ aiSec.style.transition=`bottom .38s ${SPRING}`; aiSec.style.bottom = (keyboardH + 4) + 'px'; }
-      /* Скролл к последнему сообщению */
-      requestAnimationFrame(()=>{ if(msgs) msgs.scrollTop = msgs.scrollHeight; });
+  function onResize(){
+    const vv = window.visualViewport;
+    const fromBottom = window.innerHeight - vv.height - vv.offsetTop;
+    if(fromBottom > 50){
+      bar.style.bottom = fromBottom + 'px';
+      const msgs = document.getElementById('ai-msgs');
+      if(msgs) msgs.scrollTop = msgs.scrollHeight;
     } else {
-      /* Клавиатура закрыта */
-      if(_kbOpen){
-        _kbOpen = false;
-        /* Возвращаем навбар */
-        if(nav){ nav.style.transform='translateY(0)'; nav.style.opacity='1'; }
-      }
-      bar.style.bottom = `calc(${navH}px + env(safe-area-inset-bottom))`;
-      if(aiSec){ aiSec.style.transition=`bottom .38s ${SPRING}`; aiSec.style.bottom = navH + 'px'; }
+      bar.style.bottom = 'calc(60px + env(safe-area-inset-bottom))';
     }
   }
-
-  /* VisualViewport API — самый точный способ на мобиле */
-  if(window.visualViewport){
-    let _rafId = 0;
-    function onVV(){
-      cancelAnimationFrame(_rafId);
-      _rafId = requestAnimationFrame(()=>{
-        const vv = window.visualViewport;
-        const keyboardH = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-        applyLayout(keyboardH);
-      });
-    }
-    window.visualViewport.addEventListener('resize', onVV, {passive:true});
-    window.visualViewport.addEventListener('scroll', onVV, {passive:true});
-  }
-
-  /* Fallback через focus/blur */
-  inp.addEventListener('focus', ()=>{
-    /* На iOS keyboard может не триггерить visualViewport сразу */
-    setTimeout(()=>{
-      if(!window.visualViewport) return;
-      const vv = window.visualViewport;
-      const kH = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-      if(kH < 80) return; /* уже обработано */
-      applyLayout(kH);
-    }, 350);
-  }, {passive:true});
-
-  inp.addEventListener('blur', ()=>{
-    setTimeout(()=>{
-      if(window.visualViewport){
-        const vv = window.visualViewport;
-        const kH = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-        applyLayout(kH);
-      } else { applyLayout(0); }
-    }, 100);
-  }, {passive:true});
-
-  /* Блокируем скролл страницы — только ИИ-секция скролится внутри */
-  inp.addEventListener('touchstart', e=>{ if(_kbOpen) e.stopPropagation(); }, {passive:true});
+  window.visualViewport.addEventListener('resize', onResize, {passive:true});
+  window.visualViewport.addEventListener('scroll', onResize, {passive:true});
 })();
-
-/* ══════════════════════════════════════
-   УНИВЕРСАЛЬНЫЙ ТАП-ХЭНДЛЕР (без ложных срабатываний при скролле)
-══════════════════════════════════════ */
-function addTapHandler(el, fn){
-  if(!el) return;
-  let _sx=0,_sy=0,_moved=false,_timer=0;
-  el.addEventListener('touchstart', e=>{
-    _sx=e.touches[0].clientX; _sy=e.touches[0].clientY; _moved=false;
-    clearTimeout(_timer);
-  },{passive:true});
-  el.addEventListener('touchmove', e=>{
-    if(Math.abs(e.touches[0].clientX-_sx)>9||Math.abs(e.touches[0].clientY-_sy)>9) _moved=true;
-  },{passive:true});
-  el.addEventListener('touchend', e=>{
-    if(_moved) return;
-    e.preventDefault();
-    fn();
-  },{passive:false});
-}
-
-/* Вешаем после загрузки DOM */
-document.addEventListener('DOMContentLoaded',()=>{
-  addTapHandler(document.getElementById('fps-cpu-btn'), ()=>openPicker('cpu'));
-  addTapHandler(document.getElementById('fps-gpu-btn'), ()=>openPicker('gpu'));
-  addTapHandler(document.getElementById('subj-btn'),    ()=>openSubjectPicker());
-});
-/* Fallback если DOMContentLoaded уже прошёл */
-if(document.readyState!=='loading'){
-  addTapHandler(document.getElementById('fps-cpu-btn'), ()=>openPicker('cpu'));
-  addTapHandler(document.getElementById('fps-gpu-btn'), ()=>openPicker('gpu'));
-  addTapHandler(document.getElementById('subj-btn'),    ()=>openSubjectPicker());
-}
 
 /* ══════════════════════════════════════
    SUBJECT PICKER (Help form)
@@ -2513,45 +2346,18 @@ function openPicker(type){
 
 function renderPickerList(items){
   const list = document.getElementById('picker-list');
+  const data = FPS_DATA[_pickerType];
   let html = '';
   let lastGroup = '';
   items.forEach(item => {
     if(item.group !== lastGroup){
       lastGroup = item.group;
-      if(item.group){
-        html += `<div style="padding:8px 16px 4px;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.22);font-weight:600;">${item.group}</div>`;
-      }
+      html += `<div style="padding:8px 16px 4px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28);">${item.group}</div>`;
     }
-    /* Всегда квотируем val — и числа и строки работают корректно */
-    html += `<div class="picker-item" onclick="selectPicker('${item.n}','${item.v}')">${item.n}</div>`;
+    html += `<div onclick="selectPicker('${item.n}',${item.v})" style="padding:13px 16px;font-size:14px;color:rgba(255,255,255,.85);cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);transition:background .15s;" onmouseenter="this.style.background='rgba(255,255,255,.06)'" onmouseleave="this.style.background=''">${item.n}</div>`;
   });
   if(!items.length) html = `<div style="padding:24px;text-align:center;color:rgba(255,255,255,.3);font-size:13px;">Не найдено</div>`;
   list.innerHTML = html;
-
-  /* touchstart → класс tapped только если это реальный тап, а не скролл */
-  list.querySelectorAll('.picker-item').forEach(el => {
-    let _startY = 0;
-    let _moved = false;
-    el.addEventListener('touchstart', e=>{
-      _startY = e.touches[0].clientY;
-      _moved = false;
-      /* Добавляем с небольшой задержкой — если начался скролл, отменяем */
-      setTimeout(()=>{ if(!_moved) el.classList.add('tapped'); }, 80);
-    }, {passive:true});
-    el.addEventListener('touchmove', e=>{
-      if(Math.abs(e.touches[0].clientY - _startY) > 6){
-        _moved = true;
-        el.classList.remove('tapped');
-      }
-    }, {passive:true});
-    el.addEventListener('touchend', ()=>{
-      setTimeout(()=> el.classList.remove('tapped'), 500);
-    }, {passive:true});
-    el.addEventListener('touchcancel', ()=>{
-      _moved = true;
-      el.classList.remove('tapped');
-    }, {passive:true});
-  });
 }
 
 function filterPicker(q){
