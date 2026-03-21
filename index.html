@@ -285,7 +285,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   border:1.5px solid transparent;
   border-top-color:var(--ac);
   border-right-color:var(--ac-dim);
-  animation:spin1 6s linear infinite;
+  animation:spin1 6s linear infinite;will-change:transform;
   pointer-events:none;
   z-index:2;
 }
@@ -297,7 +297,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   border:1px solid transparent;
   border-bottom-color:var(--ac-soft);
   border-left-color:var(--ac-dim);
-  animation:spin2 10s linear infinite;
+  animation:spin2 10s linear infinite;will-change:transform;
   pointer-events:none;
   z-index:1;
 }
@@ -370,6 +370,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   pointer-events:none;
   visibility:hidden;
   transform:translateY(10px);
+  content-visibility:auto;
 }
 
 .sec.on{
@@ -378,6 +379,7 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   pointer-events:auto;
   visibility:visible;
   transform:translateY(0);
+  content-visibility:visible;
 }
 
 /* ══════════════════════════════════════
@@ -1003,6 +1005,18 @@ a:active{ opacity:.55; transition:opacity .1s ease; }
 /* GPU — только нужные слои */
 #ai-bar{ backface-visibility:hidden; -webkit-backface-visibility:hidden; }
 
+/* Улучшаем Paint containment на ключевых элементах */
+.panel,.svc-card,.ni,.hdr,.nav{
+  -webkit-transform:translateZ(0);
+  transform:translateZ(0);
+}
+
+/* Отключаем pointer-events на декоративных элементах */
+.svc-card::before,.svc-card::after,
+.panel::before,.hdr-avatar-wrap::before,.hdr-avatar-wrap::after{
+  pointer-events:none;
+}
+
 /* Числа — tabular монопространственный */
 .num, #fps-num, .ld-pct, .p-val, .cl-v{
   font-variant-numeric: tabular-nums;
@@ -1409,7 +1423,7 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
 
 
 <!-- ══ PROFILE ══ -->
-<div id="prf-overlay" onclick="closeProfile()" style="position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .38s ease"></div>
+<div id="prf-overlay" onclick="closeProfile()" style="position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.72);opacity:0;pointer-events:none;transition:opacity .38s ease"></div>
 <div id="prf-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:9001;background:#0d0d0d;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);overflow-y:auto;transform:translateY(100%);transition:transform .65s cubic-bezier(.16,1,.3,1),opacity .45s ease;opacity:0;padding-bottom:calc(20px + env(safe-area-inset-bottom));max-height:100vh;box-shadow:0 -24px 80px rgba(0,0,0,.9)">
   <!-- handle -->
   <div style="width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);margin:8px auto 10px"></div>
@@ -1455,8 +1469,7 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
 
 
 <!-- ══ PICKER SHEET ══ -->
-<div id="picker-ov" onclick="closePicker()" style="position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);pointer-events:none;transition:background .3s ease,backdrop-filter .3s ease,-webkit-backdrop-filter .3s ease;"></div>
-<div id="picker-ov" onclick="closePicker()" style="position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);pointer-events:none;transition:background .42s ease,backdrop-filter .42s ease,-webkit-backdrop-filter .42s ease;"></div>
+<div id="picker-ov" onclick="closePicker()" style="position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0);pointer-events:none;transition:background .42s ease;"></div>
 <div id="picker-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:8001;max-width:480px;margin:0 auto;background:rgba(14,14,14,.98);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);transform:translateY(100%);opacity:0;transition:transform .65s cubic-bezier(.16,1,.3,1),opacity .45s ease;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -24px 80px rgba(0,0,0,.9);">
   <!-- Подсветка сверху как в профиле -->
   <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);pointer-events:none;z-index:1;"></div>
@@ -2890,12 +2903,13 @@ async function aiSend(){  const inp = document.getElementById('ai-input');
     scrollMsgs();
 
     let i=0;
+    const replyLen=reply.length;
     function typeChar(){
-      if(i>=reply.length){ scrollMsgs(); return; }
+      if(i>=replyLen){ scrollMsgs(); return; }
       i++;
-      bubble.innerHTML=reply.slice(0,i).replace(/</g,'&lt;').replace(/\n/g,'<br>');
-      msgs.scrollTop=msgs.scrollHeight;
-      setTimeout(typeChar, reply[i-1]==='\n'?25:reply[i-1]===' '?8:5);
+      bubble.textContent=reply.slice(0,i);
+      if(msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 80) msgs.scrollTop=msgs.scrollHeight;
+      setTimeout(typeChar, reply[i-1]==='\n'?18:reply[i-1]===' '?6:4);
     }
     typeChar();
   }catch(e){
