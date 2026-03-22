@@ -764,8 +764,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
   background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.14);
   transform:translateX(0);
-  transition:transform 1.08s cubic-bezier(.16,1,.3,1),
-             width     1.08s cubic-bezier(.16,1,.3,1);
+  transition:transform 1.5s cubic-bezier(.16,1,.3,1),
+             width     1.5s cubic-bezier(.16,1,.3,1);
   pointer-events:none;z-index:0;
   box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 0 0 1px rgba(255,255,255,.04);
 }
@@ -1479,13 +1479,9 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
     <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent)"></div>
     <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none"></div>
     <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:10px;position:relative">РЕФЕРАЛЫ</div>
-    <div class="info-r" style="padding:8px 0;position:relative">
+    <div class="info-r" style="padding:8px 0;border-bottom:none;position:relative">
       <span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg>Приглашено</span>
       <span class="info-v" id="ref-count">0</span>
-    </div>
-    <div class="info-r" style="padding:8px 0;border-bottom:none;position:relative">
-      <span class="info-k"><svg width="12" height="12"><use href="#i-awd"/></svg>Бонус</span>
-      <span class="info-v" id="ref-bonus" style="color:rgba(200,200,200,.7)">0 дней</span>
     </div>
     <div style="margin-top:12px;position:relative">
       <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:6px">Ваша ссылка</div>
@@ -2256,10 +2252,15 @@ initSakura('cvs-loader',  _N, .72);
 
     el.addEventListener('touchend', e => {
       if(_moved) return;
-      e.preventDefault();
+      e.preventDefault(); /* блокируем последующий click — предотвращает дублирование */
       const onclick = el.getAttribute('onclick');
       if(onclick) eval(onclick);
     }, { passive: false });
+
+    /* Убираем click на тач-устройствах чтобы не дублировалось */
+    el.addEventListener('click', e => {
+      if('ontouchstart' in window) e.stopImmediatePropagation();
+    });
   });
 
   document.addEventListener('touchmove', ()=>{}, { passive: true });
@@ -2782,9 +2783,10 @@ async function loadCL(){
     if(!r.ok)return;
     const j=await r.json();
     const rec=j.record||j||{};
-    const arr=Array.isArray(rec)?rec:(rec.changelog||[]);
+    /* changelog — берём только поле changelog, не весь массив */
+    const arr = rec.changelog || (Array.isArray(rec) ? rec : []);
     const items=arr.filter(e=>e?.ver&&e.ver!=='—');
-    if(!items.length){el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35">${t('inf.empty')}</div></div>`;return;}
+    if(!items.length){el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">${t('inf.empty')}</div></div>`;return;}
     el.innerHTML=items.map(e=>{
       const текст = (lang==='en' && e.text_en) ? e.text_en : (e.text||'');
       return `<div class="cl-e"><div class="cl-v">${e.ver}</div><div class="cl-d">${e.date||''}</div><div class="cl-t">${текст}</div></div>`;
@@ -2807,7 +2809,8 @@ async function loadInfo(){
     if(!r.ok)return;
     const j=await r.json();
     const rec=j.record||j||{};
-    const items=Array.isArray(rec.info)?rec.info.filter(e=>e?.active!==false):[];
+    /* info — берём только поле info, не путаем с changelog */
+    const items=Array.isArray(rec.info) ? rec.info.filter(e=>e?.active!==false) : [];
     if(!items.length){
       el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">${t('inf.empty')}</div></div>`;
       return;
