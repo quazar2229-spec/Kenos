@@ -1463,13 +1463,13 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
     <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent)"></div>
     <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none"></div>
     <div id="prf-key-short" style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--txt);margin-bottom:3px;position:relative">—</div>
-    <div style="font-size:8px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-muted);position:relative">СТАТУС ЛИЦЕНЗИИ</div>
+    <div style="font-size:8px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-muted);position:relative" data-i18n="prf.lic.status">СТАТУС ЛИЦЕНЗИИ</div>
   </div>
   <!-- данные — как svc-card -->
   <div style="margin:0 54px 14px;background:rgba(14,14,14,.97);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden">
     <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent)"></div>
     <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none"></div>
-    <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:10px;position:relative">ДАННЫЕ ЛИЦЕНЗИИ</div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:10px;position:relative" data-i18n="prf.lic.data">ДАННЫЕ ЛИЦЕНЗИИ</div>
     <div class="info-r" style="padding:10px 0;position:relative"><span class="info-k"><svg width="12" height="12"><use href="#i-key"/></svg>Ключ</span><span class="info-v" id="prf-key" style="font-size:11px;word-break:break-all;text-align:right;max-width:58%">—</span></div>
     <div class="info-r" style="padding:10px 0;position:relative"><span class="info-k"><svg width="12" height="12"><use href="#i-gear"/></svg>HWID</span><span class="info-v" id="prf-hwid">—</span></div>
     <div class="info-r" style="padding:10px 0;border-bottom:none;position:relative"><span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg>Telegram ID</span><span class="info-v" id="prf-uid">—</span></div>
@@ -1478,13 +1478,13 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
   <div style="margin:0 54px 14px;background:rgba(14,14,14,.97);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden">
     <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent)"></div>
     <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none"></div>
-    <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:10px;position:relative">РЕФЕРАЛЫ</div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:10px;position:relative" data-i18n="prf.ref">РЕФЕРАЛЫ</div>
     <div class="info-r" style="padding:8px 0;border-bottom:none;position:relative">
-      <span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg>Приглашено</span>
+      <span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg><span data-i18n="prf.ref.inv">Приглашено</span></span>
       <span class="info-v" id="ref-count">0</span>
     </div>
     <div style="margin-top:12px;position:relative">
-      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:6px">Ваша ссылка</div>
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:6px" data-i18n="prf.ref.link">Ваша ссылка</div>
       <div style="display:flex;gap:8px;align-items:center">
         <div id="ref-link" style="flex:1;font-size:11px;color:var(--txt-dim);background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:8px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</div>
         <button onclick="copyRefLink()" style="flex-shrink:0;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--txt-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s">
@@ -1626,6 +1626,8 @@ ru:{
 'fps.note.ok':'Хороший результат. GPU справляется.',
 'fps.note.great':'Отличное железо! GPU не является бутылочным горлышком.',
 'fps.picker.cpu':'Выберите процессор','fps.picker.gpu':'Выберите видеокарту',
+'prf.lic.status':'Статус лицензии','prf.lic.data':'Данные лицензии','prf.ref':'Рефералы',
+'prf.ref.link':'Ваша ссылка','prf.ref.inv':'Приглашено',
 },
 en:{
 'hero.eye':'Emulator Solutions','hero.sub':'Premium · BlueStacks · Custom','hero.tip':'perfection has no limits',
@@ -1675,6 +1677,8 @@ en:{
 'fps.note.ok':'Good result. GPU is handling it well.',
 'fps.note.great':'Great hardware! GPU is not a bottleneck.',
 'fps.picker.cpu':'Select processor','fps.picker.gpu':'Select graphics card',
+'prf.lic.status':'License Status','prf.lic.data':'License Data','prf.ref':'Referrals',
+'prf.ref.link':'Your link','prf.ref.inv':'Invited',
 }};
 
 let lang='ru';
