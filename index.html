@@ -1782,6 +1782,7 @@ function setLang(l){
   // Переводим kenos-tip span
   const tip = document.getElementById('kenos-tip');
   if(tip) tip.textContent = t('hero.tip');
+
 }
 
 
@@ -2866,11 +2867,13 @@ async function loadCL(){
     const j=await r.json();
     const rec=j.record||j||{};
     /* changelog — берём только поле changelog, не весь массив */
-    const arr = rec.changelog || (Array.isArray(rec) ? rec : []);
+    if(!('changelog' in rec)) return;
+    const arr = rec.changelog || [];
     const items=arr.filter(e=>e?.ver&&e.ver!=='—');
     if(!items.length){el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">${t('inf.empty')}</div></div>`;return;}
     el.innerHTML=items.map(e=>{
-      return `<div class="cl-e"><div class="cl-v">${e.ver}</div><div class="cl-d">${e.date||''}</div><div class="cl-t">${e.text||''}</div></div>`;
+      const текст = (lang==='en' && e.text_en) ? e.text_en : (e.text||'');
+      return `<div class="cl-e"><div class="cl-v">${e.ver}</div><div class="cl-d">${e.date||''}</div><div class="cl-t">${текст}</div></div>`;
     }).join('');
   }catch{}
 }
@@ -2891,13 +2894,21 @@ async function loadInfo(){
     const j=await r.json();
     const rec=j.record||j||{};
     /* info — берём только поле info, не путаем с changelog */
+    if(!('info' in rec)) return;
     const items=Array.isArray(rec.info) ? rec.info.filter(e=>e?.active!==false) : [];
     if(!items.length){
       el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">${t('inf.empty')}</div></div>`;
       return;
     }
     el.innerHTML=items.map(e=>{
-      return `<div class="cl-e"><div class="cl-v" style="display:flex;align-items:center;gap:5px">${icons[e.type]||icons.info} ${e.title||'Объявление'}</div><div class="cl-d">${e.date||''}</div><div class="cl-t">${e.body||''}</div></div>`;
+      const заголовок = (lang==='en' && e.title_en) ? e.title_en : (e.title||'Объявление');
+      const текст = (lang==='en' && e.body_en) ? e.body_en : (e.body||'');
+      return `
+      <div class="cl-e">
+        <div class="cl-v" style="display:flex;align-items:center;gap:5px">${icons[e.type]||icons.info} ${заголовок}</div>
+        <div class="cl-d">${e.date||''}</div>
+        <div class="cl-t">${текст}</div>
+      </div>`;
     }).join('');
   }catch{}
 }
