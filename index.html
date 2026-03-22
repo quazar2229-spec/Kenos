@@ -1351,91 +1351,7 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
   <section id="s-adm" class="sec" style="display:none">
     <div class="hero" style="padding-bottom:12px">
       <p class="hero-eye">Администратор</p>
-      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Панель</h1>
-    </div>
-
-    <!-- ОБНОВЛЕНИЯ (changelog) -->
-    <div class="panel">
-      <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-zap"/></svg>Добавить обновление</div>
-      <div class="p-sub">Запись в журнал версий</div>
-      <div class="form">
-        <div class="form-g">
-          <label class="form-l">Версия</label>
-          <input class="form-i" id="adm-cl-ver" type="text" placeholder="v1.0.0">
-        </div>
-        <div class="form-g">
-          <label class="form-l">Дата</label>
-          <input class="form-i" id="adm-cl-date" type="text" placeholder="01.01.2025">
-        </div>
-        <div class="form-g">
-          <label class="form-l">Текст (RU)</label>
-          <textarea class="form-ta" id="adm-cl-text" rows="3" placeholder="Что изменилось..."></textarea>
-        </div>
-        <div class="form-g">
-          <label class="form-l">Текст (EN)</label>
-          <textarea class="form-ta" id="adm-cl-text-en" rows="3" placeholder="What changed..."></textarea>
-        </div>
-        <button class="btn btn-p" id="adm-cl-btn" onclick="admSaveCL()">
-          <svg width="14" height="14"><use href="#i-send"/></svg><span>Сохранить обновление</span>
-        </button>
-        <div id="adm-cl-status" style="font-size:12px;color:rgba(255,255,255,.5);margin-top:8px;min-height:18px;letter-spacing:.04em"></div>
-      </div>
-    </div>
-
-    <!-- ОБЪЯВЛЕНИЯ (info) -->
-    <div class="panel">
-      <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-pulse"/></svg>Добавить объявление</div>
-      <div class="p-sub">Инфо · Тех. работы · Статус</div>
-      <div class="form">
-        <div class="form-g">
-          <label class="form-l">Тип</label>
-          <select class="form-i" id="adm-inf-type" style="background:rgba(255,255,255,.05);color:#fff;-webkit-appearance:none;appearance:none">
-            <option value="info" style="background:#111">info — Объявление</option>
-            <option value="tech" style="background:#111">tech — Тех. работы</option>
-            <option value="warn" style="background:#111">warn — Предупреждение</option>
-            <option value="ok"   style="background:#111">ok   — Всё хорошо</option>
-          </select>
-        </div>
-        <div class="form-g">
-          <label class="form-l">Заголовок (RU)</label>
-          <input class="form-i" id="adm-inf-title" type="text" placeholder="Заголовок...">
-        </div>
-        <div class="form-g">
-          <label class="form-l">Заголовок (EN)</label>
-          <input class="form-i" id="adm-inf-title-en" type="text" placeholder="Title...">
-        </div>
-        <div class="form-g">
-          <label class="form-l">Дата</label>
-          <input class="form-i" id="adm-inf-date" type="text" placeholder="01.01.2025">
-        </div>
-        <div class="form-g">
-          <label class="form-l">Текст (RU)</label>
-          <textarea class="form-ta" id="adm-inf-body" rows="3" placeholder="Текст объявления..."></textarea>
-        </div>
-        <div class="form-g">
-          <label class="form-l">Текст (EN)</label>
-          <textarea class="form-ta" id="adm-inf-body-en" rows="3" placeholder="Announcement text..."></textarea>
-        </div>
-        <button class="btn btn-p" id="adm-inf-btn" onclick="admSaveINF()">
-          <svg width="14" height="14"><use href="#i-send"/></svg><span>Сохранить объявление</span>
-        </button>
-        <div id="adm-inf-status" style="font-size:12px;color:rgba(255,255,255,.5);margin-top:8px;min-height:18px;letter-spacing:.04em"></div>
-      </div>
-    </div>
-
-    <!-- УДАЛИТЬ ПЕРВОЕ из списка -->
-    <div class="panel">
-      <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-ref"/></svg>Управление записями</div>
-      <div class="p-sub">Удалить первую (старую) запись</div>
-      <div style="display:flex;gap:10px;margin-top:4px">
-        <button class="btn btn-s" style="flex:1" onclick="admDeleteFirst('changelog')">
-          Удалить обновление
-        </button>
-        <button class="btn btn-s" style="flex:1" onclick="admDeleteFirst('info')">
-          Удалить объявление
-        </button>
-      </div>
-      <div id="adm-del-status" style="font-size:12px;color:rgba(255,255,255,.5);margin-top:10px;min-height:18px;letter-spacing:.04em"></div>
+      <h1 class="hero-h" style="font-size:clamp(38px,11vw,64px)">Тикеты</h1>
     </div>
   </section>
 
@@ -2872,7 +2788,8 @@ async function loadCL(){
     const j=await r.json();
     const rec=j.record||j||{};
     /* changelog — берём только поле changelog, не весь массив */
-    const arr = rec.changelog || (Array.isArray(rec) ? rec : []);
+    if(!rec.changelog) return;
+    const arr = rec.changelog;
     const items=arr.filter(e=>e?.ver&&e.ver!=='—');
     if(!items.length){el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">${t('inf.empty')}</div></div>`;return;}
     el.innerHTML=items.map(e=>{
@@ -2898,7 +2815,8 @@ async function loadInfo(){
     const j=await r.json();
     const rec=j.record||j||{};
     /* info — берём только поле info, не путаем с changelog */
-    const items=Array.isArray(rec.info) ? rec.info.filter(e=>e?.active!==false) : [];
+    if(!rec.info) return;
+    const items=rec.info.filter(e=>e?.active!==false);
     if(!items.length){
       el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">${t('inf.empty')}</div></div>`;
       return;
@@ -2919,129 +2837,6 @@ async function loadInfo(){
 document.addEventListener('visibilitychange',()=>{
   if(!document.hidden){loadKey();loadCL();loadInfo();checkStatus();loadReviews();}
 },{passive:true});
-
-/* ══════════════════════════════════════
-   ADMIN — безопасное сохранение в JSONBin
-   Принцип: читаем текущий record → мерджим нужное поле → пишем весь record обратно
-   Так changelog и info НИКОГДА не затирают друг друга
-══════════════════════════════════════ */
-
-// 1. Читаем весь текущий record из JSONBin
-async function admReadRecord(){
-  const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN}/latest`, { headers: BIN_HDR });
-  if(!r.ok) throw new Error('Ошибка чтения: ' + r.status);
-  const j = await r.json();
-  const rec = j.record || j || {};
-  if(!Array.isArray(rec.changelog)) rec.changelog = [];
-  if(!Array.isArray(rec.info))      rec.info      = [];
-  if(!Array.isArray(rec.reviews))   rec.reviews   = [];
-  return rec;
-}
-
-// 2. Пишем весь record обратно (PUT заменяет полностью)
-async function admWriteRecord(rec){
-  const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN}`, {
-    method: 'PUT',
-    headers: { ...BIN_HDR, 'Content-Type': 'application/json' },
-    body: JSON.stringify(rec)
-  });
-  if(!r.ok) throw new Error('Ошибка записи: ' + r.status);
-  return r.json();
-}
-
-function admSetStatus(id, text, ok){
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.textContent = text;
-  el.style.color = ok ? 'rgba(180,255,180,.75)' : 'rgba(255,140,140,.8)';
-  setTimeout(()=>{ el.textContent=''; }, 4000);
-}
-
-function admLock(btnId, lock){
-  const btn = document.getElementById(btnId);
-  if(!btn) return;
-  btn.style.opacity     = lock ? '.45' : '1';
-  btn.style.pointerEvents = lock ? 'none' : '';
-}
-
-// Сохранить обновление (changelog) — НЕ трогает info
-async function admSaveCL(){
-  const ver    = document.getElementById('adm-cl-ver')?.value.trim();
-  const date   = document.getElementById('adm-cl-date')?.value.trim();
-  const text   = document.getElementById('adm-cl-text')?.value.trim();
-  const textEn = document.getElementById('adm-cl-text-en')?.value.trim();
-
-  if(!ver || !text){ admSetStatus('adm-cl-status','⚠ Заполни версию и текст',false); return; }
-
-  admLock('adm-cl-btn', true);
-  admSetStatus('adm-cl-status','Загружаю данные...', true);
-
-  try{
-    const rec = await admReadRecord();                       // читаем ВСЁ
-    rec.changelog.unshift({ ver, date: date||'', text, text_en: textEn||text }); // добавляем в начало
-    await admWriteRecord(rec);                               // пишем ВСЁ обратно
-
-    admSetStatus('adm-cl-status','✓ Обновление сохранено!', true);
-    document.getElementById('adm-cl-ver').value = '';
-    document.getElementById('adm-cl-date').value = '';
-    document.getElementById('adm-cl-text').value = '';
-    document.getElementById('adm-cl-text-en').value = '';
-    loadCL();
-  } catch(e){
-    admSetStatus('adm-cl-status','✕ ' + e.message, false);
-  }
-  admLock('adm-cl-btn', false);
-}
-
-// Сохранить объявление (info) — НЕ трогает changelog
-async function admSaveINF(){
-  const type   = document.getElementById('adm-inf-type')?.value;
-  const title  = document.getElementById('adm-inf-title')?.value.trim();
-  const titleEn= document.getElementById('adm-inf-title-en')?.value.trim();
-  const date   = document.getElementById('adm-inf-date')?.value.trim();
-  const body   = document.getElementById('adm-inf-body')?.value.trim();
-  const bodyEn = document.getElementById('adm-inf-body-en')?.value.trim();
-
-  if(!title || !body){ admSetStatus('adm-inf-status','⚠ Заполни заголовок и текст',false); return; }
-
-  admLock('adm-inf-btn', true);
-  admSetStatus('adm-inf-status','Загружаю данные...', true);
-
-  try{
-    const rec = await admReadRecord();                       // читаем ВСЁ
-    rec.info.unshift({ type, title, title_en: titleEn||title, date: date||'', body, body_en: bodyEn||body, active: true });
-    await admWriteRecord(rec);                               // пишем ВСЁ обратно
-
-    admSetStatus('adm-inf-status','✓ Объявление сохранено!', true);
-    document.getElementById('adm-inf-title').value = '';
-    document.getElementById('adm-inf-title-en').value = '';
-    document.getElementById('adm-inf-date').value = '';
-    document.getElementById('adm-inf-body').value = '';
-    document.getElementById('adm-inf-body-en').value = '';
-    loadInfo();
-  } catch(e){
-    admSetStatus('adm-inf-status','✕ ' + e.message, false);
-  }
-  admLock('adm-inf-btn', false);
-}
-
-// Удалить последнюю (самую старую) запись из нужного массива
-async function admDeleteFirst(field){
-  if(!confirm('Удалить старую запись из "' + field + '"?')) return;
-  admSetStatus('adm-del-status','Загружаю данные...', true);
-  try{
-    const rec = await admReadRecord();
-    if(!rec[field] || !rec[field].length){
-      admSetStatus('adm-del-status','⚠ Список уже пуст', false); return;
-    }
-    rec[field].pop();
-    await admWriteRecord(rec);
-    admSetStatus('adm-del-status','✓ Запись удалена', true);
-    if(field==='changelog') loadCL(); else loadInfo();
-  } catch(e){
-    admSetStatus('adm-del-status','✕ ' + e.message, false);
-  }
-}
 
 /* ══════════════════════════════════════
    INIT
