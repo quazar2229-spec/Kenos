@@ -530,25 +530,30 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .svc-card{
   -webkit-tap-highlight-color:transparent;
   background:rgba(14,14,14,.97);border:1px solid var(--border);
-  border-radius:16px;padding:18px 14px 14px;
+  border-radius:16px;
+  padding:22px 12px 20px;
   cursor:pointer;position:relative;overflow:hidden;
   transition:transform .1s ease,border-color .18s ease,box-shadow .18s ease;
   box-shadow:0 4px 20px rgba(0,0,0,.45);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  min-height:90px;
 }
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent);pointer-events:none}
 .svc-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none}
 .svc-card:active{transform:scale(.94);transition:transform .06s ease}
 .svc-ico{
   display:flex;justify-content:center;align-items:center;
-  margin-bottom:12px;color:var(--txt-dim);
+  margin-bottom:10px;color:rgba(255,255,255,.55);
   position:relative;z-index:1;
 }
 .svc-card:nth-child(1) .svc-ico{animation-delay:0s}
 .svc-card:nth-child(2) .svc-ico{animation-delay:-1s}
 .svc-card:nth-child(3) .svc-ico{animation-delay:-2s}
 .svc-card:nth-child(4) .svc-ico{animation-delay:-3s}
-.svc-name{font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--txt);margin-bottom:3px;position:relative;z-index:1}
-.svc-desc{font-size:10px;color:var(--g5);position:relative;z-index:1}
+.svc-name{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--txt);margin-bottom:0;position:relative;z-index:1;text-align:center}
+.svc-desc{font-size:9px;color:var(--g5);position:relative;z-index:1;text-align:center;margin-top:3px;letter-spacing:.04em}
 
 /* ── INFO ENTRIES — тех работы и объявления ── */
 .info-entry{
@@ -878,8 +883,8 @@ button,.ni,.svc-card,.btn,.lpill,.dlink{
 .promo-wrap .form-i{flex:1}
 .promo-btn{
   padding:10px 16px;border-radius:10px;border:1px solid var(--border);
-  background:rgba(255,255,255,.06);color:var(--txt);font-family:var(--fb);
-  font-size:12px;font-weight:600;letter-spacing:.1em;cursor:pointer;
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.72);font-family:var(--fd);
+  font-size:14px;font-weight:300;letter-spacing:.14em;cursor:pointer;
   transition:background .32s var(--smooth), border-color .32s var(--smooth);
   white-space:nowrap;
 }
@@ -1143,16 +1148,16 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
 
     <!-- Калькулятор FPS -->
     <div class="panel" id="fps-calc-panel">
-      <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-zap"/></svg>Калькулятор FPS</div>
-      <div class="p-sub">Примерный FPS в Standoff 2 на KENOS BlueStacks</div>
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-zap"/></svg><span data-i18n="fps.title">Калькулятор FPS</span></div>
+      <div class="p-sub" data-i18n="fps.sub">Примерный FPS в Standoff 2 на KENOS BlueStacks</div>
 
       <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
         <!-- CPU -->
         <div id="fps-cpu-btn" onclick="openPicker('cpu')" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color .25s,background .25s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='rgba(255,255,255,.22)';this.style.background='rgba(255,255,255,.09)'" onmouseleave="this.style.borderColor='rgba(255,255,255,.1)';this.style.background='rgba(255,255,255,.06)'">
           <div style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);flex-shrink:0;margin-right:2px;"></div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:2px;">Процессор</div>
-            <div id="cpu-label" style="font-size:13px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Нажми чтобы выбрать</div>
+            <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:2px;"data-i18n="fps.cpu">Процессор</div>
+            <div id="cpu-label" style="font-size:13px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" data-i18n="fps.pick">Нажми чтобы выбрать</div>
           </div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
         </div>
@@ -1162,8 +1167,8 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
         <div id="fps-gpu-btn" onclick="openPicker('gpu')" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color .25s,background .25s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='rgba(255,255,255,.22)';this.style.background='rgba(255,255,255,.09)'" onmouseleave="this.style.borderColor='rgba(255,255,255,.1)';this.style.background='rgba(255,255,255,.06)'">
           <div style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);flex-shrink:0;margin-right:2px;"></div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:2px;">Видеокарта</div>
-            <div id="gpu-label" style="font-size:13px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Нажми чтобы выбрать</div>
+            <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:2px;" data-i18n="fps.gpu">Видеокарта</div>
+            <div id="gpu-label" style="font-size:13px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" data-i18n="fps.pick">Нажми чтобы выбрать</div>
           </div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
         </div>
@@ -1172,12 +1177,11 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
 
       <!-- Результат -->
       <div id="fps-result" style="display:none;margin-top:14px;padding:18px;background:rgba(255,255,255,.04);border-radius:16px;border:1px solid rgba(255,255,255,.07);text-align:center;">
-        <div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:4px;">FPS в Standoff 2 · KENOS</div>
+        <div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:4px;" data-i18n="fps.label">FPS в Standoff 2 · KENOS</div>
         <div id="fps-num" style="font-family:'Cormorant Garamond',serif;font-size:68px;font-weight:300;color:#fff;line-height:1;">—</div>
         <div id="fps-badge" style="font-size:12px;margin-top:6px;color:rgba(255,255,255,.45);"></div>
         <div id="fps-note" style="font-size:11px;color:rgba(255,255,255,.25);margin-top:10px;line-height:1.6;"></div>
       </div>
-      <div style="font-size:10px;color:rgba(255,255,255,.15);text-align:center;margin-top:10px;line-height:1.5;">BS работает на 4 ядрах — X3D кэш не влияет на FPS</div>
     </div>
   </section>
 
@@ -1282,6 +1286,17 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
     <div style="padding:0 16px">
       <button class="btn btn-p" onclick="go('s-buy')"><svg width="13" height="13"><use href="#i-gear"/></svg><span data-i18n="btn.getbs">Купить Custom BlueStacks</span></button>
       <button class="btn btn-s mt" onclick="refreshKey()"><svg width="13" height="13"><use href="#i-ref"/></svg><span data-i18n="btn.ref">Обновить данные</span></button>
+    </div>
+
+    <!-- ПРОМОКОД — скрывается если ключ активен -->
+    <div id="promo-block" class="panel" style="margin-top:12px">
+      <div class="p-title"><svg width="17" height="17" style="color:rgba(200,200,200,.5)"><use href="#i-ticket"/></svg><span data-i18n="promo.title">Промокод</span></div>
+      <div class="p-sub" data-i18n="promo.sub">Введи код для получения скидки</div>
+      <div class="promo-wrap">
+        <input class="form-i" id="promo-inp" type="text" data-i18n-ph="promo.ph" placeholder="KENOS-XXXX" autocomplete="off" style="text-transform:uppercase;letter-spacing:.06em"/>
+        <button class="promo-btn" onclick="applyPromo()" data-i18n="promo.btn">Применить</button>
+      </div>
+      <div id="promo-result" class="promo-result"></div>
     </div>
   </section>
 
@@ -1459,6 +1474,44 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
     <div class="info-r" style="padding:10px 0;position:relative"><span class="info-k"><svg width="12" height="12"><use href="#i-gear"/></svg>HWID</span><span class="info-v" id="prf-hwid">—</span></div>
     <div class="info-r" style="padding:10px 0;border-bottom:none;position:relative"><span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg>Telegram ID</span><span class="info-v" id="prf-uid">—</span></div>
   </div>
+  <!-- реферальная система -->
+  <div style="margin:0 54px 14px;background:rgba(14,14,14,.97);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-ac),transparent)"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac-dim) 0%,transparent 58%);pointer-events:none"></div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:10px;position:relative">РЕФЕРАЛЫ</div>
+    <div class="info-r" style="padding:8px 0;position:relative">
+      <span class="info-k"><svg width="12" height="12"><use href="#i-user"/></svg>Приглашено</span>
+      <span class="info-v" id="ref-count">0</span>
+    </div>
+    <div class="info-r" style="padding:8px 0;border-bottom:none;position:relative">
+      <span class="info-k"><svg width="12" height="12"><use href="#i-awd"/></svg>Бонус</span>
+      <span class="info-v" id="ref-bonus" style="color:rgba(200,200,200,.7)">0 дней</span>
+    </div>
+    <div style="margin-top:12px;position:relative">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-muted);margin-bottom:6px">Ваша ссылка</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div id="ref-link" style="flex:1;font-size:11px;color:var(--txt-dim);background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:8px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</div>
+        <button onclick="copyRefLink()" style="flex-shrink:0;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--txt-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s">
+          <svg width="13" height="13"><use href="#i-copy"/></svg>
+        </button>
+      </div>
+      <div style="font-size:10px;color:var(--txt-muted);margin-top:8px;line-height:1.6"></div>
+      <div id="ref-copy-msg" style="
+        margin-top:8px;
+        font-size:11px;
+        color:rgba(200,200,200,.85);
+        letter-spacing:.04em;
+        height:18px;
+        overflow:hidden;
+      ">
+        <span id="ref-copy-inner" style="
+          display:block;
+          transform:translateY(18px);
+          transition:transform .38s cubic-bezier(.16,1,.3,1);
+        ">✓ Ссылка скопирована</span>
+      </div>
+    </div>
+  </div>
   <div style="padding:0 54px">
     <button class="btn btn-s" onclick="closeProfile()">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -1470,7 +1523,7 @@ button:active,.btn:active,.lpill:active,.dlink:active,.lang-b:active{transform:s
 
 <!-- ══ PICKER SHEET ══ -->
 <div id="picker-ov" onclick="closePicker()" style="position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0);pointer-events:none;transition:background .42s ease;"></div>
-<div id="picker-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:8001;max-width:480px;margin:0 auto;background:rgba(14,14,14,.98);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);transform:translateY(100%);opacity:0;transition:transform .65s cubic-bezier(.16,1,.3,1),opacity .45s ease;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -24px 80px rgba(0,0,0,.9);">
+<div id="picker-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:8001;max-width:480px;margin:0 auto;background:#0f0f0f;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);transform:translateY(100%);opacity:0;transition:transform .65s cubic-bezier(.16,1,.3,1),opacity .45s ease;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -24px 80px rgba(0,0,0,.9);">
   <!-- Подсветка сверху как в профиле -->
   <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);pointer-events:none;z-index:1;"></div>
   <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.05) 0%,transparent 55%);pointer-events:none;z-index:0;"></div>
@@ -1565,6 +1618,18 @@ ru:{
 'abt.team':'Контакты','abt.team.d':'Наша команда',
 'toast.cp':'Скопировано','toast.sent':'Отправлено','toast.fill':'Заполните все поля','toast.ref':'Обновлено',
 'ai.eye':'Искусственный интеллект','ai.h':'Ассистент','ai.ph':'Сообщение...','ai.empty':'Спроси что угодно о KENOS',
+'promo.title':'Промокод','promo.sub':'Введи код для получения скидки',
+'promo.ph':'KENOS-XXXX','promo.btn':'Применить',
+'promo.ok':'Промокод активирован','promo.err.used':'Промокод уже использован','promo.err.invalid':'Промокод недействителен','promo.err.conn':'Ошибка соединения',
+'fps.title':'Калькулятор FPS','fps.sub':'Примерный FPS в Standoff 2 на KENOS BlueStacks',
+'fps.cpu':'Процессор','fps.gpu':'Видеокарта','fps.pick':'Нажми чтобы выбрать',
+'fps.label':'FPS в Standoff 2 · KENOS','fps.footer':'<span data-i18n="fps.footer">BS работает на процессоре — чем мощнее CPU, тем выше FPS</span>',
+'fps.badge.top':'FPS · Топ результат','fps.badge.great':'FPS · Отлично','fps.badge.good':'FPS · Хорошо','fps.badge.low':'FPS · Стоит улучшить железо',
+'fps.note.weak':'Слабая GPU ограничивает FPS. Обновите видеокарту.',
+'fps.note.mid':'GPU немного ограничивает. Рекомендуем GTX 1060+ или RX 580+',
+'fps.note.ok':'Хороший результат. GPU справляется.',
+'fps.note.great':'Отличное железо! GPU не является бутылочным горлышком.',
+'fps.picker.cpu':'Выберите процессор','fps.picker.gpu':'Выберите видеокарту',
 },
 en:{
 'hero.eye':'Emulator Solutions','hero.sub':'Premium · BlueStacks · Custom','hero.tip':'perfection has no limits',
@@ -1602,6 +1667,18 @@ en:{
 'abt.team':'Contacts','abt.team.d':'Our team',
 'toast.cp':'Copied','toast.sent':'Sent','toast.fill':'Fill all fields','toast.ref':'Refreshed',
 'ai.eye':'Artificial Intelligence','ai.h':'Assistant','ai.ph':'Message...','ai.empty':'Ask anything about KENOS',
+'promo.title':'Promo Code','promo.sub':'Enter a code to get a discount',
+'promo.ph':'KENOS-XXXX','promo.btn':'Apply',
+'promo.ok':'Promo code activated','promo.err.used':'Promo code already used','promo.err.invalid':'Invalid promo code','promo.err.conn':'Connection error',
+'fps.title':'FPS Calculator','fps.sub':'Approximate FPS in Standoff 2 on KENOS BlueStacks',
+'fps.cpu':'Processor','fps.gpu':'Graphics Card','fps.pick':'Tap to select',
+'fps.label':'FPS in Standoff 2 · KENOS','fps.footer':'BS runs on CPU — the more powerful the CPU, the higher the FPS',
+'fps.badge.top':'FPS · Top Result','fps.badge.great':'FPS · Excellent','fps.badge.good':'FPS · Good','fps.badge.low':'FPS · Consider upgrading',
+'fps.note.weak':'Weak GPU is limiting FPS. Consider upgrading your graphics card.',
+'fps.note.mid':'GPU is slightly limiting. We recommend GTX 1060+ or RX 580+',
+'fps.note.ok':'Good result. GPU is handling it well.',
+'fps.note.great':'Great hardware! GPU is not a bottleneck.',
+'fps.picker.cpu':'Select processor','fps.picker.gpu':'Select graphics card',
 }};
 
 let lang='ru';
@@ -1624,6 +1701,9 @@ function setLang(l){
   // Переводим kenos-tip span
   const tip = document.getElementById('kenos-tip');
   if(tip) tip.textContent = t('hero.tip');
+  // Перезагружаем данные с сервера чтобы применить перевод
+  loadCL();
+  loadInfo();
 }
 
 
@@ -1789,12 +1869,18 @@ async function loadKey(){
       ke.textContent = d.expires || '—';
       ks.className   = 'key-st act';
       ks.textContent = t('key.on') || 'Активен';
+      /* Скрываем промокод — ключ уже есть */
+      const pb = document.getElementById('promo-block');
+      if(pb) pb.style.display = 'none';
     } else {
       kv.textContent = '—';
       ke.textContent = t('key.none');
       kh.textContent = d.hwid || '—';
       ks.className   = 'key-st off';
       ks.textContent = t('key.off');
+      /* Показываем промокод — ключа нет */
+      const pb = document.getElementById('promo-block');
+      if(pb) pb.style.display = '';
     }
   } catch {
     kv.textContent = '—';
@@ -1885,12 +1971,56 @@ function openProfile(){
   if(g('prf-hwid'))      g('prf-hwid').textContent=kh||'—';
   if(g('prf-plan'))      g('prf-plan').textContent=act?'KENOS PLAYER':'НЕТ ЛИЦЕНЗИИ';
   if(g('prf-key-short')) g('prf-key-short').textContent=act?'Активен':'Нет';
+
+  /* Реферальная ссылка — заглушка до подключения бэкенда */
+  if(tgU.id){
+    const ссылка = `https://t.me/kenosbot?start=ref_${tgU.id}`;
+    if(g('ref-link')) g('ref-link').textContent = ссылка;
+    /* Здесь будет запрос к API для получения реальных данных:
+       const r = await fetch(`${API_BASE}/api/referral?id=${tgU.id}`);
+       const d = await r.json();
+       g('ref-count').textContent = d.count || 0;
+       g('ref-bonus').textContent = (d.bonus_days || 0) + ' дней';
+    */
+    if(g('ref-count')) g('ref-count').textContent = '0';
+    if(g('ref-bonus')) g('ref-bonus').textContent = '0 дней';
+  } else {
+    if(g('ref-link')) g('ref-link').textContent = 'Войдите через Telegram';
+  }
+
   const ov=g('prf-overlay'),sh=g('prf-sheet');
   if(!sh)return;
   if(ov){ov.style.opacity='1';ov.style.pointerEvents='auto';}
   sh.style.transform='translateY(0)';
   sh.style.opacity='1';
   document.body.style.overflow='hidden';
+}
+
+function copyRefLink(){
+  const el = document.getElementById('ref-link');
+  const inner = document.getElementById('ref-copy-inner');
+  const ссылка = el?.textContent?.trim();
+  if(!ссылка || ссылка === '—' || ссылка.includes('Войдите')) return;
+
+  /* Копируем в буфер */
+  try{
+    if(navigator.clipboard?.writeText) navigator.clipboard.writeText(ссылка).catch(()=>{});
+    else{const a=document.createElement('textarea');a.value=ссылка;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);}
+  }catch(e){}
+
+  /* Анимация — выезжает снизу */
+  if(!inner) return;
+  clearTimeout(inner._t);
+  inner.style.transition = 'none';
+  inner.style.transform = 'translateY(18px)';
+  requestAnimationFrame(() => {
+    inner.style.transition = 'transform .38s cubic-bezier(.16,1,.3,1)';
+    inner.style.transform = 'translateY(0)';
+    inner._t = setTimeout(() => {
+      inner.style.transform = 'translateY(-18px)';
+      setTimeout(() => { inner.style.transition='none'; inner.style.transform='translateY(18px)'; }, 400);
+    }, 2200);
+  });
 }
 
 function closeProfile(){
@@ -2209,7 +2339,7 @@ async function applyPromo(){
   if(!inp||!res) return;
 
   const code = inp.value.trim().toUpperCase();
-  if(!code){ showPromoResult('Введи промокод', 'err'); return; }
+  if(!code){ showPromoResult(t('promo.err.invalid'), 'err'); return; }
 
   try{
     const r = await fetch(`${API_BASE}/api/promo`, {
@@ -2219,13 +2349,13 @@ async function applyPromo(){
     });
     const d = await r.json();
     if(d.ok){
-      showPromoResult(` Промокод активирован — скидка ${d.discount}%\n${d.desc || ''}`, 'ok');
+      showPromoResult(`${t('promo.ok')} — скидка ${d.discount}%\n${d.desc || ''}`, 'ok');
       inp.value = '';
     } else {
-      showPromoResult(d.error || 'Промокод недействителен', 'err');
+      showPromoResult(d.error || t('promo.err.invalid'), 'err');
     }
   } catch {
-    showPromoResult('Ошибка соединения', 'err');
+    showPromoResult(t('promo.err.conn'), 'err');
   }
 }
 
@@ -2353,7 +2483,7 @@ function openSubjectPicker(){
 ══════════════════════════════════════ */
 const FPS_DATA = {
   cpu:{
-    title:'Выберите процессор',
+    title:'Выберите процессор',title_key:'fps.picker.cpu',
     groups:[
       {label:'AMD Ryzen 9000',items:[
         {n:'Ryzen 9 9950X',v:684},{n:'Ryzen 9 9900X',v:672},
@@ -2411,7 +2541,7 @@ const FPS_DATA = {
     ]
   },
   gpu:{
-    title:'Выберите видеокарту',
+    title:'Выберите видеокарту',title_key:'fps.picker.gpu',
     groups:[
       {label:'NVIDIA RTX 50xx (Blackwell)',items:[
         {n:'RTX 5090',v:1.0},{n:'RTX 5080',v:1.0},{n:'RTX 5070 Ti',v:1.0},{n:'RTX 5070',v:1.0},{n:'RTX 5060 Ti',v:1.0},{n:'RTX 5060',v:1.0}
@@ -2486,7 +2616,7 @@ function openPicker(type){
   const ov = document.getElementById('picker-ov');
   const list = document.getElementById('picker-list');
   const search = document.getElementById('picker-search');
-  document.getElementById('picker-title').textContent = data.title;
+  document.getElementById('picker-title').textContent = data.title_key ? t(data.title_key) : data.title;
   search.value = '';
 
   // Строим список
@@ -2608,15 +2738,15 @@ function calcFPS(){
 
   if(gpuMul < 0.6){
     fps = Math.round(fps * 0.45);
-    note = 'Слабая GPU ограничивает FPS. Обновите видеокарту.';
+    note = t('fps.note.weak');
   } else if(gpuMul < 0.85){
     fps = Math.round(fps * 0.75);
-    note = 'GPU немного ограничивает. Рекомендуем GTX 1060+ или RX 580+';
+    note = t('fps.note.mid');
   } else if(gpuMul < 1.0){
     fps = Math.round(fps * 0.92);
-    note = 'Хороший результат. GPU справляется.';
+    note = t('fps.note.ok');
   } else {
-    note = 'Отличное железо! GPU не является бутылочным горлышком.';
+    note = t('fps.note.great');
   }
 
   // Небольшой разброс для реализма
@@ -2631,7 +2761,7 @@ function calcFPS(){
   else if(fps >= 144) numEl.style.color='rgba(255,220,100,.9)';
   else numEl.style.color='rgba(255,130,100,.9)';
 
-  badgeEl.textContent = fps >= 400 ? 'FPS · Топ результат' : fps >= 240 ? 'FPS · Отлично' : fps >= 144 ? 'FPS · Хорошо' : 'FPS · Стоит улучшить железо';
+  badgeEl.textContent = fps >= 400 ? t('fps.badge.top') : fps >= 240 ? t('fps.badge.great') : fps >= 144 ? t('fps.badge.good') : t('fps.badge.low');
   noteEl.textContent = note;
   result.style.display='block';
   result.style.animation='waveIn .4s cubic-bezier(.16,1,.3,1) both';
@@ -2654,8 +2784,11 @@ async function loadCL(){
     const rec=j.record||j||{};
     const arr=Array.isArray(rec)?rec:(rec.changelog||[]);
     const items=arr.filter(e=>e?.ver&&e.ver!=='—');
-    if(!items.length){el.innerHTML='<div class="cl-e"><div class="cl-t" style="opacity:.35">Нет обновлений</div></div>';return;}
-    el.innerHTML=items.map(e=>`<div class="cl-e"><div class="cl-v">${e.ver}</div><div class="cl-d">${e.date}</div><div class="cl-t">${e.text}</div></div>`).join('');
+    if(!items.length){el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35">${t('inf.empty')}</div></div>`;return;}
+    el.innerHTML=items.map(e=>{
+      const текст = (lang==='en' && e.text_en) ? e.text_en : (e.text||'');
+      return `<div class="cl-e"><div class="cl-v">${e.ver}</div><div class="cl-d">${e.date||''}</div><div class="cl-t">${текст}</div></div>`;
+    }).join('');
   }catch{}
 }
 
@@ -2676,15 +2809,19 @@ async function loadInfo(){
     const rec=j.record||j||{};
     const items=Array.isArray(rec.info)?rec.info.filter(e=>e?.active!==false):[];
     if(!items.length){
-      el.innerHTML='<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">Нет активных объявлений</div></div>';
+      el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">${t('inf.empty')}</div></div>`;
       return;
     }
-    el.innerHTML=items.map(e=>`
+    el.innerHTML=items.map(e=>{
+      const заголовок = (lang==='en' && e.title_en) ? e.title_en : (e.title||'Объявление');
+      const текст = (lang==='en' && e.body_en) ? e.body_en : (e.body||'');
+      return `
       <div class="cl-e">
-        <div class="cl-v" style="display:flex;align-items:center;gap:5px">${icons[e.type]||icons.info} ${e.title||'Объявление'}</div>
+        <div class="cl-v" style="display:flex;align-items:center;gap:5px">${icons[e.type]||icons.info} ${заголовок}</div>
         <div class="cl-d">${e.date||''}</div>
-        <div class="cl-t">${e.body||''}</div>
-      </div>`).join('');
+        <div class="cl-t">${текст}</div>
+      </div>`;
+    }).join('');
   }catch{}
 }
 
