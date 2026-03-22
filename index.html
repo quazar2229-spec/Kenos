@@ -1782,7 +1782,6 @@ function setLang(l){
   // Переводим kenos-tip span
   const tip = document.getElementById('kenos-tip');
   if(tip) tip.textContent = t('hero.tip');
-
 }
 
 
@@ -2867,8 +2866,7 @@ async function loadCL(){
     const j=await r.json();
     const rec=j.record||j||{};
     /* changelog — берём только поле changelog, не весь массив */
-    if(!('changelog' in rec)) return;
-    const arr = rec.changelog || [];
+    const arr = rec.changelog || (Array.isArray(rec) ? rec : []);
     const items=arr.filter(e=>e?.ver&&e.ver!=='—');
     if(!items.length){el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">${t('inf.empty')}</div></div>`;return;}
     el.innerHTML=items.map(e=>{
@@ -2894,7 +2892,6 @@ async function loadInfo(){
     const j=await r.json();
     const rec=j.record||j||{};
     /* info — берём только поле info, не путаем с changelog */
-    if(!('info' in rec)) return;
     const items=Array.isArray(rec.info) ? rec.info.filter(e=>e?.active!==false) : [];
     if(!items.length){
       el.innerHTML=`<div class="cl-e"><div class="cl-t" style="opacity:.35;text-align:center;padding:12px 0">${t('inf.empty')}</div></div>`;
